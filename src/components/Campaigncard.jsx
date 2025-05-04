@@ -23,7 +23,7 @@ export default function Campaigncard({ campaign, sortOption }) {
     const renderExtraInfo = () => {
         switch (sortOption) {
             case '인기순':
-                return `기부자: ${campaign.donate_count}명`;
+                return `총 ${campaign.donate_count}명 참여함`;
             case '최신순':
                 return `${formatDate(campaign.donate_start)}`;
             case '종료임박순':
