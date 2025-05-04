@@ -1,0 +1,77 @@
+.donate-header {
+  display: flex;
+  flex-direction: row;           
+  justify-content: space-between;   
+  align-items: center;
+  padding: 12px 200px 8px 200px;
+}
+
+.donate-title {
+  margin: 0;
+  color: #333;
+}
+
+.select-container {
+  margin-top: 2.5px;
+}
+
+select {
+  width: 110px;
+  padding: 8px 10px 7px 10px;
+  font-size: 0.9rem;
+  color: #333;
+  background: url('../assets/icon-arrow-down.svg') no-repeat right 10px center;
+  background-size: 12px 12px;
+  border: 1px solid #555;
+  background-color: #fff;
+  border-radius: 5px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  box-sizing: border-box;
+
+}
+
+.campaign-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 20px 200px;
+}
+
+@media (max-width: 1024px) {
+  .campaign-grid {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 10px 100px;
+  }
+
+  .donate-header {
+    padding: 10px 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .campaign-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 10px 50px;
+  }
+
+  .donate-header {
+    padding: 20px 50px;
+  }
+}
+
+@media (max-width: 540px) {
+  .campaign-grid {
+    grid-template-columns: 1fr;
+    padding: 20px 20px;
+  }
+
+  .donate-header {
+    flex-direction: column;       /* 세로 배치 */
+    align-items: flex-start;      /* 왼쪽 정렬 */
+    gap: 10px;                    /* 타이틀과 셀렉트 사이 간격 */
+    padding: 20px 20px;
+  }
+}

@@ -1,0 +1,119 @@
+/* Navbar 전체 스타일 */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 200px 15px 200px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+
+  .navbar-left {
+
+  }
+  
+  .navbar-logo {
+    font-size: 1.5em;
+    font-weight: bold; 
+    color: #333;
+    text-decoration: none;
+    text-align : center;
+    line-height: 100%;
+  }
+  
+  .navbar-center {
+  }
+
+  .navbar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    gap: 30px;
+
+  }
+  
+  .navbar-link { 
+    color: #555;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.2s ease, border-bottom-color 0.2s ease;
+  }
+  
+  .navbar-link:hover,
+  .navbar-link:focus {
+    color: #0071ce;
+  }
+  
+  .navbar-link.active {
+    color: #0071ce; /* 활성 링크 색상 (선택 사항) */
+    font-weight: bold; /* 활성 링크 굵기 (선택 사항) */
+  }
+
+  .navbar-right {
+    display: flex; 
+    align-items: center; 
+    gap: 2px;
+  }
+  
+  .navbar-login {
+    text-decoration: none; 
+    color: #555;
+    font-size: 1rem;
+    padding: 5px 10px;
+    transition: color 0.2s ease;
+  }
+  
+  .navbar-login:hover {
+    color: #0071ce; 
+  }
+  
+  .navbar-search-icon {
+    background: none;
+    border: none;
+    cursor: pointer; 
+    font-size: 1.3em;
+    color: #555;
+    padding: 7px 0px 0px 0px;
+  }
+  
+  .navbar-search-icon:hover {
+  }
+  
+  /* --- 반응형 디자인 예시 (선택 사항) --- */
+
+  @media (max-width: 768px) {
+    .navbar {
+      flex-direction: column; 
+    }
+  
+    .navbar-center {
+      margin-top: 10px; 
+      width: 100%;
+    }
+  
+    .navbar-menu {
+      flex-direction: column;
+      width: 100%;
+      gap: 5px; 
+    }
+  
+    .navbar-menu li {
+      width: 100%;
+    }
+  
+    .navbar-menu a {
+      display: block; 
+      text-align: center; 
+      padding: 10px;
+    }
+  
+    .navbar-right {
+      margin-top: 15px; 
+      width: 100%;
+      justify-content: center; 
+    }
+  }
