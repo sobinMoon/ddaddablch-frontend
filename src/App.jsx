@@ -9,6 +9,7 @@ import LayoutwithNav from './layouts/LayoutwithNav';
 import LayoutwithoutNav from './layouts/LayoutwithoutNav';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Campaign from './pages/Campaign';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path='/donate' element={<Donate />} />
         <Route path='/reviews' element={<Reviews />} />
         <Route path='/community' element={<Community />} />
+        <Route path='/campaign/:id' element={<Campaign />} />
       </Route>
 
       <Route element={<LayoutwithoutNav />}>

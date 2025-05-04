@@ -1,8 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // ✅ 추가
 import defaultImage from '../assets/dog.jpg';
 import './Campaigncard.css';
 
 export default function Campaigncard({ campaign, sortOption }) {
+    const navigate = useNavigate(); // ✅ 추가
+
     const formatDate = (dateStr) => {
         const date = new Date(dateStr);
         const year = date.getFullYear(); // 'YYYY'
@@ -33,8 +36,12 @@ export default function Campaigncard({ campaign, sortOption }) {
         }
     };
 
+    const handleClick = () => {
+        navigate(`/campaign/${campaign.c_id}`); // ✅ 상세 페이지 이동
+    };
+
     return (
-        <div className="campaign-card">
+        <div className="campaign-card" onClick={handleClick} style={{ cursor: 'pointer' }}>
             <img className='campaign-img' src={defaultImage} alt="캠페인 이미지" />
             <p className='campaign-name'>{campaign.c_name}</p>
             <p className='campaign-info'>{renderExtraInfo()}</p>
