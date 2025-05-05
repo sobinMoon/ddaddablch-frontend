@@ -1,69 +1,84 @@
 .campaign-wrap {
-    display: flex;
-    max-width: calc(100% - 400px); /* 좌우 200px씩 여백 */
-    margin: 0 auto;
-    padding: 0 200px;
-    gap: 54px;
-  }
-  
-  .left-wrap {
-    flex: 6.5;
-    padding: 42px 0px;
-  }
-  
-  .right-wrap {
-    flex: 3.5;
-    padding: 42px 0px;
-  }
-  
-  .camp-img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    object-fit: cover;
-  }
-  
-  .camp-title{
-    font-weight: bold;
-    font-size: 1.8rem;
-    color: #333;
-    margin: 0px;
-  }
+  display: flex;
+  max-width: calc(100% - 400px);
+  /* 좌우 200px씩 여백 */
+  margin: 0 auto;
+  padding: 0 200px;
+  gap: 54px;
+}
 
-  .camp-tabs {
-    display: flex;
-    justify-content: flex-start;
-    border-bottom: 1px solid #dee2e6;
-    position: relative;
-  }
-  
-  .camp-tab {
-    text-align: center;
-    padding: 18px 12px;
-    text-decoration: none;
-    color: #999;
-    font-weight: normal;
-    position: relative;
-  }
-  
-  .camp-tab::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -1px;
-    height: 1.8px;
-    width: 100%;
-    background-color: transparent;
-    z-index: 1;
-    transition: background-color 0.3s;
-  }
-  
-  .camp-tab.active {
-    color: #0071ce; 
-    font-weight: bold;
-  }
-  
-  .camp-tab.active::after {
-    background-color: #0071ce;
-  }
-  
+.left-wrap {
+  flex: 6.5;
+  padding: 36px 0px;
+}
+
+.camp-img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+
+.camp-tabs {
+  display: flex;
+  justify-content: flex-start;
+  border-bottom: 1px solid #dee2e6;
+  position: sticky;
+  top: 0px; 
+  background-color: white; 
+  z-index: 10;
+}
+
+.camp-tab {
+  text-align: center;
+  padding: 18px 12px;
+  text-decoration: none;
+  color: #999;
+  font-weight: normal;
+  position: relative;
+}
+
+.camp-tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 1.8px;
+  width: 100%;
+  background-color: transparent;
+  z-index: 1;
+  transition: background-color 0.3s;
+}
+
+.camp-tab.active {
+  color: #0071ce;
+  font-weight: bold;
+}
+
+.camp-tab.active::after {
+  background-color: #0071ce;
+}
+
+
+.right-wrap {
+  flex: 3.5;
+  padding: 36px 0px;
+  position: sticky;
+  top: 0px;
+  align-self: flex-start;
+}
+
+.camp-title {
+  font-weight: bold;
+  font-size: 1.8rem;
+  color: #333;
+  margin: 0px 0px 20px 0px;
+}
+
+.funding-period { 
+  font-size: 0.95rem;
+  color: #888;
+  margin: 0px;
+  font-weight: 500;
+}

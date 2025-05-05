@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import { NavLink, Outlet, useParams } from 'react-router-dom';
 import defaultImage from '../assets/dog.jpg';
 import './Campaign.css';
+import Progressbar from '../components/Progressbar';
+import Donatecard from '../components/Donatecard';
+
 
 export default function Campaign() {
   const { id } = useParams();
@@ -14,7 +17,7 @@ export default function Campaign() {
     <div className='campaign-wrap'>
       <div className='left-wrap'>
         <img className='camp-img' src={defaultImage} alt="캠페인 이미지" />
-        
+
         <div className='camp-tabs'>
           <NavLink to={`/donate/campaign/${id}`} end className='camp-tab'>캠페인 소개</NavLink>
           <NavLink to={`/donate/campaign/${id}/plan`} className='camp-tab'>사용 계획</NavLink>
@@ -28,6 +31,13 @@ export default function Campaign() {
 
       <div className='right-wrap'>
         <p className='camp-title'>가정 폭력에서 살아남은 강아지의 행복한 내일을 위해!</p>
+        <Progressbar current={420000} goal={1000000} />
+        <p className='funding-period'>2025.03.06 ~ 2025.05.06</p>
+        <Donatecard goal={5000000}
+          remaining={1250000}
+          participants={243}
+          onDonate={() => alert("기부 페이지로 이동!")}
+        />
       </div>
     </div>
   );

@@ -1,0 +1,42 @@
+.progress-wrapper {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  
+  #goal-info {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #888;
+
+  }
+
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #333;
+    align-items: flex-end; /* 아래 정렬 */
+  }
+
+  .funding-percent {
+    color: #0071ce;
+    font-size: 2rem;
+  }
+  
+  .progress-container {
+    width: 100%;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 6px;
+    position: relative;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background-color: #0071ce;
+    transition: width 0.4s ease;
+  }
+  
