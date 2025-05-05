@@ -4,7 +4,7 @@
   /* 좌우 200px씩 여백 */
   margin: 0 auto;
   padding: 0 200px;
-  gap: 54px;
+  gap: 60px;
 }
 
 .left-wrap {
@@ -32,7 +32,7 @@
 
 .camp-tab {
   text-align: center;
-  padding: 18px 12px;
+  padding: 18px 12px 20px 12px;
   text-decoration: none;
   color: #999;
   font-weight: normal;
@@ -44,7 +44,7 @@
   position: absolute;
   left: 0;
   bottom: -1px;
-  height: 1.8px;
+  height: 1.5px;
   width: 100%;
   background-color: transparent;
   z-index: 1;
@@ -62,7 +62,7 @@
 
 
 .right-wrap {
-  flex: 3.5;
+  flex: 3.3;
   padding: 36px 0px;
   position: sticky;
   top: 0px;

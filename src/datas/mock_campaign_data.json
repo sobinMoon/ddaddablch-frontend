@@ -485,7 +485,7 @@
     "c_name": "캠페인 31",
     "c_image_url": "https://example.com/image31.jpg",
     "c_category": "장애인",
-    "c_description": "이것은 캠페인 31에 대한 설명입니다.",
+    "c_description": "캠페인 31에 대한 설명입니다.",
     "c_goal": 7668003,
     "c_current_amount": 3873500,
     "donate_count": 42,
