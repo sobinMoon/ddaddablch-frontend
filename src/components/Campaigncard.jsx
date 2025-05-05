@@ -37,7 +37,7 @@ export default function Campaigncard({ campaign, sortOption }) {
     };
 
     const handleClick = () => {
-        navigate(`/campaign/${campaign.c_id}`); // ✅ 상세 페이지 이동
+        navigate(`/donate/campaign/${campaign.c_id}`); // ✅ 상세 페이지 이동
     };
 
     return (

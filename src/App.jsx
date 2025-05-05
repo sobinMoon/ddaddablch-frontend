@@ -10,6 +10,9 @@ import LayoutwithoutNav from './layouts/LayoutwithoutNav';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Campaign from './pages/Campaign';
+import Campaignintro from './pages/Campaignintro';
+import Campaignplan from './pages/Campaignplan';
+import Campaignnews from './pages/Campaignnews';
 
 function App() {
   return (
@@ -19,7 +22,11 @@ function App() {
         <Route path='/donate' element={<Donate />} />
         <Route path='/reviews' element={<Reviews />} />
         <Route path='/community' element={<Community />} />
-        <Route path='/campaign/:id' element={<Campaign />} />
+        <Route path='/donate/campaign/:id' element={<Campaign />}>
+          <Route index element={<Campaignintro />} />
+          <Route path='plan' element={<Campaignplan />} />
+          <Route path='news' element={<Campaignnews />} />
+        </Route>
       </Route>
 
       <Route element={<LayoutwithoutNav />}>
