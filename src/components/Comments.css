@@ -7,7 +7,7 @@
 .comment-title {
   font-size: 1.3rem;
   margin-bottom: 12px;
-  color: #333;
+  color: #555;
 }
 
 .textarea-wrapper {
@@ -88,11 +88,14 @@
 .comment-nickname {
   font-weight: bold;
   margin: 0 0 4px;
+  color: #333;
 }
 
 .comment-text {
   margin: 0;
   white-space: pre-line;
+  color: #333;
+
 }
 
 

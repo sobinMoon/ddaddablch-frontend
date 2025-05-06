@@ -4,7 +4,7 @@
     border: 1px solid #dee2e6;
     border-radius: 12px;
     background-color: #fff;
-    margin: 32px 0px;
+    margin: 56px 0px 24px 0px;
     box-sizing: border-box;
     padding-top: 32px;
 }
@@ -27,7 +27,7 @@
 .orgcard-name {
     font-weight: bold;
     font-size: 1.1rem;
-    color: #333;
+    color: #555;
 }
 
 .orgcard-description {

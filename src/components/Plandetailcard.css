@@ -1,0 +1,45 @@
+.plan-box {
+    border: 1px solid #dee2e6;
+    padding: 24px 32px;
+    border-radius: 10px;
+    background-color: #fff;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.plan-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 24px 0px 12px 0px;
+    color: #555;
+    text-align: left;
+}
+
+.plan-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 1rem;
+    color: #444;
+}
+
+.plan-divider {
+    border: none;
+    border-bottom: 1px solid #dee2e6;
+    margin: 12px 0;
+}
+
+.plan-goal {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #555;
+    text-align: left;
+}
+
+.plan-notice {
+    font-size: 0.9rem;
+    color: #888;
+}
