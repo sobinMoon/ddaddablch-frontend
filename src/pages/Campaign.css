@@ -1,7 +1,5 @@
 .campaign-wrap {
   display: flex;
-  max-width: calc(100% - 400px);
-  /* 좌우 200px씩 여백 */
   margin: 0 auto;
   padding: 0 200px;
   gap: 70px;
@@ -81,4 +79,42 @@
   color: #888;
   margin: 0px;
   font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  
+  .campaign-wrap {
+    flex-direction: column;
+    padding: 0px 20px;
+    margin: 0px auto;
+    width: 100%;
+    box-sizing: border-box;
+    gap: 0px;
+  }
+
+  .right-wrap {
+    order: 1;
+    width: 100%;
+    position: static;
+  }
+
+  .left-wrap {
+    order: 2;
+    width: 100%;
+  }
+  .camp-img {
+    width: 100%;
+    height: auto;
+  }
+
+  .camp-tabs {
+    gap: 8px;
+  }
+
+  .camp-tab {
+    flex: 1 1 30%;
+    text-align: center;
+  }
+
+
 }
