@@ -5,6 +5,7 @@ import './Campaign.css';
 import Progressbar from '../components/Progressbar';
 import Donatecard from '../components/Donatecard';
 import Comments from '../components/Comments';
+import Orgcard from '../components/Orgcard';
 
 export default function Campaign() {
   const { id } = useParams();
@@ -25,6 +26,7 @@ export default function Campaign() {
         <div className='tab-content'>
           <Outlet />
         </div>
+        <Orgcard/>
         <Comments/>
       </div>
 

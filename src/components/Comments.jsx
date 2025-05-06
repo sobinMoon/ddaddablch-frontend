@@ -68,7 +68,7 @@ export default function Comments() {
       onChange={handleChange}
       placeholder="댓글을 입력하세요"
       rows={3}
-      maxLength={20} // 예시: 최대 글자 수
+      maxLength={MAX_LENGTH} //최대 글자 수
     />
     <div className="textarea-footer">
       <span className="char-count">{input.length}/{MAX_LENGTH}</span>
