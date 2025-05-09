@@ -13,13 +13,13 @@ export default function Campaignlist() {
   const [filteredData, setFilteredData] = useState([]);
   useEffect(() => {
     let result = [...mockData];
-  
+
     result = result.filter(c => c.c_status_flag === 'ACTIVE');
-  
+
     if (selectedCategory !== '전체') {
       result = result.filter(c => c.c_category === selectedCategory);
     }
-  
+
     switch (sortOption) {
       case '인기순':
         result.sort((a, b) => b.donate_count - a.donate_count);
@@ -33,7 +33,7 @@ export default function Campaignlist() {
       default:
         break;
     }
-  
+
     setFilteredData(result);
   }, [selectedCategory, sortOption]);
 
@@ -57,10 +57,10 @@ export default function Campaignlist() {
       </div>
 
       <div className="campaign-grid">
-  {filteredData.map(c => (
-    <Campaigncard key={c.c_id} campaign={c} sortOption={sortOption} />
-  ))}
-</div>
+        {filteredData.map(c => (
+          <Campaigncard key={c.c_id} campaign={c} sortOption={sortOption} />
+        ))}
+      </div>
     </div>
   );
 }
