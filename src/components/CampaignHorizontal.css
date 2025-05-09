@@ -1,0 +1,119 @@
+.campaign-horizontal-card {
+    display: flex;
+    width: 100%;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 -1px 2px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    margin-bottom: 12px;
+}
+
+
+.campaign-horizontal-image {
+    width: 260px;
+    height: 200px;
+    flex-shrink: 0;
+}
+
+.campaign-horizontal-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.campaign-horizontal-content {
+    flex: 1;
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+}
+
+.campaign-horizontal-info {
+    flex: 1;
+}
+
+.campaign-horizontal-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0 0 2px 0;
+    color: #333;
+}
+
+.campaign-horizontal-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0 0 16px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+}
+
+.campaign-horizontal-org {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0 0 8px 0;
+}
+
+.campaign-horizontal-progress-container {
+    margin-top: auto;
+}
+
+.campaign-horizontal-progress-bar {
+    width: 100%;
+    height: 5px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.campaign-horizontal-progress-fill {
+    height: 100%;
+    background-color: #0071ce;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.campaign-horizontal-progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+
+.campaign-horizontal-current-amount {
+    color: #0071ce;
+    font-weight: 500;
+}
+
+.campaign-horizontal-percentage {
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .campaign-horizontal-card {
+        flex-direction: column;
+    }
+
+    .campaign-horizontal-image {
+        width: 100%;
+        height: 240px;
+    }
+
+    .campaign-horizontal-content {
+        padding: 16px;
+    }
+
+    .campaign-horizontal-title {
+        font-size: 1.1rem;
+    }
+
+    .campaign-horizontal-description {
+        font-size: 0.85rem;
+    }
+} 

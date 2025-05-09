@@ -65,3 +65,15 @@
 .signup-btn:hover {
     text-decoration: underline;
 }
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.9rem;
+    margin: 8px 0;
+    text-align: center;
+}
+
+#login-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}

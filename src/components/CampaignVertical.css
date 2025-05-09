@@ -1,0 +1,105 @@
+.campaign-vertical-card {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+
+.campaign-vertical-image {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+}
+
+.campaign-vertical-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.campaign-vertical-content {
+    padding: 18px;
+}
+
+.campaign-vertical-title {
+    margin: 0 0 2px 0;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.campaign-vertical-org {
+    margin: 0 0 8px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.campaign-vertical-progress-container {
+    margin-top: 12px;
+    width: 100%;
+}
+
+.campaign-vertical-progress-bar {
+    width: 100%;
+    height: 5px;
+    background-color: #f0f0f0;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 4px;
+    position: relative;
+}
+
+.campaign-vertical-progress-fill {
+    height: 100%;
+    background-color: #0071ce;
+    transition: width 0.3s ease;
+    border-radius: 3px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 6px;
+}
+
+.campaign-vertical-progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 4px;
+}
+
+.campaign-vertical-current-amount {
+    color: #0071ce;
+    font-weight: 500;
+}
+
+.campaign-vertical-percentage {
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .campaign-vertical-card {
+        margin-bottom: 16px;
+    }
+
+    .campaign-vertical-image {
+        height: 180px;
+    }
+
+    .campaign-vertical-content {
+        padding: 20px;
+    }
+
+    .campaign-vertical-title {
+        font-size: 1rem;
+    }
+
+    .campaign-vertical-org {
+        font-size: 0.85rem;
+    }
+} 

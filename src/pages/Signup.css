@@ -5,93 +5,170 @@
     border-radius: 12px;
     border: 1px solid #dee2e6;
     font-family: sans-serif;
-  }
-  
-  h2 {
+}
+
+h2 {
     color: #333;
     text-align: center;
     margin-bottom: 24px;
-  }
-  
-  .type-buttons {
+}
+
+.type-buttons {
     display: flex;
     justify-content: center;
     gap: 12px;
     margin-bottom: 20px;
-  }
-  
-  .type-buttons button {
+}
+
+.type-buttons button {
     font-size: 0.9rem;
     padding: 10px;
     width: 100%;
     border-radius: 8px;
     border: none;
     cursor: pointer;
-  }
-  
-  .type-buttons .active {
+}
+
+.type-buttons .active {
     font-weight: bold;
     border: 2px solid #0071ce;
     background-color: #fff;
     color: #0071ce;
-  }
-  
-  .type-buttons .inactive {
+}
+
+.type-buttons .inactive {
     border: 2px solid #bbb;
     background-color: #fff;
     color: #bbb;
-  }
-  
-  .signup-form .form-group {
-    margin-bottom: 16px;
-  }
-  
-  .signup-form label {
-    display: block;
-    font-size: 0.8rem;
-    margin-bottom: 4px;
-    color: #555;
-  }
-  
-  .signup-form input {
+}
+
+.student-signup {
     width: 100%;
-    padding: 0.75rem;
-    font-size: 0.9rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
-  }
-  
-  .signup-form .email-verify button {
-    font-size: 0.9rem;
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    background-color: #0071ce;
-    color: white;
-  }
-  
-  .error {
-    font-size: 0.8rem;
-    color: red;
+}
+
+.student-signup label {
+    margin-top: 10px;
+    display: block;
+    font-weight: 500;
+}
+
+.student-signup input {
+    width: 100%;
+    padding: 8px;
     margin-top: 4px;
-  }
-  
-  .submit-button {
+    margin-bottom: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.student-signup .error {
+    color: red;
+    font-size: 0.8em;
+    margin-bottom: 5px;
+}
+
+.student-signup .message {
+    margin-top: 10px;
+    font-weight: bold;
+    color: green;
+    text-align: center;
+}
+
+.student-signup button[type="submit"] {
     width: 100%;
     padding: 10px;
     background-color: #0071ce;
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 0.9rem;
+    border-radius: 5px;
     cursor: pointer;
-    margin-top: 12px;
-    margin-bottom: 32px;
-  }
-  
-  .submit-button:hover {
+    margin-top: 20px;
+}
+
+.student-signup button[type="submit"]:hover {
     background-color: #005bb5;
-  }
+}
+
+.email-verification-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.email-verification-container input {
+    flex: 1;
+    min-width: 0;
+}
+
+.email-verification-container button {
+    white-space: nowrap;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.email-verification-container button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.verification-message {
+    margin: 8px 0;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.verification-message.info {
+    background-color: #e3f2fd;
+    color: #0d47a1;
+}
+
+.verification-message.success {
+    background-color: #e8f5e9;
+    color: #1b5e20;
+}
+
+.token-verification-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.token-verification-container input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.token-verification-container button {
+    white-space: nowrap;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.token-verification-container button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.token-verification-container button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
   
