@@ -164,12 +164,12 @@ const Studentsignup = () => {
       return (
         <form className="student-signup" onSubmit={handleSubmit}>
           <label>이름*</label>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} />
+          <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="이름을 입력해주세요" />
           {errors.name && <p className="error">{errors.name}</p>}
     
           <label>닉네임 (선택)</label>
           <div className="row">
-            <input type="text" name="nickname" value={formData.nickname} onChange={handleChange} />
+            <input type="text" name="nickname" value={formData.nickname} onChange={handleChange} placeholder="닉네임을 입력해주세요" />
             <button type="button" onClick={checkNicknameDuplicate}>중복 확인</button>
           </div>
           {nicknameCheckMsg && <p className={isNicknameAvailable ? 'info' : 'error'}>{nicknameCheckMsg}</p>}
@@ -182,6 +182,7 @@ const Studentsignup = () => {
                 value={formData.email} 
                 onChange={handleChange}
                 disabled={isVerifying}
+                placeholder="이메일을 입력해주세요"
             />
             <button 
                 type="button" 
@@ -203,7 +204,7 @@ const Studentsignup = () => {
                     name="verificationToken"
                     value={formData.verificationToken}
                     onChange={handleChange}
-                    placeholder="인증 토큰을 입력하세요"
+                    placeholder="인증 토큰을 입력해주세요"
                 />
                 <button
                     type="button"
@@ -218,14 +219,14 @@ const Studentsignup = () => {
           {errors.emailVerified && <p className="error">{errors.emailVerified}</p>}
     
           <label>지갑 주소 (선택)</label>
-          <input type="text" name="walletAddress" value={formData.walletAddress} onChange={handleChange} />
+          <input type="text" name="walletAddress" value={formData.walletAddress} onChange={handleChange} placeholder="지갑 주소를 입력해주세요" />
     
           <label>비밀번호*</label>
-          <input type="password" name="password" value={formData.password} onChange={handleChange} />
+          <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="비밀번호를 입력해주세요" />
           {errors.password && <p className="error">{errors.password}</p>}
     
           <label>비밀번호 확인*</label>
-          <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
+          <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="비밀번호를 다시 입력해주세요" />
           {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
     
           <button type="submit">가입하기</button>

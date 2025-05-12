@@ -7,6 +7,7 @@ const SERVER_URL = "http://10.101.48.92:8080";
 
 export default function Login() {
   const navigate = useNavigate();
+  const [userType, setUserType] = useState('student');
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -28,7 +29,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${SERVER_URL}/auth/login/student`, {
+      const res = await fetch(`${SERVER_URL}/auth/login/${userType}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,15 +60,31 @@ export default function Login() {
   };
 
   return (
-    <div className='login-wrap'>
-      <form className="loginForm" onSubmit={handleSubmit}>
-        <div>
+    <div className='login-container'>
+      <form className="login-form" onSubmit={handleSubmit}>
+        <div className="login-header">
           <h2>LOGO</h2>
         </div>
-        <div className="login-input">
+        <div className="login-type-buttons">
+          <button
+            type="button"
+            className={userType === 'student' ? 'login-type-active' : 'login-type-inactive'}
+            onClick={() => setUserType('student')}
+          >
+            🧑‍🎓학생 로그인
+          </button>
+          <button
+            type="button"
+            className={userType === 'organization' ? 'login-type-active' : 'login-type-inactive'}
+            onClick={() => setUserType('organization')}
+          >
+            🏢단체 로그인
+          </button>
+        </div>
+        <div className="login-input-group">
           <input
             type="email"
-            className="userEmail"
+            className="login-email"
             name="email"
             value={formData.email}
             onChange={handleChange}
@@ -76,23 +93,23 @@ export default function Login() {
           />
           <input
             type="password"
-            className="password"
+            className="login-password"
             name="password"
             value={formData.password}
             onChange={handleChange}
             placeholder="비밀번호"
             required
           />
-          {error && <p className="error-message">{error}</p>}
+          {error && <p className="login-error-message">{error}</p>}
           <button 
             type="submit" 
-            id="login-btn"
+            className="login-submit-btn"
             disabled={isLoading}
           >
             {isLoading ? '로그인 중...' : 'Login'}
           </button>
         </div>
-        <Link className="signup-btn" to="/signup">회원가입</Link>
+        <Link className="login-signup-link" to="/signup">회원가입</Link>
       </form>
     </div>
   );
