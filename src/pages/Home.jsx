@@ -4,6 +4,8 @@ import CampaignVertical from '../components/CampaignVertical'
 import CampaignHorizontal from '../components/CampaignHorizontal'
 import defaultImage from '../assets/dog.jpg'
 import UrgentCampaignBanner from '../components/UrgentCampaignBanner'
+import TotalDonation from '../components/TotalDonation'
+import DonationReviews from '../components/DonationReviews'
 
 export default function Home() {
   // 긴급 캠페인 데이터
@@ -134,8 +136,8 @@ export default function Home() {
         </div>
       </div>
       <div className="home-right">
-        {/* 오른쪽 섹션 컨텐츠가 들어갈 자리 */}
-        <h1>오른쪽 섹션</h1>
+        <TotalDonation />
+        <DonationReviews />
       </div>
     </div>
   )

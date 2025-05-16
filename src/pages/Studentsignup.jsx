@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Signup.css';
 
 // 서버 URL을 상수로 정의
-const SERVER_URL = "http://10.101.48.92:8080";
+const SERVER_URL = "http://10.101.48.80:8080";
 
 const Studentsignup = () => {
     const [formData, setFormData] = useState({
@@ -182,14 +182,14 @@ const Studentsignup = () => {
                 value={formData.email} 
                 onChange={handleChange}
                 disabled={isVerifying}
-                placeholder="이메일을 입력해주세요"
+                placeholder="example@sookmyung.ac.kr"
             />
             <button 
                 type="button" 
                 onClick={sendVerificationEmail}
                 disabled={isVerifying || !formData.email}
             >
-                {isVerifying ? '인증 중...' : '인증 메일 보내기'}
+                {isVerifying ? '인증 중...' : '인증메일 전송'}
             </button>
           </div>
           {emailVerificationMsg && (

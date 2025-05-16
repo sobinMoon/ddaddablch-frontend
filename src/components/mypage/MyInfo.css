@@ -1,0 +1,100 @@
+.mypage-content {
+    padding: 24px 0;
+}
+
+/* 기부 내역 섹션 */
+.myinfo-donates {
+    background-color: #fff;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    border: 1px solid #dee2e6;
+    padding: 32px;
+}
+
+.myinfo-donates-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    }
+
+.myinfo-donates-header-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.myinfo-donates-header-button {
+    padding: 0;
+    font-size: 0.9rem;
+    color: #666;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #666;
+    cursor: pointer;
+    width: fit-content;
+   
+}
+
+.myinfo-donates-content {
+    display: flex;
+    gap: 18px;
+    flex-direction: column;
+}
+
+.myinfo-donates-content-total,
+.myinfo-donates-content-count {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+.myinfo-donates-content-total-title,
+.myinfo-donates-content-count-title {
+    font-size: 14px;
+    color: #666;
+}
+
+.myinfo-donates-content-total-amount,
+.myinfo-donates-content-count-amount {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* NFT 보유 내역 섹션 */
+.myinfo-nft-container {
+    background-color: #fff;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    border: 1px solid #dee2e6;
+    padding: 32px;
+}   
+
+.myinfo-nft-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.myinfo-nft-header-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.myinfo-nft-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.myinfo-nft-content-item {
+    aspect-ratio: 1;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+} 

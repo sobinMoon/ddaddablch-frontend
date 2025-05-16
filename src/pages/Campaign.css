@@ -17,6 +17,11 @@
   object-fit: cover;
 }
 
+.comment-title {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  color: #555;
+}
 
 .camp-tabs {
   display: flex;

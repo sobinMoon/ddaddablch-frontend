@@ -1,0 +1,96 @@
+.mypage-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.profile-section {
+    background-color: #fff;
+    margin: 32px 0px;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-details {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.profile-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-nickname {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.edit-profile-btn {
+    padding: 0;
+    font-size: 0.9rem;
+    color: #666;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #666;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.tab-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tab-button {
+    cursor: pointer;
+    background-color: white;
+    color: #555;
+    text-decoration: none;
+    font-size: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 30px;
+    padding: 9px 16px;
+    position: relative;
+}
+
+.tab-button.active {
+    color: #fff;
+    border: 1px solid #0071ce;
+    background-color: #0071ce;
+}
+
+.new-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background-color: #ff4444;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 3px 6px;
+    border-radius: 10px;
+    border: 2px solid white;
+}
+
+.mypage-content {
+    padding: 20px;
+    min-height: 200px;
+}

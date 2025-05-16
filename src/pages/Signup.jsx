@@ -12,13 +12,13 @@ const Signup = () => {
           className={userType === 'student' ? 'active' : 'inactive'}
           onClick={() => setUserType('student')}
         >
-          학생 회원
+          🧑‍🎓학생 회원
         </button>
         <button
           className={userType === 'organization' ? 'active' : 'inactive'}
           onClick={() => setUserType('organization')}
         >
-          단체 회원
+          🏢단체 회원
         </button>
       </div>
 

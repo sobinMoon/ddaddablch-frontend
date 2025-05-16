@@ -1,11 +1,21 @@
 a {
-    text-decoration: none;
-    }
-    
-    body {
-        margin: 0; /* body의 기본 마진 제거 */
-        padding: 0; /* 혹시 모를 body의 패딩도 제거 (선택 사항) */
-        box-sizing: border-box; /* 모든 요소의 크기 계산 방식을 일관되게 설정 (권장) */
-        /* 프로젝트의 다른 기본 폰트 설정 등이 여기에 있을 수 있습니다. */
-        font-family: sans-serif; /* 예시 */
-      }
+  text-decoration: none;
+}
+
+body {
+  margin: 0;
+  /* body의 기본 마진 제거 */
+  padding: 0;
+  /* 혹시 모를 body의 패딩도 제거 (선택 사항) */
+  box-sizing: border-box;
+  /* 모든 요소의 크기 계산 방식을 일관되게 설정 (권장) */
+  /* 프로젝트의 다른 기본 폰트 설정 등이 여기에 있을 수 있습니다. */
+  font-family: sans-serif;
+  /* 예시 */
+}
+
+* {
+    font-family: sans-serif;
+}
+
+

@@ -59,7 +59,6 @@ export default function Comments() {
   
   return (
     <div className="comment-container">
-      <h3 className="comment-title">댓글을 남겨 응원해주세요</h3>
       <form onSubmit={handleSubmit} className="comment-form">
   <div className="textarea-wrapper">
     <textarea

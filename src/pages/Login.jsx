@@ -3,7 +3,7 @@ import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 
 // 서버 URL을 상수로 정의
-const SERVER_URL = "http://10.101.48.92:8080";
+const SERVER_URL = "http://10.101.48.80:8080";
 
 export default function Login() {
   const navigate = useNavigate();
