@@ -9,7 +9,7 @@ export default function Orgcard() {
     const handleClick = () => {
         // TODO: Replace with actual organization ID from backend
         const orgId = 1;
-        navigate(`/organization/${orgId}`);
+        navigate(`/org-detail/${orgId}`);
     };
 
     return (

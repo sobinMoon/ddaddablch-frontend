@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
-
-// 서버 URL을 상수로 정의
-const SERVER_URL = "http://10.101.48.80:8080";
+import { AuthContext } from '../hooks/AuthContext';
+import SERVER_URL from '../hooks/SeverUrl';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,6 +13,7 @@ export default function Login() {
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { setUser } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setFormData({
@@ -45,6 +45,11 @@ export default function Login() {
         // 토큰을 로컬 스토리지에 저장
         localStorage.setItem('token', data.token);
         localStorage.setItem('refreshToken', data.refreshToken);
+
+        setUser({
+          email: formData.email,
+          type: userType, // 'student' 또는 'organization'
+        });
         
         // 로그인 성공 시 홈페이지로 이동
         navigate('/');

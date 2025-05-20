@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import './Signup.css';
 import Studentsignup from './Studentsignup';
+import Orgsignup from './Orgsignup';
+
+
 const Signup = () => {
   const [userType, setUserType] = useState('student');
 
@@ -22,7 +25,7 @@ const Signup = () => {
         </button>
       </div>
 
-      {userType === 'student' ? <Studentsignup/>:<div>aa</div>}
+      {userType === 'student' ? <Studentsignup/>:<Orgsignup/>}
     </div>
   );
 };

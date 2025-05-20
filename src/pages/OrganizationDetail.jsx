@@ -11,7 +11,6 @@ export default function OrganizationDetail() {
         window.scrollTo(0, 0);
       }, []);
 
-    // TODO: Replace with actual data fetching from backend
     const organization = {
         id: orgId,
         name: "사단 법인 위액트",
@@ -19,38 +18,38 @@ export default function OrganizationDetail() {
         image: defaultImage,
         activeCampaigns: [
             {
-                "c_id": 1,
-                "o_id": 4478,
-                "c_name": "캠페인 1",
-                "c_image_url": defaultImage,
-                "c_category": "사회",
-                "c_description": "이것은 캠페인 1에 대한 설명입니다.",
-                "c_goal": 10000,
-                "c_current_amount": 2000,
-                "donate_count": 2,
-                "donate_start": "2025-03-06T12:14:18",
-                "donate_end": "2025-04-10T12:14:18",
-                "business_start": "2025-04-20T12:14:18",
-                "business_end": "2025-07-19T12:14:18",
-                "c_status_flag": "ACTIVE"
+                "cid": 1,
+                "oid": 4478,
+                "cname": "캠페인 1",
+                "cimageUrl": defaultImage,
+                "ccategory": "사회",
+                "cdescription": "이것은 캠페인 1에 대한 설명입니다.",
+                "cgoal": 10000,
+                "ccurrentAmount": 2000,
+                "donateCount": 2,
+                "donateStart": "2025-03-06T12:14:18",
+                "donateEnd": "2025-04-10T12:14:18",
+                "businessStart": "2025-04-20T12:14:18",
+                "businessEnd": "2025-07-19T12:14:18",
+                "cstatusFlag": "ACTIVE"
               },
         ],
         completedCampaigns: [
             {
-                "c_id": 1,
-                "o_id": 4478,
-                "c_name": "캠페인 1",
-                "c_image_url": defaultImage,
-                "c_category": "사회",
-                "c_description": "이것은 캠페인 1에 대한 설명입니다.",
-                "c_goal": 10000,   
-                "c_current_amount": 2000,
-                "donate_count": 2,
-                "donate_start": "2025-03-06T12:14:18",
-                "donate_end": "2025-04-10T12:14:18",
-                "business_start": "2025-04-20T12:14:18",
-                "business_end": "2025-07-19T12:14:18",
-                "c_status_flag": "ENDED"
+                "cid": 1,
+                "oid": 4478,
+                "cname": "캠페인 1",
+                "cimageUrl": defaultImage,
+                "ccategory": "사회",
+                "cdescription": "이것은 캠페인 1에 대한 설명입니다.",
+                "cgoal": 10000,   
+                "ccurrentAmount": 2000,
+                "donateCount": 2,
+                "donateStart": "2025-03-06T12:14:18",
+                "donateEnd": "2025-04-10T12:14:18",
+                "businessStart": "2025-04-20T12:14:18",
+                "businessEnd": "2025-07-19T12:14:18",
+                "cstatusFlag": "ENDED"
             }
         ]
     };

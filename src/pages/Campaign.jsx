@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { NavLink, Outlet, useParams } from 'react-router-dom';
+import { NavLink, Outlet, useParams, useNavigate } from 'react-router-dom';
 import defaultImage from '../assets/dog.jpg';
 import './Campaign.css';
 import Progressbar from '../components/Progressbar';
@@ -9,6 +9,11 @@ import Orgcard from '../components/Orgcard';
 
 export default function Campaign() {
   const { id } = useParams();
+  const navigate = useNavigate();
+
+  const onDonate = () => {
+    navigate(`/donate/metamask`);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -38,7 +43,8 @@ export default function Campaign() {
         <Donatecard goal={1000000}
           remaining={1000000-420000}
           participants={243}
-          onDonate={() => alert("기부 페이지로 이동!")}
+          onDonate={onDonate}
+
         />
       </div>
     </div>

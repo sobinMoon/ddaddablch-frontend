@@ -11,10 +11,11 @@
 .create-post-title input,
 .create-post-content textarea {
     width: 100%;
-    padding: 18px;
+    padding: 12px;
     font-size: 1rem;
     border: 1px solid #dee2e6;
     box-sizing: border-box;
+    border-radius: 6px;
 }
 
 .create-post-title input:focus {

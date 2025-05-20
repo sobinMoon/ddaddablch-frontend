@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Signup.css';
-
-// 서버 URL을 상수로 정의
-const SERVER_URL = "http://10.101.48.80:8080";
+import SERVER_URL from '../hooks/SeverUrl';
 
 const Studentsignup = () => {
     const [formData, setFormData] = useState({
@@ -235,6 +233,5 @@ const Studentsignup = () => {
         </form>
       );
 };
-
 
 export default Studentsignup;

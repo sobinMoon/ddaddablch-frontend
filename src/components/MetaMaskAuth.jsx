@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Web3 from "web3";
 import "./MetaMaskAuth.css"; // CSS 분리
+import SERVER_URL from '../hooks/SeverUrl';
 
-const API_BASE_URL = "http://10.101.48.80:8080/wallet/auth"; // 백엔드 주소
+const API_BASE_URL = `${SERVER_URL}/wallet/auth`; // 백엔드 주소
 
 const MetaMaskAuth = () => {
   const [walletAddress, setWalletAddress] = useState("");
@@ -15,6 +16,9 @@ const MetaMaskAuth = () => {
     verify: false,
   });
 
+  const [isConnected, setIsConnected] = useState(false);
+
+
   const log = (text) => {
     setLogList((prev) => [
       ...prev,
@@ -22,24 +26,27 @@ const MetaMaskAuth = () => {
     ]);
   };
 
-  const connectWallet = async () => {
-    log("메타마스크 연결 시도...");
-    if (window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        setWalletAddress(accounts[0]);
-        log(`지갑 연결 성공: ${accounts[0]}`);
-        setStepEnabled((prev) => ({ ...prev, requestChallenge: true }));
-      } catch (err) {
-        log(`에러: ${err.message}`);
-      }
-    } else {
-      alert("메타마스크를 설치해주세요.");
-      log("메타마스크가 설치되어 있지 않습니다.");
+
+const connectWallet = async () => {
+  log("메타마스크 연결 시도...");
+  if (window.ethereum) {
+    try {
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      setWalletAddress(accounts[0]);
+      setIsConnected(true); // ✅ 연결 성공 표시
+      log(`지갑 연결 성공: ${accounts[0]}`);
+      setStepEnabled((prev) => ({ ...prev, requestChallenge: true }));
+    } catch (err) {
+      log(`에러: ${err.message}`);
     }
-  };
+  } else {
+    alert("메타마스크를 설치해주세요.");
+    log("메타마스크가 설치되어 있지 않습니다.");
+  }
+};
+
 
   const requestChallenge = async () => {
     log("인증 요청 시도...");
@@ -102,36 +109,55 @@ const MetaMaskAuth = () => {
   };
 
   return (
-    <div className="container">
-      <h1>메타마스크 지갑 인증 테스트 (React)</h1>
+    <div className="metamask-auth-container">
+      <h1 className="metamask-auth-title">메타마스크 지갑 인증</h1>
+      <div className="divider"></div>
 
-      <h2>1단계: 메타마스크 연결</h2>
-      <button onClick={connectWallet}>메타마스크 연결</button>
-      {walletAddress && <p>지갑 주소: {walletAddress}</p>}
+      <h2 className="metamask-auth-subtitle">메타마스크 연결</h2>
+      <p className="metamask-auth-description">메타마스크를 통해 지갑 주소를 연결해주세요.</p>
+      <button onClick={connectWallet} disabled={isConnected}>메타마스크 연결</button>
+      {walletAddress &&
+      <div className="metamask-connected-msg-container">
+       <p className="metamask-connected-msg">✅ 지갑 주소가 연결되었어요!</p>
+       {walletAddress && <p className="metamask-connected-msg-content">{walletAddress}</p>}
+      </div>}
+      
+      <div className="divider"></div>
 
-      <h2>2단계: 인증 메시지 요청</h2>
+      <h2 className="metamask-auth-subtitle">인증 메시지 요청</h2>
+      <p className="metamask-auth-description">인증을 위한 일회성 메시지를 요청해주세요.</p>
       <button onClick={requestChallenge} disabled={!stepEnabled.requestChallenge}>
         인증 요청
       </button>
-      {message && <p>받은 메시지: {message}</p>}
+      {message &&
+      <div className="metamask-connected-msg-container"> 
+      <p className="metamask-connected-msg">✅ 인증 메시지를 수신했어요!</p>
+      <p className="metamask-connected-msg-content">받은 메시지: {message}</p>
+      </div>}
+      <div className="divider"></div>
 
-      <h2>3단계: 메시지 서명</h2>
+      <h2 className="metamask-auth-subtitle">메시지 서명</h2>
+      <p className="metamask-auth-description">메시지를 서명해주세요.</p>
       <button onClick={signMessage} disabled={!stepEnabled.sign}>
         메시지 서명
       </button>
       {signature && (
-        <>
-          <p>서명 일부: {signature.slice(0, 20)}...{signature.slice(-10)}</p>
-          <p style={{ fontSize: "12px" }}>전체: {signature}</p>
-        </>
+        <div className="metamask-connected-msg-container" >
+          <p className="metamask-connected-msg">✅ 메시지 서명이 완료되었어요!</p>
+          <p className="metamask-connected-msg-content">서명 일부: {signature.slice(0, 20)}...{signature.slice(-10)}</p>
+          <p className="metamask-connected-msg-content">전체: {signature}</p>
+        </div>
       )}
+      <div className="divider"></div>
 
-      <h2>4단계: 서명 검증</h2>
+      <h2 className="metamask-auth-subtitle">서명 검증</h2>
+      <p className="metamask-auth-description">서명을 검증해주세요.</p>
       <button onClick={verifySignature} disabled={!stepEnabled.verify}>
         서명 검증
       </button>
+      <div className="divider"></div>
 
-      <h3>로그</h3>
+      <h3 className="metamask-auth-subtitle">로그</h3>
       <div className="log">
         {logList.map((entry, index) => (
           <div key={index}>{entry}</div>

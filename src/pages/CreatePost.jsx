@@ -5,7 +5,7 @@ export default function CreatePost() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null); // 🔥 이 줄 추가
+  const [previewUrl, setPreviewUrl] = useState(null); 
   const [fileName, setFileName] = useState('');
 
   const handleSubmit = () => {
