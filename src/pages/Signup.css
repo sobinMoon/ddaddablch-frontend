@@ -70,7 +70,18 @@ h2 {
     margin: 4px 0 0 0;
 }
 
-
+.student-signup .nickname-info {
+    margin: 8px 0 0 0;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    background-color: #e3f2fd;
+    color: #0d47a1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    
+}
 
 .student-signup .message {
     margin: 0;

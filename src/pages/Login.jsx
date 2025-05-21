@@ -52,7 +52,11 @@ export default function Login() {
         });
         
         // 로그인 성공 시 홈페이지로 이동
-        navigate('/');
+        if (userType === 'student') {
+          navigate('/');
+        } else {
+          navigate('/organization/home');
+        }
       } else {
         setError(data.message || '로그인에 실패했습니다.');
       }

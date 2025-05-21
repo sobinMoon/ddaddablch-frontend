@@ -39,16 +39,22 @@ export default function Orgsignup() {
     setEmailVerificationMsg('');
     setIsVerifying(true);
     try {
-      const res = await fetch(`${SERVER_URL}/api/v1/org/sign-up/send-verification-email`, {
+      const res = await fetch(`${SERVER_URL}/api/org/sign-up/send-verification-email`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        credentials: 'include',
+        headers: { 
+          'Content-Type': 'application/json', 
+          'Accept': 'application/json'
+        },
         body: JSON.stringify({ email: formData.email })
       });
+
       const data = await res.json();
+
       if (!res.ok) throw new Error(data.message || '서버 응답 오류');
+      console.log('서버 응답:', data);
       setEmailVerificationMsg('인증 메일이 발송되었습니다. 이메일을 확인한 후 토큰을 입력해주세요.');
     } catch (err) {
+      console.error('이메일 인증 요청 중 오류:', err);
       setEmailVerificationMsg(`인증 메일 전송 중 오류 발생: ${err.message}`);
     } finally {
       setIsVerifying(false);
@@ -62,10 +68,9 @@ export default function Orgsignup() {
     }
 
     try {
-      const res = await fetch(`${SERVER_URL}/api/v1/org/verify-email?token=${formData.verificationToken}`, {
+      const res = await fetch(`${SERVER_URL}/api/org/verify-email?token=${formData.verificationToken}`, {
         method: 'GET',
         headers: { 'Accept': 'application/json' },
-        credentials: 'include'
       });
       const data = await res.json();
       if (data.success) {
@@ -88,7 +93,7 @@ export default function Orgsignup() {
     }
 
     try {
-      const res = await fetch(`${SERVER_URL}/api/v1/org/sign-up/organization`, {
+      const res = await fetch(`${SERVER_URL}/api/org/sign-up/organization`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Signup.css';
 import SERVER_URL from '../hooks/SeverUrl';
+import { FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 
 const Studentsignup = () => {
     const [formData, setFormData] = useState({
@@ -54,7 +55,6 @@ const Studentsignup = () => {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                credentials: 'include',
                 body: JSON.stringify({ email: formData.email })
             });
     
@@ -142,7 +142,6 @@ const Studentsignup = () => {
                 headers: {
                     'Accept': 'application/json'
                 },
-                credentials: 'include'
             });
 
             const data = await res.json();
@@ -170,7 +169,11 @@ const Studentsignup = () => {
             <input type="text" name="nickname" value={formData.nickname} onChange={handleChange} placeholder="닉네임을 입력해주세요" />
             <button type="button" onClick={checkNicknameDuplicate}>중복 확인</button>
           </div>
-          {nicknameCheckMsg && <p className={isNicknameAvailable ? 'info' : 'error'}>{nicknameCheckMsg}</p>}
+          {nicknameCheckMsg && 
+          <p className={isNicknameAvailable ? 'nickname-info' : 'error'}>
+            {isNicknameAvailable ? <FaRegCheckCircle /> : <FaRegTimesCircle />}
+            {nicknameCheckMsg}
+          </p>}
     
           <label>이메일*</label>
           <div className="email-verification-container">
