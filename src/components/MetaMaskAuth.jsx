@@ -62,6 +62,8 @@ const connectWallet = async () => {
       const data = await res.json();
       if (res.ok) {
         setMessage(data.message);
+
+        
         log(`인증 메시지 수신: ${data.message}`);
         setStepEnabled((prev) => ({ ...prev, sign: true }));
       } else {
@@ -100,6 +102,8 @@ const connectWallet = async () => {
       const data = await res.json();
       if (res.ok && data.success) {
         log("✅ 인증 성공!");
+        alert("인증 성공!");
+        window.location.href = '/donate/donate-component';
       } else {
         log("❌ 인증 실패!");
       }
@@ -132,7 +136,7 @@ const connectWallet = async () => {
       {message &&
       <div className="metamask-connected-msg-container"> 
       <p className="metamask-connected-msg">✅ 인증 메시지를 수신했어요!</p>
-      <p className="metamask-connected-msg-content">받은 메시지: {message}</p>
+      <p className="metamask-connected-msg-content">{message}</p>
       </div>}
       <div className="divider"></div>
 
@@ -144,8 +148,6 @@ const connectWallet = async () => {
       {signature && (
         <div className="metamask-connected-msg-container" >
           <p className="metamask-connected-msg">✅ 메시지 서명이 완료되었어요!</p>
-          <p className="metamask-connected-msg-content">서명 일부: {signature.slice(0, 20)}...{signature.slice(-10)}</p>
-          <p className="metamask-connected-msg-content">전체: {signature}</p>
         </div>
       )}
       <div className="divider"></div>

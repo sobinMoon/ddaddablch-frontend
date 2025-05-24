@@ -68,6 +68,9 @@ h2 {
     color: red;
     font-size: 0.8em;
     margin: 4px 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .student-signup .nickname-info {
@@ -149,7 +152,7 @@ h2 {
 .email-verification-container {
     display: flex;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     width: 100%;
 }
 
@@ -189,11 +192,13 @@ h2 {
 }
 
 .verification-message.info {
+    margin-top: 8px;
     background-color: #e3f2fd;
     color: #0d47a1;
 }
 
 .verification-message.success {
+    margin-top: 8px;
     background-color: #e8f5e9;
     color: #1b5e20;
 }
@@ -231,5 +236,38 @@ h2 {
 .token-verification-container button:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
+}
+
+.profileimage-upload-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.profileimage-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #dee2e6;
+}
+
+.profileimage-upload {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    background-color: #f5f5f5;
+    font-size: 36px;
+    color: #888;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.profileimage-upload:hover {
+    background-color: #e0e0e0;
 }
   

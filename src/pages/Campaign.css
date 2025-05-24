@@ -12,7 +12,7 @@
 
 .camp-img {
   width: 100%;
-  height: auto;
+  height: 480px;
   border-radius: 8px;
   object-fit: cover;
 }

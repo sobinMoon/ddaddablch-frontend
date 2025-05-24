@@ -27,6 +27,7 @@ export default function Campaignlist() {
         }
 
         const data = await response.json();
+        console.log(data);
         setCampaigns(data.campaigns); // ⬅️ 핵심: campaigns 배열만 저장
       } catch (err) {
         setError(err.message);
@@ -43,7 +44,7 @@ export default function Campaignlist() {
     let result = [...campaigns];
 
     if (selectedCategory !== '전체') {
-      result = result.filter(c => c.ccategory === selectedCategory);
+      result = result.filter(c => c.category === selectedCategory);
     }
 
     switch (sortOption) {

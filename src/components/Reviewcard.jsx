@@ -20,10 +20,10 @@ export default function Reviewcard({ campaign }) {
 
     return (
         <div className="review-card" onClick={handleClick} style={{ cursor: 'pointer' }}>
-            <img className='review-img' src={defaultImage} alt="캠페인 이미지" />
-            <p className='review-name'>{campaign.c_name}</p>
+            <img className='review-img' src={campaign.imageUrl} alt="캠페인 이미지" />
+            <p className='review-name'>{campaign.name}</p>
             <p className='review-period'>
-                {formatDate(campaign.donate_start)} ~ {formatDate(campaign.donate_end)}
+                {formatDate(campaign.donateStart)} ~ {formatDate(campaign.donateEnd)}
             </p>
         </div>
     );

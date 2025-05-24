@@ -10,7 +10,9 @@ export default function Orgsignup() {
     password: '',
     confirmPassword: '',
     walletAddress: '',
-    verificationToken: ''
+    verificationToken: '',
+    description: '',
+    profileImage: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -39,7 +41,7 @@ export default function Orgsignup() {
     setEmailVerificationMsg('');
     setIsVerifying(true);
     try {
-      const res = await fetch(`${SERVER_URL}/api/org/sign-up/send-verification-email`, {
+      const res = await fetch(`${SERVER_URL}/api/org/send-verification-email`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json', 
@@ -49,6 +51,7 @@ export default function Orgsignup() {
       });
 
       const data = await res.json();
+      console.log(data);
 
       if (!res.ok) throw new Error(data.message || '서버 응답 오류');
       console.log('서버 응답:', data);
@@ -121,6 +124,41 @@ export default function Orgsignup() {
       <input type="text" name="businessNumber" value={formData.businessNumber} onChange={handleChange} placeholder="사업자 등록번호를 입력해주세요" />
       {errors.businessNumber && <p className="error">{errors.businessNumber}</p>}
 
+      <label>소개글</label>
+      <textarea 
+        name="description" 
+        value={formData.description} 
+        onChange={handleChange} 
+        placeholder="소개글을 입력해주세요 "
+        rows="4"
+      />
+
+      <label>프로필 이미지</label>
+      <div className="profileimage-upload-wrapper">
+        {formData.profileImage && (
+          <img src={formData.profileImage} alt="프로필 미리보기" className="profileimage-preview" />
+        )}
+        <label htmlFor="profileImageInput" className="profileimage-upload">
+          +
+        </label>
+        <input
+          id="profileImageInput"
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                setFormData({ ...formData, profileImage: reader.result });
+              };
+              reader.readAsDataURL(file);
+            }
+          }}
+          style={{ display: 'none' }}
+        />
+      </div>
+
       <label>이메일*</label>
       <div className="email-verification-container">
         <input
@@ -132,9 +170,11 @@ export default function Orgsignup() {
           placeholder="example@organization.com"
         />
         <button type="button" onClick={sendVerificationEmail} disabled={isVerifying || !formData.email}>
-          {isVerifying ? '인증 중...' : '인증메일 전송'}
+          {isVerifying ? '전송 중...' : '인증메일 전송'}
         </button>
       </div>
+      {errors.email && <p className="error">{errors.email}</p>}
+
       {emailVerificationMsg && (
         <p className={`verification-message ${emailVerified ? 'success' : 'info'}`}>{emailVerificationMsg}</p>
       )}
@@ -152,7 +192,6 @@ export default function Orgsignup() {
           </button>
         </div>
       )}
-      {errors.email && <p className="error">{errors.email}</p>}
       {errors.emailVerified && <p className="error">{errors.emailVerified}</p>}
 
       <label>지갑 주소 (선택)</label>

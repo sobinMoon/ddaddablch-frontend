@@ -40,7 +40,7 @@ export default function Campaign() {
     navigate(`/donate/metamask`);
   };
 
-  if (!campaign) return <div>로딩 중...</div>;
+  if (!campaign) return <div></div>;
 
   return (
     <div className='campaign-wrap'>
@@ -56,7 +56,7 @@ export default function Campaign() {
         </div>
         <Orgcard organization={campaign.organization} />
         <h3 className="comment-title">댓글을 남겨 응원해주세요</h3>
-        <Comments campaignId={id} />
+        <Comments campaignId={campaign.id} />
       </div>
 
       <div className='right-wrap'>

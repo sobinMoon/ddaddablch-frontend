@@ -29,17 +29,21 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${SERVER_URL}/auth/login/${userType}`, {
+      const endpoint =
+        userType === 'organization' ? '/auth/login/org' : '/auth/login/student';
+
+      const res = await fetch(`${SERVER_URL}${endpoint}`, {
+
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        credentials: 'include',
         body: JSON.stringify(formData)
       });
 
       const data = await res.json();
+      console.log(data);
 
       if (data.success) {
         // 토큰을 로컬 스토리지에 저장
@@ -50,7 +54,7 @@ export default function Login() {
           email: formData.email,
           type: userType, // 'student' 또는 'organization'
         });
-        
+
         // 로그인 성공 시 홈페이지로 이동
         if (userType === 'student') {
           navigate('/');
@@ -110,8 +114,8 @@ export default function Login() {
             required
           />
           {error && <p className="login-error-message">{error}</p>}
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="login-submit-btn"
             disabled={isLoading}
           >

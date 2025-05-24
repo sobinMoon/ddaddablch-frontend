@@ -5,6 +5,8 @@ import { useOutletContext } from 'react-router-dom';
 export default function Campaignintro() {
   const { campaign } = useOutletContext();
   const text = campaign.description;
+  console.log(text);
+
   return (
     <div>
       <div />
@@ -12,9 +14,10 @@ export default function Campaignintro() {
         <p style={{
           padding: '0px',
           borderRadius: '10px',
-          whiteSpace: 'pre-line', 
+          whiteSpace: 'pre-line',
+          fontSize: '1.05rem',
         }}>
-       {text}
+          {text.replace(/\\n|¶/g, '\n')}
         </p>
       </div>
 

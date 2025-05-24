@@ -7,13 +7,12 @@
     overflow: hidden;
     cursor: pointer;
     transition: transform 0.2s ease;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
 }
 
 
 .campaign-horizontal-image {
     width: 260px;
-    height: 200px;
     flex-shrink: 0;
 }
 

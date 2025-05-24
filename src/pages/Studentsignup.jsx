@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Signup.css';
 import SERVER_URL from '../hooks/SeverUrl';
 import { FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 const Studentsignup = () => {
     const [formData, setFormData] = useState({
@@ -59,7 +60,8 @@ const Studentsignup = () => {
             });
     
             const data = await res.json();
-            
+            console.log(data);
+
             if (!res.ok) {
                 throw new Error(data.message || '서버 응답 오류');
             }
@@ -103,6 +105,8 @@ const Studentsignup = () => {
         }
       };
     
+      const navigate = useNavigate();
+      
       const handleSubmit = async e => {
         e.preventDefault();
         const validationErrors = validate();
@@ -110,25 +114,42 @@ const Studentsignup = () => {
           setErrors(validationErrors);
           return;
         }
-    
+      
         try {
           const res = await fetch(`${SERVER_URL}/api/v1/user/sign-up/student`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
           });
-    
-          const data = await res.json();
+      
+          let data;
+          const contentType = res.headers.get("Content-Type");
+          if (contentType && contentType.includes("application/json")) {
+            data = await res.json();
+          } else {
+            const text = await res.text();
+            data = { message: text };  // fallback
+          }
+      
+          console.log(data);
+      
           if (res.status === 201) {
             setMessage(data.message);
             setErrors({});
+            navigate('/login');
+            alert(data.message);
+          } else if (res.status === 409) {
+            setMessage(data.message || '이미 등록된 이메일입니다');
+            setErrors({});
+            alert(data.message);
           } else {
             setMessage(data.message || '오류 발생');
           }
-        } catch {
+        } catch (error) {
           setMessage('서버 오류 발생');
         }
       };
+      
     
       const verifyEmailToken = async () => {
         if (!formData.verificationToken) {
@@ -193,6 +214,7 @@ const Studentsignup = () => {
                 {isVerifying ? '인증 중...' : '인증메일 전송'}
             </button>
           </div>
+          {errors.email && <p className="error">{errors.email}</p>}
           {emailVerificationMsg && (
             <p className={`verification-message ${emailVerified ? 'success' : 'info'}`}>
                 {emailVerificationMsg}
@@ -216,7 +238,6 @@ const Studentsignup = () => {
                 </button>
             </div>
           )}
-          {errors.email && <p className="error">{errors.email}</p>}
           {errors.emailVerified && <p className="error">{errors.emailVerified}</p>}
     
           <label>지갑 주소 (선택)</label>
@@ -232,9 +253,11 @@ const Studentsignup = () => {
     
           <button type="submit">가입하기</button>
     
-          {message && <p className="message">{message}</p>}
+          {/* {message && <p className="message">{message}</p>} */}
         </form>
       );
 };
 
 export default Studentsignup;
+
+//(409로 에러나면 이메일 중복)
