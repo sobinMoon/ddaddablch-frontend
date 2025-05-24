@@ -18,7 +18,6 @@ import OrganizationDetail from './pages/OrganizationDetail';
 import Post from './pages/Post';
 import CreatePost from './pages/CreatePost';
 import MetaMaskAuth from './components/MetaMaskAuth';
-import { AuthProvider } from './hooks/AuthContext';
 import LayoutForOrg from './layouts/LayoutForOrg';
 import OrgHome from './pages/Organization/OrgHome';
 import CreateCampaign from './pages/Organization/CreateCampaign';
@@ -27,7 +26,6 @@ import BeneficiaryWithdraw from './metamask/BeneficiaryWithdraw';
 
 function App() {
   return (
-    <AuthProvider>
       <Routes>
         <Route element={<LayoutwithNav />}>
           <Route path='/' element={<Home />} />
@@ -58,7 +56,6 @@ function App() {
           <Route path='/organization/beneficiary-withdraw' element={<BeneficiaryWithdraw />} />
         </Route>
       </Routes>
-    </AuthProvider>
   );
 }
 

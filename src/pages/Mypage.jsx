@@ -6,13 +6,12 @@ import Donations from '../components/mypage/Donations';
 import Notifications from '../components/mypage/Notifications';
 import Posts from '../components/mypage/Posts';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../hooks/AuthContext';
 import SERVER_URL from '../hooks/SeverUrl';
+
 export default function Mypage() {
     const [activeTab, setActiveTab] = useState('my');
     const [hasNewNotifications, setHasNewNotifications] = useState(true); // 임시로 true로 설정
     const navigate = useNavigate();
-    const { setUser } = useContext(AuthContext);
 
     const renderContent = () => {
         switch (activeTab) {
@@ -52,9 +51,7 @@ export default function Mypage() {
                 // 로컬 스토리지의 토큰들 제거
                 localStorage.removeItem('token');
                 localStorage.removeItem('refreshToken');
-                // Context의 사용자 정보 초기화
-                setUser(null);
-                // 로그인 페이지로 리다이렉트
+            
                 navigate('/login');
             } else {
                 alert(data.message || '로그아웃 중 오류가 발생했습니다.');

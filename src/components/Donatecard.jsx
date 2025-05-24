@@ -1,11 +1,9 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Donatecard.css';
-import { AuthContext } from '../hooks/AuthContext';
 
 export default function Donatecard({ goal, remaining, participants, onDonate}) {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
 
   const handleDonateClick = () => {
     // 토큰 확인
@@ -17,12 +15,7 @@ export default function Donatecard({ goal, remaining, participants, onDonate}) {
       return;
     }
 
-    // Context의 user 정보 확인
-    if (!user || user.type !== 'student') {
-      alert('학생계정 로그인이 필요한 서비스입니다.');
-      navigate('/login');
-      return;
-    }
+  
 
     // 학생 계정인 경우 기존 onDonate 함수 실행
     onDonate();

@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../hooks/AuthContext';
 import SERVER_URL from '../hooks/SeverUrl';
 
 export default function Login() {
@@ -13,7 +12,6 @@ export default function Login() {
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { setUser } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setFormData({
@@ -49,10 +47,6 @@ export default function Login() {
         localStorage.setItem('token', data.token);
         localStorage.setItem('refreshToken', data.refreshToken);
 
-        setUser({
-          email: formData.email,
-          type: userType,
-        });
 
         if (userType === 'student') {
           navigate('/');
