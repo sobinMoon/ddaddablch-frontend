@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './CreateCampaign.css';
 
-
 const categories = ['아동청소년', '노인', '환경', '동물', '장애인', '사회'];
 
 export default function CreateCampaign() {
@@ -21,6 +20,8 @@ export default function CreateCampaign() {
     const [donateEnd, setDonateEnd] = useState('');
     const [businessStart, setBusinessStart] = useState('');
     const [businessEnd, setBusinessEnd] = useState('');
+    const [walletAddress, setWalletAddress] = useState('');
+    const [logList, setLogList] = useState([]);
 
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -71,6 +72,35 @@ export default function CreateCampaign() {
             alert('이미지 파일만 업로드할 수 있습니다.');
         }
     };
+
+    const log = (text) => {
+        setLogList((prev) => [
+          ...prev,
+          `[${new Date().toLocaleTimeString()}] ${text}`,
+        ]);
+      };
+    
+    const connectWallet = async () => {
+        log("메타마스크 연결 시도...");
+        if (window.ethereum) {
+            try {
+                const accounts = await window.ethereum.request({
+                    method: "eth_requestAccounts",
+                });
+                setWalletAddress(accounts[0]);
+                setIsConnected(true); // ✅ 연결 성공 표시
+                log(`지갑 연결 성공: ${accounts[0]}`);
+                setStepEnabled((prev) => ({ ...prev, requestChallenge: true }));
+            } catch (err) {
+                log(`에러: ${err.message}`);
+            }
+        } else {
+            alert("메타마스크를 설치해주세요.");
+            log("메타마스크가 설치되어 있지 않습니다.");
+        }
+    };
+
+
 
     return (
         <div className="create-campaign-container">
@@ -250,7 +280,12 @@ export default function CreateCampaign() {
                 </div>
             </div>
 
-
+            <div className='create-campaign-address'>
+                <div className='create-campaign-label'>지갑 주소</div>
+                {walletAddress && <p className="create-campaign-address-content">{walletAddress}</p>}
+                <button className='create-campaign-address-button' onClick={connectWallet}>+ 지갑 주소 연결하기</button>
+            </div>
+            
             <button className="create-campaign-submit" onClick={handleSubmit}>
                 등록하기
             </button>

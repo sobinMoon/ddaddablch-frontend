@@ -13,7 +13,7 @@ function BeneficiaryWithdraw() {
   const [network, setNetwork] = useState(null);
 
 // 컨트랙트 주소 (Truffle migrate 후 콘솔에 표시된 주소)
-  const CONTRACT_ADDRESS = '0x2A916B47Bd9F6a3e8CEBb84A3133cF63c9086EE9';
+  const CONTRACT_ADDRESS = '0x2fFe751D7Cc8701EB1D60E9c965f2a90FE8cc67A';
 
   useEffect(() => {
     const connectWallet = async () => {
@@ -53,6 +53,10 @@ function BeneficiaryWithdraw() {
           const balance = await contractInstance.getBeneficiaryBalance(userAddress);
           setContractBalance(ethers.utils.formatEther(balance));
 
+          // const balance2= await contractInstance.getContractBalance();
+          // console.log("ETH 잔액:", ethers.utils.formatEther(balance2));
+
+          console.log("인출 전 잔액:", contractBalance);
 // 계정 변경 이벤트 리스너
           window.ethereum.on('accountsChanged', handleAccountsChanged);
           window.ethereum.on('chainChanged', () => window.location.reload());
@@ -114,6 +118,8 @@ function BeneficiaryWithdraw() {
 // 잔액 갱신
       const newBalance = await contract.getBeneficiaryBalance(account);
       setContractBalance(ethers.utils.formatEther(newBalance));
+      console.log("인출 후 잔액:", contractBalance);
+      
     } catch (error) {
       console.error("인출 오류:", error);
       alert('인출 처리 중 오류가 발생했습니다: ' + error.message);

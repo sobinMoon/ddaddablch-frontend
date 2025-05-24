@@ -46,16 +46,14 @@ export default function Login() {
       console.log(data);
 
       if (data.success) {
-        // 토큰을 로컬 스토리지에 저장
         localStorage.setItem('token', data.token);
         localStorage.setItem('refreshToken', data.refreshToken);
 
         setUser({
           email: formData.email,
-          type: userType, // 'student' 또는 'organization'
+          type: userType,
         });
 
-        // 로그인 성공 시 홈페이지로 이동
         if (userType === 'student') {
           navigate('/');
         } else {

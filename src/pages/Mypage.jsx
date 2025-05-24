@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './Mypage.css';
 import defaultProfile from '../assets/cat.jpg';
 import MyInfo from '../components/mypage/MyInfo';
 import Donations from '../components/mypage/Donations';
 import Notifications from '../components/mypage/Notifications';
 import Posts from '../components/mypage/Posts';
-
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../hooks/AuthContext';
+import SERVER_URL from '../hooks/SeverUrl';
 export default function Mypage() {
     const [activeTab, setActiveTab] = useState('my');
     const [hasNewNotifications, setHasNewNotifications] = useState(true); // 임시로 true로 설정
+    const navigate = useNavigate();
+    const { setUser } = useContext(AuthContext);
 
     const renderContent = () => {
         switch (activeTab) {
@@ -22,6 +26,42 @@ export default function Mypage() {
                 return <Posts />;
             default:
                 return null;
+        }
+    };
+
+    const handleLogout = async () => {
+        try {
+            const refreshToken = localStorage.getItem('refreshToken');
+            
+            if (!refreshToken) {
+                alert('로그인 정보가 없습니다.');
+                return;
+            }
+
+            const response = await fetch(`${SERVER_URL}/auth/logout`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ refreshToken })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // 로컬 스토리지의 토큰들 제거
+                localStorage.removeItem('token');
+                localStorage.removeItem('refreshToken');
+                // Context의 사용자 정보 초기화
+                setUser(null);
+                // 로그인 페이지로 리다이렉트
+                navigate('/login');
+            } else {
+                alert(data.message || '로그아웃 중 오류가 발생했습니다.');
+            }
+        } catch (error) {
+            console.error('로그아웃 중 오류:', error);
+            alert('로그아웃 중 오류가 발생했습니다.');
         }
     };
 
@@ -68,6 +108,11 @@ export default function Mypage() {
                     </button>
                 </div>
                 {renderContent()}
+            </div>
+            <div className="mypage-footer">
+                <button className="logout-btn" onClick={handleLogout}>
+                    로그아웃
+                </button>
             </div>
         </div>
     );

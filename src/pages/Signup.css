@@ -46,7 +46,7 @@ h2 {
     width: 100%;
 }
 
-.student-signup label {
+.student-signup label:not(.profileimage-upload) {
     margin-top: 18px;
     margin-bottom: 5px;
     display: block;
@@ -237,7 +237,17 @@ h2 {
     background-color: #cccccc;
     cursor: not-allowed;
 }
-
+.org-description-textarea {
+    resize: none;
+    width: 100%;
+    height: 180px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+    
 .profileimage-upload-wrapper {
     display: flex;
     align-items: center;
@@ -265,6 +275,8 @@ h2 {
     color: #888;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    margin: 0;
+    font-weight: normal;
 }
 
 .profileimage-upload:hover {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 import './Comments.css';
 import SERVER_URL from '../hooks/SeverUrl';
 
@@ -12,6 +13,7 @@ const formatDate = (date) => {
 };
 
 export default function Comments({ campaignId }) {
+  const navigate = useNavigate();
   const MAX_LENGTH = 200;
   const [comments, setComments] = useState([]);
   const [input, setInput] = useState('');
@@ -20,7 +22,6 @@ export default function Comments({ campaignId }) {
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
 
-  // 댓글 목록 조회
   const fetchComments = async (page = 0) => {
     try {
       const token = localStorage.getItem('token');
@@ -47,6 +48,7 @@ export default function Comments({ campaignId }) {
           liked: comment.liked,
           userId: comment.studentUser.id
         }));
+        console.log(formattedComments);
         setComments(formattedComments);
         setTotalPages(data.result.totalPages);
         setTotalElements(data.result.totalElements);
@@ -60,18 +62,55 @@ export default function Comments({ campaignId }) {
     fetchComments(currentPage);
   }, [campaignId, currentPage]);
 
+  const refreshToken = async () => {
+    try {
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (!refreshToken) {
+        throw new Error('No refresh token');
+      }
+
+      const response = await fetch(`${SERVER_URL}/api/v1/auth/refresh`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          refreshToken: refreshToken
+        })
+      });
+
+      const data = await response.json();
+      if (data.isSuccess) {
+        localStorage.setItem('token', data.result.token);
+        localStorage.setItem('refreshToken', data.result.refreshToken);
+        return data.result.token;
+      } else {
+        throw new Error('Token refresh failed');
+      }
+    } catch (error) {
+      console.error('Token refresh error:', error);
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      navigate('/login');
+      throw error;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (input.trim() === '') return;
 
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError('로그인이 필요합니다.');
-        return;
-      }
+    let token = localStorage.getItem('token');
+    console.log('현재 토큰:', token);
 
-      const response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaignId}/comments`, {
+    if (!token) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login');
+      return;
+    }
+
+    try {
+      let response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaignId}/comments`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -82,37 +121,56 @@ export default function Comments({ campaignId }) {
         })
       });
 
+      // 토큰이 만료된 경우
+      if (response.status === 401) {
+        token = await refreshToken();
+        response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaignId}/comments`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            content: input.trim()
+          })
+        });
+      }
+
       const data = await response.json();
+      console.log('서버 응답:', data);
       
       if (data.isSuccess) {
-        fetchComments(0); // 첫 페이지로 돌아가서 새로고침
+        fetchComments(0);
         setInput('');
         setError('');
       } else {
         setError(data.message || '댓글 작성에 실패했습니다.');
       }
     } catch (err) {
-      setError('서버 오류가 발생했습니다.');
       console.error('댓글 작성 중 오류:', err);
+      setError('서버 오류가 발생했습니다.');
     }
   };
 
   const handleLike = async (commentId, userId) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError('로그인이 필요합니다.');
-        return;
-      }
+    let token = localStorage.getItem('token');
+    console.log('좋아요 토큰:', token);
 
+    if (!token) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login');
+      return;
+    }
+
+    try {
       // 본인 댓글인지 확인
       const currentUserId = JSON.parse(localStorage.getItem('user'))?.id;
       if (currentUserId === userId) {
-        setError('본인의 댓글은 좋아요할 수 없습니다.');
+        alert('본인의 댓글은 좋아요할 수 없습니다.');
         return;
       }
 
-      const response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaignId}/comments/${commentId}/likes`, {
+      let response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaignId}/comments/${commentId}/likes`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -120,16 +178,29 @@ export default function Comments({ campaignId }) {
         }
       });
 
+      // 토큰이 만료된 경우
+      if (response.status === 401) {
+        token = await refreshToken();
+        response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaignId}/comments/${commentId}/likes`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
+      }
+
       const data = await response.json();
+      console.log('좋아요 서버 응답:', data);
+      
       if (data.isSuccess) {
-        // 좋아요 성공 시 댓글 목록 새로고침
         fetchComments(currentPage);
       } else {
-        setError(data.message || '좋아요 처리에 실패했습니다.');
+        alert(data.message || '좋아요 처리에 실패했습니다.');
       }
     } catch (err) {
       console.error('좋아요 처리 중 오류:', err);
-      setError('서버 오류가 발생했습니다.');
+      alert('서버 오류가 발생했습니다.');
     }
   };
 

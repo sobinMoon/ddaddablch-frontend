@@ -37,7 +37,7 @@ export default function Campaign() {
   }, [id]);
 
   const onDonate = () => {
-    navigate(`/donate/metamask`);
+    navigate(`/donate/metamask-auth`, { state: { campaign } });
   };
 
   if (!campaign) return <div></div>;
@@ -64,6 +64,7 @@ export default function Campaign() {
         <Progressbar current={campaign.currentAmount} goal={campaign.goal} />
         <p className='funding-period'>{campaign.donateStart} ~ {campaign.donateEnd}</p>
         <Donatecard 
+          campaignId={campaign.id}
           goal={campaign.goal}
           remaining={campaign.goal - campaign.currentAmount}
           participants={campaign.donateCount}

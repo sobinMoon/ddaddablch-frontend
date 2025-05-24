@@ -22,8 +22,7 @@ import { AuthProvider } from './hooks/AuthContext';
 import LayoutForOrg from './layouts/LayoutForOrg';
 import OrgHome from './pages/Organization/OrgHome';
 import CreateCampaign from './pages/Organization/CreateCampaign';
-import WithdrawFunds from './metamask/WithdrawFunds';
-import DonateComponent from './metamask/DonateComponent';
+import MetamaskDonate from './metamask/MetamaskDonate';
 import BeneficiaryWithdraw from './metamask/BeneficiaryWithdraw';
 
 function App() {
@@ -44,8 +43,8 @@ function App() {
             <Route path='plan' element={<Campaignplan />} />
             <Route path='news' element={<Campaignnews />} />
           </Route>
-          <Route path='/donate/metamask' element={<MetaMaskAuth />} />
-          <Route path='/donate/donate-component' element={<DonateComponent />} />
+          <Route path='/donate/metamask-auth' element={<MetaMaskAuth />} />
+          <Route path='/donate/metamask-donate' element={<MetamaskDonate />} />
         </Route>
 
         <Route element={<LayoutwithoutNav />}>
@@ -56,7 +55,6 @@ function App() {
         <Route element={<LayoutForOrg />}>
           <Route path='/organization/home' element={<OrgHome />} />
           <Route path='/organization/create-campaign' element={<CreateCampaign />} />
-          <Route path='/organization/withdraw-funds' element={<WithdrawFunds />} />
           <Route path='/organization/beneficiary-withdraw' element={<BeneficiaryWithdraw />} />
         </Route>
       </Routes>

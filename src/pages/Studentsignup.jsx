@@ -27,11 +27,38 @@ const Studentsignup = () => {
       const [isVerifying, setIsVerifying] = useState(false);
       const [verificationCheckInterval, setVerificationCheckInterval] = useState(null);
     
+      const isValidEmail = (email) => {
+        const emailRegex = /^[^\s@]+@sookmyung\.ac\.kr$/;
+        return emailRegex.test(email);
+      };
+    
       const handleChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-        if (e.target.name === 'nickname') {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        
+        if (name === 'nickname') {
           setIsNicknameAvailable(null);
           setNicknameCheckMsg('');
+        }
+        
+        if (name === 'email') {
+          if (!value) {
+            setErrors(prev => ({ ...prev, email: '이메일은 필수입니다.' }));
+          } else if (!isValidEmail(value)) {
+            setErrors(prev => ({ ...prev, email: '숙명여대 이메일(@sookmyung.ac.kr)만 사용 가능합니다.' }));
+          } else {
+            setErrors(prev => {
+              const newErrors = { ...prev };
+              delete newErrors.email;
+              return newErrors;
+            });
+          }
+        } else if (errors[name]) {
+          setErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors[name];
+            return newErrors;
+          });
         }
       };
     
@@ -39,7 +66,7 @@ const Studentsignup = () => {
         const newErrors = {};
         if (!formData.name) newErrors.name = '이름은 필수입니다.';
         if (!formData.email) newErrors.email = '이메일은 필수입니다.';
-        else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = '이메일 형식이 올바르지 않습니다.';
+        else if (!isValidEmail(formData.email)) newErrors.email = '숙명여대 이메일(@sookmyung.ac.kr)만 사용 가능합니다.';
         if (!formData.password) newErrors.password = '비밀번호는 필수입니다.';
         if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
         if (!emailVerified) newErrors.emailVerified = '이메일 인증을 완료해주세요.';
@@ -209,7 +236,7 @@ const Studentsignup = () => {
             <button 
                 type="button" 
                 onClick={sendVerificationEmail}
-                disabled={isVerifying || !formData.email}
+                disabled={isVerifying || !formData.email || !isValidEmail(formData.email)}
             >
                 {isVerifying ? '인증 중...' : '인증메일 전송'}
             </button>

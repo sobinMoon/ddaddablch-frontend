@@ -188,8 +188,6 @@
 
 }
 
-
-
 .create-campaign-submit {
     padding: 12px;
     margin-top: 42px;
@@ -205,3 +203,30 @@
 .create-campaign-submit:hover {
     background-color: #0056b3;
 }
+
+.create-campaign-address-button{
+    font-size: 0.9rem;
+    padding: 12px;
+    margin-top: 5px;
+    background-color: #efefef;
+    color: #888;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.create-campaign-address-button:hover{
+    background-color: #e6f3ff;
+    color: #0071ce;
+}   
+
+  .create-campaign-address-content {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #dee2e6;
+    box-sizing: border-box;
+    border-radius: 6px;
+    margin: 0 0 8px 0;
+  }

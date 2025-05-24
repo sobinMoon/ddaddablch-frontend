@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import Web3 from "web3";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./MetaMaskAuth.css"; // CSS 분리
 import SERVER_URL from '../hooks/SeverUrl';
 
 const API_BASE_URL = `${SERVER_URL}/wallet/auth`; // 백엔드 주소
 
 const MetaMaskAuth = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const campaign = location.state?.campaign;
+
   const [walletAddress, setWalletAddress] = useState("");
   const [message, setMessage] = useState("");
   const [signature, setSignature] = useState("");
@@ -103,7 +108,7 @@ const connectWallet = async () => {
       if (res.ok && data.success) {
         log("✅ 인증 성공!");
         alert("인증 성공!");
-        window.location.href = '/donate/donate-component';
+        navigate('/donate/metamask-donate', { state: { campaign } });
       } else {
         log("❌ 인증 실패!");
       }

@@ -21,8 +21,38 @@ export default function Orgsignup() {
   const [emailVerificationMsg, setEmailVerificationMsg] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
 
+  const isValidEmail = (email) => {
+    return /\S+@\S+\.\S+/.test(email);
+  };
+
   const handleChange = e => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, profileImage: reader.result });
+        if (errors.profileImage) {
+          setErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors.profileImage;
+            return newErrors;
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const validate = () => {
@@ -30,10 +60,12 @@ export default function Orgsignup() {
     if (!formData.name) newErrors.name = '기관명은 필수입니다.';
     if (!formData.businessNumber) newErrors.businessNumber = '사업자 등록번호는 필수입니다.';
     if (!formData.email) newErrors.email = '이메일은 필수입니다.';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = '이메일 형식이 올바르지 않습니다.';
+    else if (!isValidEmail(formData.email)) newErrors.email = '이메일 형식이 올바르지 않습니다.';
     if (!formData.password) newErrors.password = '비밀번호는 필수입니다.';
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
     if (!emailVerified) newErrors.emailVerified = '이메일 인증을 완료해주세요.';
+    if (!formData.description) newErrors.description = '소개글은 필수입니다.';
+    if (!formData.profileImage) newErrors.profileImage = '프로필 이미지는 필수입니다.';
     return newErrors;
   };
 
@@ -124,16 +156,18 @@ export default function Orgsignup() {
       <input type="text" name="businessNumber" value={formData.businessNumber} onChange={handleChange} placeholder="사업자 등록번호를 입력해주세요" />
       {errors.businessNumber && <p className="error">{errors.businessNumber}</p>}
 
-      <label>소개글</label>
+      <label>소개글*</label>
       <textarea 
+        className='org-description-textarea'
         name="description" 
         value={formData.description} 
         onChange={handleChange} 
-        placeholder="소개글을 입력해주세요 "
+        placeholder="소개글을 입력해주세요"
         rows="4"
       />
+      {errors.description && <p className="error">{errors.description}</p>}
 
-      <label>프로필 이미지</label>
+      <label>프로필 이미지*</label>
       <div className="profileimage-upload-wrapper">
         {formData.profileImage && (
           <img src={formData.profileImage} alt="프로필 미리보기" className="profileimage-preview" />
@@ -145,19 +179,11 @@ export default function Orgsignup() {
           id="profileImageInput"
           type="file"
           accept="image/*"
-          onChange={(e) => {
-            const file = e.target.files[0];
-            if (file) {
-              const reader = new FileReader();
-              reader.onloadend = () => {
-                setFormData({ ...formData, profileImage: reader.result });
-              };
-              reader.readAsDataURL(file);
-            }
-          }}
+          onChange={handleImageChange}
           style={{ display: 'none' }}
         />
       </div>
+      {errors.profileImage && <p className="error">{errors.profileImage}</p>}
 
       <label>이메일*</label>
       <div className="email-verification-container">
@@ -169,7 +195,11 @@ export default function Orgsignup() {
           disabled={isVerifying}
           placeholder="example@organization.com"
         />
-        <button type="button" onClick={sendVerificationEmail} disabled={isVerifying || !formData.email}>
+        <button 
+          type="button" 
+          onClick={sendVerificationEmail} 
+          disabled={isVerifying || !formData.email || !isValidEmail(formData.email)}
+        >
           {isVerifying ? '전송 중...' : '인증메일 전송'}
         </button>
       </div>
