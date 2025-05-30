@@ -112,7 +112,14 @@ function MetamaskDonate() {
       await tx.wait();
       toast.success('성공적으로 기부되었습니다!');
       
-      navigate(`/donate/campaign/${campaign.id}`);
+      navigate(`/donate/campaign/${campaign.id}`, {
+        state: {
+          showDonationModal: true,
+          donationAmount: donateAmount,
+          campaignName: campaign.name,
+          campaignCategory: campaign.category
+        }
+      });
     } catch (error) {
       console.error("기부 오류:", error);
       toast.error('기부 처리 중 오류가 발생했습니다: ' + error.message);
