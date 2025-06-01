@@ -8,12 +8,21 @@ export default function Community() {
     const location = useLocation();
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
-    const postsPerPage = 8;
+    const [posts, setPosts] = useState([]);
+    const [pagination, setPagination] = useState({
+        totalPage: 0,
+        totalElements: 0,
+        isFirst: true,
+        isLast: false,
+        listSize: 8
+    });
 
     useEffect(() => {
-        const page = new URLSearchParams(location.search).get('page');
-        if (page) {
-            setCurrentPage(parseInt(page));
+        const pageParam = parseInt(new URLSearchParams(location.search).get('page'));
+        if (pageParam && !isNaN(pageParam) && pageParam > 0) {
+            setCurrentPage(pageParam);
+        } else {
+            setCurrentPage(1); // 잘못된 page 값일 경우 기본값
         }
 
         // 저장된 스크롤 위치가 있으면 복원
@@ -24,21 +33,30 @@ export default function Community() {
         }
     }, [location.search]);
 
-    // Mock data
-    const mockPosts = Array.from({ length: 100 }, (_, index) => ({
-        id: index + 1,
-        title: `'모두를 위한 무장애 환경 : 누구나 누리는 사회'에 기부했어요`,
-        content: `'모두를 위한 무장애 환경 : 누구나 누리는 사회' 모금함에 0.12315ETH 기부했어요!! 송이들도 같이 참여해요'모두를 위한 무장애 환경 : 누구나 누리는 사회' 모금함에 0.12315ETH 기부했어요!! 송이들도 같이 참여해요'모두를 위한 무장애 환경 : 누구나 누리는 사회' 모금함에 0.12315ETH 기부했어요!! 송이들도 같이 참여해요'모두를 위한 무장애 환경 : 누구나 누리는 사회' 모금함에 0.12315ETH 기부했어요!! 송이들도 같이 참여해요`,
-        comment_count: 10,
-        like_count: 10,
-        created_at: '1시간 전',
-        nickname: '닉네임'
-    }));
 
-    const totalPages = Math.ceil(mockPosts.length / postsPerPage);
-    const startIndex = (currentPage - 1) * postsPerPage;
-    const endIndex = startIndex + postsPerPage;
-    const currentPosts = mockPosts.slice(startIndex, endIndex);
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await fetch(`/api/v1/posts?page=${currentPage}`);
+                const data = await response.json();
+
+                if (data.isSuccess) {
+                    setPosts(data.result.postList);
+                    setPagination({
+                        totalPage: data.result.totalPage,
+                        totalElements: data.result.totalElements,
+                        isFirst: data.result.isFirst,
+                        isLast: data.result.isLast,
+                        listSize: data.result.listSize
+                    });
+                }
+            } catch (error) {
+                console.error('게시글을 불러오는 중 오류가 발생했습니다:', error);
+            }
+        };
+
+        fetchPosts();
+    }, [currentPage]);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -54,18 +72,18 @@ export default function Community() {
     const renderPagination = () => {
         const pageNumbers = [];
         const maxVisiblePages = 5; // 보여줄 페이지 번호 개수
-        
+
         // 현재 페이지 주변의 페이지 번호 계산
         let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-        
+        let endPage = Math.min(pagination.totalPage, startPage + maxVisiblePages - 1);
+
         // 시작 페이지 조정
         if (endPage - startPage + 1 < maxVisiblePages) {
             startPage = Math.max(1, endPage - maxVisiblePages + 1);
         }
 
         // 이전 페이지 버튼
-        if (currentPage > 1) {
+        if (!pagination.isFirst) {
             pageNumbers.push(
                 <button
                     key="prev"
@@ -107,23 +125,23 @@ export default function Community() {
         }
 
         // 마지막 페이지
-        if (endPage < totalPages) {
-            if (endPage < totalPages - 1) {
+        if (endPage < pagination.totalPage) {
+            if (endPage < pagination.totalPage - 1) {
                 pageNumbers.push(<span key="end-ellipsis" className="community-page-ellipsis">...</span>);
             }
             pageNumbers.push(
                 <button
-                    key={totalPages}
+                    key={pagination.totalPage}
                     className="community-page-btn"
-                    onClick={() => handlePageChange(totalPages)}
+                    onClick={() => handlePageChange(pagination.totalPage)}
                 >
-                    {totalPages}
+                    {pagination.totalPage}
                 </button>
             );
         }
 
         // 다음 페이지 버튼
-        if (currentPage < totalPages) {
+        if (!pagination.isLast) {
             pageNumbers.push(
                 <button
                     key="next"
@@ -145,8 +163,12 @@ export default function Community() {
                     <h2 className="community-title">커뮤니티</h2>
                 </div>
                 <div className="community-posts">
-                    {currentPosts.map((post, index) => (
-                        <Postcard key={post.id} onPostClick={handlePostClick} />
+                    {posts.map((post) => (
+                        <Postcard
+                            key={post.postId}
+                            post={post}
+                            onPostClick={handlePostClick}
+                        />
                     ))}
                 </div>
                 <div className="community-pagination">

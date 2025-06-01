@@ -5,7 +5,7 @@ import { AiOutlineHeart } from 'react-icons/ai';
 import { FaRegCommentDots } from "react-icons/fa";
 import { Link, useLocation } from 'react-router-dom';
 
-export default function Postcard({ onPostClick }) {
+export default function Postcard({ post, onPostClick }) {
     const location = useLocation();
     const currentPage = new URLSearchParams(location.search).get('page') || '1';
 
@@ -15,39 +15,42 @@ export default function Postcard({ onPostClick }) {
         }
     };
 
+    // 날짜 포맷팅 함수
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+    };
+
     return (
         <div className="post-card">
             <div className="post-card-content">
                 <Link 
-                    to={`/community/post/1?fromPage=${currentPage}`} 
+                    to={`/community/post/${post.postId}?fromPage=${currentPage}`} 
                     className="post-card-title-link"
                     onClick={handleClick}
                 >
-                    <h3 className="post-card-title">'모두를 위한 무장애 환경 : 누구나 누리는 사회'에 기부했어요</h3>
+                    <h3 className="post-card-title">{post.title}</h3>
                 </Link>
-                <p className="post-card-preview">'모두를 위한 무장애 환경 : 누구나 누리는 사회' 모금함에 0.12315ETH 기부했어요!!
-                송이들도 같이 참여해요'모두를 위한 무장애 환경 : 누구나 누리는 사회' 모금함에 0.12315ETH 기부했어요!!
-                송이들도 같이 참여해요'모두를 위한 무장애 환경 : 누구나 누리는 사회' 모금함에 0.12315ETH 기부했어요!!
-                송이들도 같이 참여해요'모두를 위한 무장애 환경 : 누구나 누리는 사회' 모금함에 0.12315ETH 기부했어요!!
-                송이들도 같이 참여해요</p>
+                <p className="post-card-preview">{post.previewContent}</p>
                 <div className="post-card-info">
                     <span className="post-card-comment">
                         <FaRegCommentDots className="post-card-comment-icon" /> 
-                        <span className="post-card-comment-text">10</span>
+                        <span className="post-card-comment-text">{post.commentCount}</span>
                     </span>
                     <span className="post-card-likes">
                         <AiOutlineHeart className="post-card-heart-icon" /> 
-                        <span className="post-card-likes-text">10</span>
+                        <span className="post-card-likes-text">{post.likeCount}</span>
                     </span>
                     <span>|</span>
-                    <span className="post-card-time">15:42</span>
+                    <span className="post-card-time">{formatDate(post.createdAt)}</span>
                     <span>|</span>
-                    <span className="post-card-nickname">닉네임</span>
+                    <span className="post-card-nickname">{post.studentUser.nickname}</span>
                 </div>
             </div>
 
-            <img src={defaultImage} alt="post-image" className="post-card-image" />
-            
+            <img src={post.nft || defaultImage} alt="post-image" className="post-card-image" />
         </div>
     );
 }

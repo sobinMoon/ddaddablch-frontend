@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import './Post.css';
-import profileImage from '../assets/cat.jpg';
+import defaultImage from '../assets/cat.jpg';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { FaRegCommentDots } from "react-icons/fa";
 import Comments from '../components/Comments';
@@ -9,17 +9,44 @@ import { TfiMenuAlt } from "react-icons/tfi";
 
 export default function Post() {
     const [isLiked, setIsLiked] = useState(false);
+    const [post, setPost] = useState(null);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const location = useLocation();
-    const [likeCount, setLikeCount] = useState(10);
+    const { postId } = useParams();
 
     useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+        const fetchPost = async () => {
+            try {
+                const response = await fetch(`/api/v1/posts/${postId}`);
+                const data = await response.json();
+                
+                if (data.isSuccess) {
+                    setPost(data.result);
+                    setIsLiked(data.result.liked);
+                }
+            } catch (error) {
+                console.error('게시글을 불러오는 중 오류가 발생했습니다:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const handleLike = () => {
-        setIsLiked(!isLiked);
-        setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+        fetchPost();
+        window.scrollTo(0, 0);
+    }, [postId]);
+
+    const handleLike = async () => {
+        try {
+            // TODO: 좋아요 API 호출 구현
+            setIsLiked(!isLiked);
+            setPost(prev => ({
+                ...prev,
+                likeCount: isLiked ? prev.likeCount - 1 : prev.likeCount + 1
+            }));
+        } catch (error) {
+            console.error('좋아요 처리 중 오류가 발생했습니다:', error);
+        }
     };
 
     const handleList = () => {
@@ -27,50 +54,67 @@ export default function Post() {
         navigate(`/community?page=${fromPage}`);
     };
 
-    return <div className="post-container">
-        <p className="post-title">‘모두를 위한 무장애 환경 : 누구나 누리는 사회’에 기부했어요</p>
-        <div className="post-info">
-            <div className="post-info-left">
-                <span className='post-profile-image'>
-                    <img src={profileImage} alt="profile" />
-                </span>
-                <span className="post-nickname">닉네임</span>
-                <span>|</span>
-                <span className="post-time">04-12 15:42</span>
+    if (loading) {
+        return <div className="post-container">로딩 중...</div>;
+    }
+
+    if (!post) {
+        return <div className="post-container">게시글을 찾을 수 없습니다.</div>;
+    }
+
+    // 날짜 포맷팅 함수
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${month}-${day} ${hours}:${minutes}`;
+    };
+
+    return (
+        <div className="post-container">
+            <p className="post-title">{post.title}</p>
+            <div className="post-info">
+                <div className="post-info-left">
+                    <span className='post-profile-image'>
+                        <img src={post.studentUser.profileImage || defaultImage} alt="profile" />
+                    </span>
+                    <span className="post-nickname">{post.studentUser.nickname}</span>
+                    <span>|</span>
+                    <span className="post-time">{formatDate(post.createdAt)}</span>
+                </div>
+                <div className="post-info-right">
+                    <span className="post-card-comment">
+                        <FaRegCommentDots className="post-card-comment-icon" /> 
+                        <span className="post-card-comment-text">{post.commentCount}</span>
+                    </span>
+                    <span className="post-card-likes">
+                        <AiOutlineHeart className="post-card-heart-icon" /> 
+                        <span className="post-card-likes-text">{post.likeCount}</span>
+                    </span>
+                </div>
             </div>
-            <div className="post-info-right">
-                <span className="post-view">조회 18</span>
-                <span>|</span>
-                <span className="post-card-comment">
-                    <FaRegCommentDots className="post-card-comment-icon" /> 
-                    <span className="post-card-comment-text">10</span>
-                </span>
-                <span className="post-card-likes">
-                    <AiOutlineHeart className="post-card-heart-icon" /> 
-                    <span className="post-card-likes-text">10</span>
-                </span>
+
+            <div className="post-content">
+                <p className="post-content-text">
+                    {post.content}
+                </p>
+                {post.nft && <img className='post-content-image' src={post.nft} alt="post" />}
             </div>
-        </div>
 
-        <div className="post-content">
-            <p className="post-content-text">
-                '모두를 위한 무장애 환경 : 누구나 누리는 사회' 모금함에 0.12315ETH 기부했어요!!<br />
-                송이들도 같이 참여해요
-            </p>
-            <img className='post-content-image' src={profileImage} alt="profile" />
-        </div>
+            <div className="post-footer">
+                <button className="post-like-button" onClick={handleLike}>
+                    {isLiked ? <AiFillHeart className="post-like-icon liked" /> : <AiOutlineHeart className="post-like-icon" />}
+                    <span>좋아요 {post.likeCount}</span>
+                </button>
+                <button className="post-list-button" onClick={handleList}>
+                    <TfiMenuAlt className="post-menu-icon" />       
+                    <span>목록</span>
+                </button>
+            </div>
 
-        <div className="post-footer">
-            <button className="post-like-button" onClick={handleLike}>
-                {isLiked ? <AiFillHeart className="post-like-icon liked" /> : <AiOutlineHeart className="post-like-icon" />}
-                <span>좋아요 {likeCount} </span>
-            </button>
-            <button className="post-list-button" onClick={handleList}>
-                <TfiMenuAlt className="post-menu-icon" />       
-                <span>목록</span>
-            </button>
+            <Comments postId={postId} />
         </div>
-
-        <Comments />
-    </div>;
+    );
 }
