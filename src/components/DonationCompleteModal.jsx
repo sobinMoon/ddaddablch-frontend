@@ -1,18 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DonationCompleteModal.css';
-import defaultImage from '../assets/IMG_animal.jpg';
+import defaultImage1 from '../assets/IMG_environment.png';
+import defaultImage2 from '../assets/IMG_animal.png';
+import defaultImage3 from '../assets/IMG_elderly.png';
+import defaultImage4 from '../assets/IMG_children.png';
+import defaultImage5 from '../assets/IMG_disabled.png';
 import { IoClose } from "react-icons/io5";
+import { createDonationImage } from '../hooks/imageUtils';
 
 function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
   const navigate = useNavigate();
+  const [compositeImage, setCompositeImage] = useState(null);
+
+  useEffect(() => {
+    if (isOpen && donationInfo) {
+      createDonationImage(defaultImage2, donationInfo)
+        .then(imageUrl => {
+          setCompositeImage(imageUrl);
+        })
+        .catch(error => {
+          console.error('이미지 합성 실패:', error);
+          setCompositeImage(defaultImage2);
+        });
+    }
+  }, [isOpen, donationInfo]);
 
   const handleShare = () => {
-    onClose(); // 모달 닫기
-    // 이미지 URL을 state로 전달
+    onClose();
     navigate('/community/create-post', {
       state: {
-        defaultImage: defaultImage,
+        defaultImage: compositeImage || defaultImage2,
         donationInfo: donationInfo
       }
     });
@@ -33,7 +51,11 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
           <p className='donation-modal-info-text'>NFT 인증서가 발급되었어요</p>
           {/*<p>캠페인: {donationInfo.campaignName}</p>*/}
           {/*<p>기부 금액: {donationInfo.amount} ETH</p>*/}
-          <img className='donation-modal-img' src={defaultImage} alt="캠페인 이미지" />
+          <img 
+            className='donation-modal-img' 
+            src={compositeImage || defaultImage2} 
+            alt="기부 인증서" 
+          />
         </div>
         <div className="modal-actions">
           <button onClick={handleShare}>커뮤니티에 공유하기</button>

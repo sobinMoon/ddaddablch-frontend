@@ -17,7 +17,7 @@ function MetamaskDonate() {
   const [platformFee, setPlatformFee] = useState(0);
   const [loading, setLoading] = useState(false);
   const [validationError, setValidationError] = useState('');
-  const contractAddress = '0x2fFe751D7Cc8701EB1D60E9c965f2a90FE8cc67A';
+  const contractAddress = '0x1057853d7eC04BB66ECFf3BABe6c94aCbC074beb';
 
   // 지갑 연결 상태 확인 함수
   const checkWalletConnection = async () => {

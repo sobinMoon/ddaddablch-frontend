@@ -13,7 +13,7 @@ function BeneficiaryWithdraw() {
   const [network, setNetwork] = useState(null);
 
 // 컨트랙트 주소 (Truffle migrate 후 콘솔에 표시된 주소)
-  const CONTRACT_ADDRESS = '0x2fFe751D7Cc8701EB1D60E9c965f2a90FE8cc67A';
+  const CONTRACT_ADDRESS = '0x1057853d7eC04BB66ECFf3BABe6c94aCbC074beb';
 
   useEffect(() => {
     const connectWallet = async () => {

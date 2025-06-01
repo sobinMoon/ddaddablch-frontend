@@ -6,52 +6,39 @@ import Progressbar from '../components/Progressbar';
 import Donatecard from '../components/Donatecard';
 import Comments from '../components/Comments';
 import Orgcard from '../components/Orgcard';
-import DonationCompleteModal from '../components/DonationCompleteModal';
 import SERVER_URL from '../hooks/SeverUrl';
+import DonationCompleteModal from '../components/DonationCompleteModal';
 
 export default function Campaign() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  
-  // 임시 캠페인 데이터
-  const [campaign, setCampaign] = useState({
-    id: 1,
-    name: "테스트 캠페인",
-    description: "이것은 테스트 캠페인입니다.",
-    imageUrl: defaultImage,
-    goal: 10000000,
-    currentAmount: 5000000,
-    donateCount: 25,
-    donateStart: "2024-03-01",
-    donateEnd: "2024-04-01",
-    organization: {
-      id: 1,
-      name: "테스트 단체",
-      description: "테스트 단체 설명입니다.",
-      imageUrl: defaultImage
+  const [showDonationModal, setShowDonationModal] = useState(false);
+  const [donationInfo, setDonationInfo] = useState(null);
+
+  const [campaign, setCampaign] = useState(null);
+
+  useEffect(() => {
+    if (location.state?.showDonationModal) {
+      setShowDonationModal(true);
+      setDonationInfo({
+        amount: location.state.donationAmount,
+        campaignName: location.state.campaignName,
+        category: location.state.campaignCategory
+      });
     }
-  });
+  }, [location.state]);
 
-  const [showDonationModal, setShowDonationModal] = useState(true);
-  const [donationInfo, setDonationInfo] = useState({
-    amount: "0.1",
-    campaignName: campaign.name
-  });
-
-  // 서버 연동 부분 주석 처리
-  /*
   useEffect(() => {
     const fetchCampaign = async () => {
       try {
+        console.log(id);
         const res = await fetch(`${SERVER_URL}/api/v1/campaigns/${id}`);
+
         const data = await res.json();
         if (res.ok && data.isSuccess) {
           setCampaign(data.result);
-          setDonationInfo(prev => ({
-            ...prev,
-            campaignName: data.result.name
-          }));
+          console.log(data.result);
         } else {
           console.error('캠페인 정보를 불러오는 데 실패했습니다.');
         }
@@ -63,16 +50,22 @@ export default function Campaign() {
     fetchCampaign();
     window.scrollTo(0, 0);
   }, [id]);
-  */
 
   const onDonate = () => {
     navigate(`/donate/metamask-auth`, { state: { campaign } });
   };
 
+  if (!campaign) return <div></div>;
+
   return (
     <div className='campaign-wrap'>
+      <DonationCompleteModal 
+        isOpen={showDonationModal}
+        onClose={() => setShowDonationModal(false)}
+        donationInfo={donationInfo}
+      />
       <div className='left-wrap'>
-        <img className='camp-img' src={campaign.imageUrl} alt="캠페인 이미지" />
+        <img className='camp-img' src={campaign.imageUrl || defaultImage} alt="캠페인 이미지" />
         <div className='camp-tabs'>
           <NavLink to={`/donate/campaign/${id}`} end className='camp-tab'>캠페인 소개</NavLink>
           <NavLink to={`/donate/campaign/${id}/plan`} className='camp-tab'>사용 계획</NavLink>
@@ -98,12 +91,6 @@ export default function Campaign() {
           onDonate={onDonate}
         />
       </div>
-
-      <DonationCompleteModal
-        isOpen={showDonationModal}
-        onClose={() => setShowDonationModal(false)}
-        donationInfo={donationInfo}
-      />
     </div>
   );
 }
