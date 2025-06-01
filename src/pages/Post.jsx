@@ -113,8 +113,7 @@ export default function Post() {
                     <span>목록</span>
                 </button>
             </div>
-
-            <Comments postId={postId} />
+            <Comments type="post" id={postId} />
         </div>
     );
 }

@@ -12,7 +12,7 @@ const formatDate = (date) => {
   return `${year}.${month}.${day}`;
 };
 
-export default function Comments({ campaignId }) {
+export default function Comments({ type, id }) {
   const navigate = useNavigate();
   const MAX_LENGTH = 200;
   const [comments, setComments] = useState([]);
@@ -21,6 +21,16 @@ export default function Comments({ campaignId }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
+
+  // API 엔드포인트 결정
+  const getEndpoint = () => {
+    if (type === 'campaign') {
+      return `${SERVER_URL}/api/v1/campaigns/${id}/comments`;
+    } else if (type === 'post') {
+      return `${SERVER_URL}/api/v1/posts/${id}/comments`;
+    }
+    throw new Error('Invalid comment type');
+  };
 
   const fetchComments = async (page = 0) => {
     try {
@@ -32,26 +42,33 @@ export default function Comments({ campaignId }) {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaignId}/comments?page=${page}`, {
+      const endpoint = getEndpoint();
+      const response = await fetch(`${endpoint}?page=${page}`, {
         headers
       });
       const data = await response.json();
       
       if (data.isSuccess) {
-        const formattedComments = data.result.comments.map(comment => ({
-          id: comment.id,
+        // API 응답 형식에 따라 데이터 매핑
+        const formattedComments = (type === 'campaign' ? data.result.comments : data.result).map(comment => ({
+          id: type === 'campaign' ? comment.id : comment.postCommentId,
           content: comment.content,
           nickname: comment.studentUser.nickname,
           profileImage: comment.studentUser.profileImage,
           createdAt: formatDate(new Date(comment.createdAt)),
-          likes: comment.likes,
+          likes: type === 'campaign' ? comment.likes : comment.likeCount,
           liked: comment.liked,
           userId: comment.studentUser.id
         }));
-        console.log(formattedComments);
+
         setComments(formattedComments);
-        setTotalPages(data.result.totalPages);
-        setTotalElements(data.result.totalElements);
+        if (type === 'campaign') {
+          setTotalPages(data.result.totalPages);
+          setTotalElements(data.result.totalElements);
+        } else {
+          setTotalPages(1); // 포스트 댓글은 페이지네이션이 없는 경우
+          setTotalElements(formattedComments.length);
+        }
       }
     } catch (err) {
       console.error('댓글 목록 조회 중 오류:', err);
@@ -60,7 +77,7 @@ export default function Comments({ campaignId }) {
 
   useEffect(() => {
     fetchComments(currentPage);
-  }, [campaignId, currentPage]);
+  }, [id, currentPage, type]);
 
   const refreshToken = async () => {
     try {
@@ -101,8 +118,6 @@ export default function Comments({ campaignId }) {
     if (input.trim() === '') return;
 
     let token = localStorage.getItem('token');
-    console.log('현재 토큰:', token);
-
     if (!token) {
       alert('로그인이 필요한 서비스입니다.');
       navigate('/login');
@@ -110,7 +125,8 @@ export default function Comments({ campaignId }) {
     }
 
     try {
-      let response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaignId}/comments`, {
+      const endpoint = getEndpoint();
+      let response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -121,10 +137,9 @@ export default function Comments({ campaignId }) {
         })
       });
 
-      // 토큰이 만료된 경우
       if (response.status === 401) {
         token = await refreshToken();
-        response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaignId}/comments`, {
+        response = await fetch(endpoint, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -137,7 +152,6 @@ export default function Comments({ campaignId }) {
       }
 
       const data = await response.json();
-      console.log('서버 응답:', data);
       
       if (data.isSuccess) {
         fetchComments(0);
@@ -154,8 +168,6 @@ export default function Comments({ campaignId }) {
 
   const handleLike = async (commentId, userId) => {
     let token = localStorage.getItem('token');
-    console.log('좋아요 토큰:', token);
-
     if (!token) {
       alert('로그인이 필요한 서비스입니다.');
       navigate('/login');
@@ -163,14 +175,14 @@ export default function Comments({ campaignId }) {
     }
 
     try {
-      // 본인 댓글인지 확인
       const currentUserId = JSON.parse(localStorage.getItem('user'))?.id;
       if (currentUserId === userId) {
         alert('본인의 댓글은 좋아요할 수 없습니다.');
         return;
       }
 
-      let response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaignId}/comments/${commentId}/likes`, {
+      const endpoint = getEndpoint();
+      let response = await fetch(`${endpoint}/${commentId}/likes`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -178,10 +190,9 @@ export default function Comments({ campaignId }) {
         }
       });
 
-      // 토큰이 만료된 경우
       if (response.status === 401) {
         token = await refreshToken();
-        response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaignId}/comments/${commentId}/likes`, {
+        response = await fetch(`${endpoint}/${commentId}/likes`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -191,7 +202,6 @@ export default function Comments({ campaignId }) {
       }
 
       const data = await response.json();
-      console.log('좋아요 서버 응답:', data);
       
       if (data.isSuccess) {
         fetchComments(currentPage);

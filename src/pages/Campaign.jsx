@@ -76,7 +76,7 @@ export default function Campaign() {
         </div>
         <Orgcard organization={campaign.organization} />
         <h3 className="comment-title">댓글을 남겨 응원해주세요</h3>
-        <Comments campaignId={campaign.id} />
+        <Comments type="campaign" id={campaign.id} />
       </div>
 
       <div className='right-wrap'>
