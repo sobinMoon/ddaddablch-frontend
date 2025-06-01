@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import contractJSON from './contractABI.json';
 const contractABI = contractJSON.abi;
 import './MetamaskDonate.css';
+import SERVER_URL from '../hooks/SeverUrl';
 
 function MetamaskDonate() {
   const location = useLocation();
@@ -97,6 +98,62 @@ function MetamaskDonate() {
     return true;
   };
 
+  const recordDonation = async (transactionHash) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('로그인이 필요합니다.');
+      }
+
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user) {
+        throw new Error('사용자 정보를 찾을 수 없습니다.');
+      }
+
+      const response = await fetch(`${SERVER_URL}/api/donations/record`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          transactionHash,
+          donorWalletAddress: account,
+          campaignWalletAddress: campaign.walletAddress,
+          amount: parseFloat(donateAmount),
+          campaignId: campaign.id,
+          userId: user.id,
+          message: `${campaign.name}에 ${donateAmount} ETH 기부`
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 409) {
+          throw new Error('이미 기록된 트랜잭션입니다.');
+        } else if (response.status === 400) {
+          if (data.code === 'DONATION4002') {
+            throw new Error('유효하지 않은 트랜잭션입니다.');
+          } else {
+            throw new Error(data.message || '입력값이 올바르지 않습니다.');
+          }
+        } else {
+          throw new Error(data.message || '기부 기록 저장에 실패했습니다.');
+        }
+      }
+
+      if (!data.isSuccess) {
+        throw new Error(data.message || '기부 기록 저장에 실패했습니다.');
+      }
+
+      return true;
+    } catch (error) {
+      console.error('기부 기록 저장 중 오류:', error);
+      throw error;
+    }
+  };
+
   const handleDonate = async () => {
     if (!contract || !validateInputs()) return;
     
@@ -109,8 +166,16 @@ function MetamaskDonate() {
 
       toast.info('기부 트랜잭션이 진행 중입니다...');
       
-      await tx.wait();
+      const receipt = await tx.wait();
       toast.success('성공적으로 기부되었습니다!');
+
+      // 기부 기록 저장
+      try {
+        await recordDonation(receipt.transactionHash);
+      } catch (recordError) {
+        console.error('기부 기록 저장 실패:', recordError);
+        toast.warning('기부는 완료되었으나 기록 저장에 실패했습니다: ' + recordError.message);
+      }
       
       navigate(`/donate/campaign/${campaign.id}`, {
         state: {
