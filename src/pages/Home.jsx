@@ -9,7 +9,6 @@ import DonationReviews from '../components/DonationReviews'
 import SERVER_URL from '../hooks/SeverUrl';
 
 export default function Home() {
-  
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -29,9 +28,15 @@ export default function Home() {
 
         const result = await response.json();
         console.log(result);
-        setData(result);
+        
+        if (result.isSuccess && result.result) {
+          setData(result.result);
+        } else {
+          throw new Error('데이터 형식이 올바르지 않습니다.');
+        }
       } catch (err) {
         setError(err.message);
+        console.error('Error fetching home data:', err);
       } finally {
         setLoading(false);
       }
@@ -40,10 +45,13 @@ export default function Home() {
     fetchHomeCampaign();
   }, []);
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!data) return <div>No data available</div>;
 
-  const urgentCampaigns = data ? data.popular : [];
-  const newCampaigns = data ? data.latest : [];
-  const endingSoonCampaign = data ? data.endingSoon : [];
+  const urgentCampaigns = data.popular || [];
+  const newCampaigns = data.latest || [];
+  const endingSoonCampaign = data.endingSoon || [];
   
   return (
     <div className="home-wrap">

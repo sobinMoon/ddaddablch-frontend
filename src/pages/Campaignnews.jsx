@@ -76,7 +76,7 @@ export default function Campaignnews() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   return (
@@ -88,25 +88,32 @@ export default function Campaignnews() {
           <div className='no-news-message'>사업기간: {campaign.businessStart} ~ {campaign.businessEnd}</div>
         </div>
       )}
-      {/* {isOrg && (!campaign.campaignSpendings || campaign.campaignSpendings.length === 0) && (
+      {isOrg && (!campaign.campaignSpendings || campaign.campaignSpendings.length === 0) && (
         <button 
           className="create-news-button"
           onClick={handleCreateNews}
         >
           캠페인 소식 작성
         </button>
-      )} */}
+      )}
 
-        <button 
-          className="create-news-button"
-          onClick={handleCreateNews}
-        >
-          캠페인 소식 작성
-        </button>
      {campaign.campaignSpendings && campaign.campaignSpendings.length > 0 && (
       <div className='news-list-container'>
-        <h2>{campaign.campaignSpendings.title} 소식</h2>
-        <p>{campaign.campaignSpendings.content}</p>
+        <h2>{campaign.campaignUpdate.title} 소식</h2>
+        {campaign.campaignUpdate.imageUrl && (
+          <img 
+            src={campaign.campaignUpdate.imageUrl} 
+            alt="캠페인 소식 이미지" 
+            className="news-image"
+            style={{
+              maxWidth: '100%',
+              height: 'auto',
+              borderRadius: '8px',
+              marginBottom: '16px'
+            }}
+          />
+        )}
+        <p>{campaign.campaignUpdate.content}</p>
       </div>
      )}
     </div>

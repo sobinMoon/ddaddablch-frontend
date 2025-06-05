@@ -15,7 +15,7 @@ export default function Reviewcard({ campaign }) {
     };
 
     const handleClick = () => {
-        navigate(`/donate/campaign/${campaign.c_id}/news`);
+        navigate(`/donate/campaign/${campaign.id}/news`);
     };
 
     return (

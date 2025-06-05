@@ -8,12 +8,14 @@ import SERVER_URL from '../hooks/SeverUrl';
 export default function Navbar() {
     const [role, setRole] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchUserInfo = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
                 setIsLoggedIn(false);
+                setIsLoading(false);
                 return;
             }
 
@@ -37,11 +39,17 @@ export default function Navbar() {
             } catch (error) {
                 console.error('사용자 정보 요청 실패:', error);
                 setIsLoggedIn(false);
+            } finally {
+                setIsLoading(false);
             }
         };
 
         fetchUserInfo();
     }, []);
+
+    if (isLoading) {
+        return null; // 로딩 중에는 아무것도 렌더링하지 않음
+    }
 
     const getNavLinkClass = ({ isActive }) => (
         isActive ? 'navbar-link active' : 'navbar-link'
@@ -52,11 +60,11 @@ export default function Navbar() {
             <div className='org-navbar'
             style={{
                 backgroundColor: '#fff',
-                borderBottom: '1px solid #dee2e6',
                 display: 'flex',
-                justifyContent: 'center', // 중앙 정렬
+                justifyContent: 'center',
                 alignItems: 'center',
-                height: '70px' // 높이도 적당히 지정해주면 더 깔끔
+                height: '70px',
+                width: '100%'
             }}
         >
             <a href="/organization/home" className="navbar-logo"
@@ -64,49 +72,51 @@ export default function Navbar() {
                     fontSize: '1.5rem',
                     fontWeight: 'bold',
                     color: '#333',
-                    textDecoration: 'none'
+                    textDecoration: 'none',
+                    position: 'absolute',
+                    left: '50%',
+                    transform: 'translateX(-50%)'
                 }}
             >
                 Logo
             </a>
         </div>
-
         );
 
         return (
-            <ul className="navbar-menu">
-                <li><NavLink to="/" className={getNavLinkClass}>홈</NavLink></li>
-                <li><NavLink to="/donate" className={getNavLinkClass}>기부하기</NavLink></li>
-                <li><NavLink to="/reviews" className={getNavLinkClass}>모금후기</NavLink></li>
-                <li><NavLink to="/community" className={getNavLinkClass}>커뮤니티</NavLink></li>
-            </ul>
+            <>
+                <div className="navbar-left">
+                    <a href="/" className="navbar-logo">
+                        Logo
+                    </a>
+                </div>
+                <div className="navbar-center">
+                    <ul className="navbar-menu">
+                        <li><NavLink to="/" className={getNavLinkClass}>홈</NavLink></li>
+                        <li><NavLink to="/donate" className={getNavLinkClass}>기부하기</NavLink></li>
+                        <li><NavLink to="/reviews" className={getNavLinkClass}>모금후기</NavLink></li>
+                        <li><NavLink to="/community" className={getNavLinkClass}>커뮤니티</NavLink></li>
+                    </ul>
+                </div>
+                <div className="navbar-right">
+                    {isLoggedIn ? (
+                        <NavLink to="/mypage" className="profile-link">
+                            <img src={defaultProfile} alt="프로필" className="profile-img" />
+                        </NavLink>
+                    ) : (
+                        <a href="/login" className="navbar-login">로그인</a>
+                    )}
+                    <button className="navbar-search-icon" aria-label="검색">
+                        <IoSearchSharp />
+                    </button>
+                </div>
+            </>
         );
     };
 
     return (
         <nav className="navbar">
-            <div className="navbar-left">
-                <a href="/" className="navbar-logo">
-                    Logo
-                </a>
-            </div>
-
-            <div className="navbar-center">
                 {renderMenu()}
-            </div>
-
-            <div className="navbar-right">
-                {isLoggedIn ? (
-                    <NavLink to="/mypage" className="profile-link">
-                        <img src={defaultProfile} alt="프로필" className="profile-img" />
-                    </NavLink>
-                ) : (
-                    <a href="/login" className="navbar-login">로그인</a>
-                )}
-                <button className="navbar-search-icon" aria-label="검색">
-                    <IoSearchSharp />
-                </button>
-            </div>
         </nav>
     );
 }

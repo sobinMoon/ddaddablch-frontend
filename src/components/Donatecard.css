@@ -45,6 +45,11 @@
     transition: background-color 0.2s ease;
 }
 
-.donation-button:hover {
+.donation-button:hover:not(:disabled) {
     background-color: #005bb5;
+}
+
+.donation-button:disabled {
+    background-color: #0071ce;
+    cursor: default;
 }

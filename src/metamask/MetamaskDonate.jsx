@@ -18,7 +18,7 @@ function MetamaskDonate() {
   const [platformFee, setPlatformFee] = useState(0);
   const [loading, setLoading] = useState(false);
   const [validationError, setValidationError] = useState('');
-  const contractAddress = '0x1057853d7eC04BB66ECFf3BABe6c94aCbC074beb';
+  const contractAddress = '0x12b29c4ACB4f9E2C59eC21Ffa5a21e4E226e6419';
 
   // 페이지 진입 시 스크롤 맨 위로
   useEffect(() => {
@@ -107,13 +107,21 @@ function MetamaskDonate() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        throw new Error('로그인이 필요합니다.');
+        throw new Error('인증 정보를 찾을 수 없습니다.');
       }
 
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (!user) {
-        throw new Error('사용자 정보를 찾을 수 없습니다.');
+      // 사용자 정보 가져오기
+      const userResponse = await fetch(`${SERVER_URL}/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!userResponse.ok) {
+        throw new Error('사용자 정보를 가져오는데 실패했습니다.');
       }
+
+      const userData = await userResponse.json();
 
       const response = await fetch(`${SERVER_URL}/api/donations/record`, {
         method: 'POST',
@@ -127,7 +135,7 @@ function MetamaskDonate() {
           campaignWalletAddress: campaign.walletAddress,
           amount: parseFloat(donateAmount),
           campaignId: campaign.id,
-          userId: user.id,
+          userId: userData.id,
           message: `${campaign.name}에 ${donateAmount} ETH 기부`
         })
       });

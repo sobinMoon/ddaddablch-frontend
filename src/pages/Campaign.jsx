@@ -89,6 +89,7 @@ export default function Campaign() {
           remaining={campaign.goal - campaign.currentAmount}
           participants={campaign.donateCount}
           onDonate={onDonate}
+          campaignState={campaign.statusFlag}
         />
       </div>
     </div>

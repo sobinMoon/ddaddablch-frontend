@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Donatecard.css';
 import SERVER_URL from '../hooks/SeverUrl';
 
-export default function Donatecard({ goal, remaining, participants, onDonate}) {
+export default function Donatecard({ goal, remaining, participants, onDonate, campaignState}) {
   const navigate = useNavigate();
 
   const handleDonateClick = async () => {
@@ -70,7 +70,16 @@ export default function Donatecard({ goal, remaining, participants, onDonate}) {
         <span>{participants.toLocaleString()}명</span>
       </div>
 
-      <button className="donation-button" onClick={handleDonateClick}>기부하기</button>
+      <button 
+        className={`donation-button ${campaignState !== 'FUNDRAISING' ? 'disabled' : ''}`}
+        onClick={handleDonateClick}
+        disabled={campaignState !== 'FUNDRAISING'}
+        style={{
+          opacity: campaignState !== 'FUNDRAISING' ? 0.5 : 1
+        }}
+      >
+        {campaignState === 'FUNDRAISING' ? '기부하기' : '모금 종료'}
+      </button>
     </div>
   );
 }
