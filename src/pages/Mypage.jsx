@@ -12,17 +12,90 @@ export default function Mypage() {
     const [activeTab, setActiveTab] = useState('my');
     const [hasNewNotifications, setHasNewNotifications] = useState(true); // 임시로 true로 설정
     const navigate = useNavigate();
-
+    const userInfo = {
+        "isSuccess": true,
+        "code": "MYPAGE201",
+        "message": "학생 마이페이지가 성공적으로 조회되었습니다.",
+        "result": {
+            "walletAddresses": [],
+            "createdAt": "2025-05-28 22:39:05",
+            "totalDonationAmount": 5.00000000,
+            "totalDonationCount": 1,
+            "recentDonations": [
+                {
+                    "donationId": 3,
+                    "campaignName": "길고양이 구조, 함께해요",
+                    "donationAmount": 5.00000000,
+                    "donationDate": "2025-06-01 04:36:31",
+                    "transactionHash": "0x89258cc2007fff53f8488496697b295f8367f73fa3e1bedff7ebbeed577f8470",
+                    "donationStatus": "SUCCESS",
+                    "campaignImageUrl": "https://images.unsplash.com/photo-1651169007722-ce4a5fb6eaae?q=80&w=1958&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                }
+            ],
+            "recentPosts": [
+                {
+                    "postId": 1,
+                    "title": "캠페인제목",
+                    "createdAt": "2025-06-01 04:03:25",
+                    "likeCount": 0,
+                    "commentCount": 2,
+                    "pnft": "nft항목입니다요"
+                },
+                {
+                    "postId": 2,
+                    "title": "캠페인제목2",
+                    "createdAt": "2025-06-01 04:03:25",
+                    "likeCount": 10,
+                    "commentCount": 1,
+                }
+            ],
+            "recentComments": [],
+            "unreadNotifications": [
+                {
+                    "createdAt": "2025-06-01T04:37:54.622342",
+                    "updatedAt": "2025-06-01T04:37:54.622342",
+                    "notificationId": 4,
+                    "studentId": 140,
+                    "title": "새 댓글이 달렸습니다",
+                    "content": "메로나님이 회원님의 게시글에 댓글을 달았습니다",
+                    "notificationType": "POST_COMMENT",
+                    "relatedPostId": 1,
+                    "relatedDonationId": null,
+                    "isRead": false,
+                    "redirectUrl": "api/v1/posts/1"
+                },
+                {
+                    "createdAt": "2025-06-01T04:36:31.471224",
+                    "updatedAt": "2025-06-01T04:36:31.471224",
+                    "notificationId": 3,
+                    "studentId": 140,
+                    "title": "기부가 완료되었습니다",
+                    "content": "길고양이 구조, 함께해요 캠페인에 기부가 성공적으로 완료되었습니다",
+                    "notificationType": "DONATION_COMPLETE",
+                    "relatedPostId": null,
+                    "relatedDonationId": 3,
+                    "isRead": false,
+                    "redirectUrl": "/api/v1/campaigns/8"
+                }
+            ],
+            "sprofileImage": null,
+            "sid": 140,
+            "snickname": "me",
+            "sname": "김과연",
+            "semail": "seobeen624@sookmyung.ac.kr"
+        }
+    };
+    
     const renderContent = () => {
         switch (activeTab) {
             case 'my':
-                return <MyInfo />;
+                return <MyInfo userInfo={userInfo} setActiveTab={setActiveTab} />;
             case 'donations':
-                return <Donations />;
+                return <Donations recentDonations={userInfo.result.recentDonations} />;
             case 'notifications':
                 return <Notifications />;
             case 'posts':
-                return <Posts />;
+                return <Posts recentPosts={userInfo.result.recentPosts} />;
             default:
                 return null;
         }
@@ -62,14 +135,15 @@ export default function Mypage() {
         }
     };
 
+ 
     return (
         <div className="mypage-container">
             <div className="profile-section">
                 <div className="profile-info">
-                    <img src={defaultProfile} alt="프로필" className="profile-image" />
+                    <img src={userInfo.result.sprofileImage} alt="프로필" className="profile-image" />
                     <div className="profile-details">
                         <div className="profile-text">
-                            <h2 className="profile-nickname">닉네임</h2>
+                            <h2 className="profile-nickname">{userInfo.result.snickname}</h2>
                             <button className="edit-profile-btn">수정</button>
                         </div>
                     </div>
