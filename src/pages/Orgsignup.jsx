@@ -9,7 +9,6 @@ export default function Orgsignup() {
     email: '',
     password: '',
     confirmPassword: '',
-    walletAddress: '',
     verificationToken: '',
     description: '',
     profileImage: ''
@@ -25,15 +24,49 @@ export default function Orgsignup() {
     return /\S+@\S+\.\S+/.test(email);
   };
 
+  const formatBusinessNumber = (value) => {
+    // 숫자만 추출
+    const numbers = value.replace(/[^0-9]/g, '');
+    
+    // 10자리로 제한
+    const limitedNumbers = numbers.slice(0, 10);
+    
+    // 형식에 맞게 포맷팅
+    if (limitedNumbers.length <= 3) {
+      return limitedNumbers;
+    } else if (limitedNumbers.length <= 5) {
+      return `${limitedNumbers.slice(0, 3)}-${limitedNumbers.slice(3)}`;
+    } else {
+      return `${limitedNumbers.slice(0, 3)}-${limitedNumbers.slice(3, 5)}-${limitedNumbers.slice(5)}`;
+    }
+  };
+
   const handleChange = e => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    if (errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
+    
+    if (name === 'businessNumber') {
+      const formattedValue = formatBusinessNumber(value);
+      setFormData({ ...formData, [name]: formattedValue });
+      
+      // 형식 검증
+      if (formattedValue && !/^\d{3}-\d{2}-\d{5}$/.test(formattedValue)) {
+        setErrors(prev => ({ ...prev, businessNumber: '사업자 등록번호 형식이 올바르지 않습니다. (예: 000-00-00000)' }));
+      } else {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors.businessNumber;
+          return newErrors;
+        });
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+      if (errors[name]) {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[name];
+          return newErrors;
+        });
+      }
     }
   };
 
@@ -58,14 +91,14 @@ export default function Orgsignup() {
   const validate = () => {
     const newErrors = {};
     if (!formData.name) newErrors.name = '기관명은 필수입니다.';
-    if (!formData.businessNumber) newErrors.businessNumber = '사업자 등록번호는 필수입니다.';
+    if (formData.businessNumber && !/^[\d]{3}-[\d]{2}-[\d]{5}$/.test(formData.businessNumber)) {
+      newErrors.businessNumber = '사업자 등록번호 형식이 올바르지 않습니다. (예: 000-00-00000)';
+    }
     if (!formData.email) newErrors.email = '이메일은 필수입니다.';
     else if (!isValidEmail(formData.email)) newErrors.email = '이메일 형식이 올바르지 않습니다.';
     if (!formData.password) newErrors.password = '비밀번호는 필수입니다.';
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
     if (!emailVerified) newErrors.emailVerified = '이메일 인증을 완료해주세요.';
-    if (!formData.description) newErrors.description = '소개글은 필수입니다.';
-    if (!formData.profileImage) newErrors.profileImage = '프로필 이미지는 필수입니다.';
     return newErrors;
   };
 
@@ -152,11 +185,18 @@ export default function Orgsignup() {
       <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="기관명을 입력해주세요" />
       {errors.name && <p className="error">{errors.name}</p>}
 
-      <label>사업자 등록번호*</label>
-      <input type="text" name="businessNumber" value={formData.businessNumber} onChange={handleChange} placeholder="사업자 등록번호를 입력해주세요" />
+      <label>사업자 등록번호 (선택)</label>
+      <input 
+        type="text" 
+        name="businessNumber" 
+        value={formData.businessNumber} 
+        onChange={handleChange} 
+        placeholder="000-00-00000"
+        maxLength="12"
+      />
       {errors.businessNumber && <p className="error">{errors.businessNumber}</p>}
 
-      <label>소개글*</label>
+      <label>소개글(선택)</label>
       <textarea 
         className='org-description-textarea'
         name="description" 
@@ -165,9 +205,8 @@ export default function Orgsignup() {
         placeholder="소개글을 입력해주세요"
         rows="4"
       />
-      {errors.description && <p className="error">{errors.description}</p>}
 
-      <label>프로필 이미지*</label>
+      <label>프로필 이미지(선택)</label>
       <div className="profileimage-upload-wrapper">
         {formData.profileImage && (
           <img src={formData.profileImage} alt="프로필 미리보기" className="profileimage-preview" />
@@ -183,7 +222,6 @@ export default function Orgsignup() {
           style={{ display: 'none' }}
         />
       </div>
-      {errors.profileImage && <p className="error">{errors.profileImage}</p>}
 
       <label>이메일*</label>
       <div className="email-verification-container">
@@ -223,9 +261,6 @@ export default function Orgsignup() {
         </div>
       )}
       {errors.emailVerified && <p className="error">{errors.emailVerified}</p>}
-
-      <label>지갑 주소 (선택)</label>
-      <input type="text" name="walletAddress" value={formData.walletAddress} onChange={handleChange} placeholder="지갑 주소를 입력해주세요" />
 
       <label>비밀번호*</label>
       <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="비밀번호를 입력해주세요" />

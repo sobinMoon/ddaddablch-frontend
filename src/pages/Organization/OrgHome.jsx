@@ -3,6 +3,7 @@ import defaultImage from '../../assets/dog.jpg';
 import './OrgHome.css';
 import CampaignHorizontal from '../../components/CampaignHorizontal';
 import { useNavigate } from 'react-router-dom';
+import SERVER_URL from '../../hooks/SeverUrl';
 
 export default function OrgHome() {
     const navigate = useNavigate();
@@ -61,6 +62,39 @@ export default function OrgHome() {
         ]
     };
 
+    const handleLogout = async () => {
+        try {
+            const refreshToken = localStorage.getItem('refreshToken');
+            
+            if (!refreshToken) {
+                alert('로그인 정보가 없습니다.');
+                return;
+            }
+
+            const response = await fetch(`${SERVER_URL}/auth/logout`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ refreshToken })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // 로컬 스토리지의 토큰들 제거
+                localStorage.removeItem('token');
+                localStorage.removeItem('refreshToken');
+            
+                navigate('/login');
+            } else {
+                alert(data.message || '로그아웃 중 오류가 발생했습니다.');
+            }
+        } catch (error) {
+            console.error('로그아웃 중 오류:', error);
+            alert('로그아웃 중 오류가 발생했습니다.');
+        }
+    };
     return (
         <div className="orghome-container">
             <div className="orghome-info">
@@ -97,6 +131,11 @@ export default function OrgHome() {
                         <CampaignHorizontal key={campaign.id} campaign={campaign} />
                     ))}
                 </div>
+            </div>
+            <div className="orghome-footer">
+                <button className="logout-btn" onClick={handleLogout}>
+                    로그아웃
+                </button>
             </div>
         </div>
     );

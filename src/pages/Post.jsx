@@ -6,6 +6,7 @@ import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { FaRegCommentDots } from "react-icons/fa";
 import Comments from '../components/Comments';
 import { TfiMenuAlt } from "react-icons/tfi";
+import SERVER_URL from '../hooks/SeverUrl';
 
 export default function Post() {
     const [isLiked, setIsLiked] = useState(false);
@@ -18,7 +19,8 @@ export default function Post() {
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const response = await fetch(`/api/v1/posts/${postId}`);
+                console.log(postId);
+                const response = await fetch(`${SERVER_URL}/api/v1/posts/${postId}`);
                 const data = await response.json();
                 
                 if (data.isSuccess) {

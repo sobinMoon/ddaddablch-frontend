@@ -3,11 +3,13 @@ import Postcard from '../components/Postcard'
 import './Community.css'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { useLocation, useNavigate } from 'react-router-dom'
+import SERVER_URL from '../hooks/SeverUrl'
 
 export default function Community() {
     const location = useLocation();
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
+    console.log(currentPage);
     const [posts, setPosts] = useState([]);
     const [pagination, setPagination] = useState({
         totalPage: 0,
@@ -37,8 +39,9 @@ export default function Community() {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch(`/api/v1/posts?page=${currentPage}`);
+                const response = await fetch(`${SERVER_URL}/api/v1/posts?page=${currentPage-1}`);
                 const data = await response.json();
+                console.log('응답 텍스트:', data);
 
                 if (data.isSuccess) {
                     setPosts(data.result.postList);

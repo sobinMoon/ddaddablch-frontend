@@ -6,6 +6,7 @@ import defaultImage2 from '../assets/IMG_animal.png';
 import defaultImage3 from '../assets/IMG_elderly.png';
 import defaultImage4 from '../assets/IMG_children.png';
 import defaultImage5 from '../assets/IMG_disabled.png';
+import defaultImage6 from '../assets/IMG_social.jpg';
 import { IoClose } from "react-icons/io5";
 import { createDonationImage } from '../hooks/imageUtils';
 
@@ -13,15 +14,35 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
   const navigate = useNavigate();
   const [compositeImage, setCompositeImage] = useState(null);
 
+  const getDefaultImageByCategory = (category) => {
+    switch (category) {
+      case '아동청소년':
+        return defaultImage4;
+      case '노인':
+        return defaultImage3;
+      case '환경':
+        return defaultImage1;
+      case '사회':
+        return defaultImage6;
+      case '동물':
+        return defaultImage2;
+      case '장애인':
+        return defaultImage5;
+      default:
+        return defaultImage2; // 기본값으로 동물 이미지 사용
+    }
+  };
+
   useEffect(() => {
     if (isOpen && donationInfo) {
-      createDonationImage(defaultImage2, donationInfo)
+      const defaultImage = getDefaultImageByCategory(donationInfo.category);
+      createDonationImage(defaultImage, donationInfo)
         .then(imageUrl => {
           setCompositeImage(imageUrl);
         })
         .catch(error => {
           console.error('이미지 합성 실패:', error);
-          setCompositeImage(defaultImage2);
+          setCompositeImage(defaultImage);
         });
     }
   }, [isOpen, donationInfo]);

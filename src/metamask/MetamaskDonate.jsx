@@ -20,6 +20,11 @@ function MetamaskDonate() {
   const [validationError, setValidationError] = useState('');
   const contractAddress = '0x1057853d7eC04BB66ECFf3BABe6c94aCbC074beb';
 
+  // 페이지 진입 시 스크롤 맨 위로
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // 지갑 연결 상태 확인 함수
   const checkWalletConnection = async () => {
     if (window.ethereum) {

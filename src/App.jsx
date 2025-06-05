@@ -23,6 +23,7 @@ import OrgHome from './pages/Organization/OrgHome';
 import CreateCampaign from './pages/Organization/CreateCampaign';
 import MetamaskDonate from './metamask/MetamaskDonate';
 import BeneficiaryWithdraw from './metamask/BeneficiaryWithdraw';
+import CreateCampaignNews from './pages/Organization/CreateCampaignNews';
 
 function App() {
   return (
@@ -34,7 +35,7 @@ function App() {
           <Route path='/reviews' element={<Reviews />} />
           <Route path='/org-detail/:id' element={<OrganizationDetail />} />
           <Route path='/community' element={<Community />} />
-          <Route path='/community/post/:id' element={<Post />} />
+          <Route path='/community/post/:postId' element={<Post />} />
           <Route path='/community/create-post' element={<CreatePost />} />
           <Route path='/donate/campaign/:id' element={<Campaign />}>
             <Route index element={<Campaignintro />} />
@@ -54,6 +55,7 @@ function App() {
           <Route path='/organization/home' element={<OrgHome />} />
           <Route path='/organization/create-campaign' element={<CreateCampaign />} />
           <Route path='/organization/beneficiary-withdraw' element={<BeneficiaryWithdraw />} />
+          <Route path='/organization/create-campaign-news/:campaignId' element={<CreateCampaignNews />} />
         </Route>
       </Routes>
   );

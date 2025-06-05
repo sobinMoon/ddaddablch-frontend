@@ -9,7 +9,6 @@ const Studentsignup = () => {
         name: '',
         nickname: '',
         email: '',
-        walletAddress: '',
         password: '',
         confirmPassword: '',
         verificationToken: ''
@@ -266,9 +265,6 @@ const Studentsignup = () => {
             </div>
           )}
           {errors.emailVerified && <p className="error">{errors.emailVerified}</p>}
-    
-          <label>지갑 주소 (선택)</label>
-          <input type="text" name="walletAddress" value={formData.walletAddress} onChange={handleChange} placeholder="지갑 주소를 입력해주세요" />
     
           <label>비밀번호*</label>
           <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="비밀번호를 입력해주세요" />

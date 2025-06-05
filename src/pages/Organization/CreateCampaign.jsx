@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './CreateCampaign.css';
+import SERVER_URL from '../../hooks/SeverUrl';
 
 const categories = ['아동청소년', '노인', '환경', '동물', '장애인', '사회'];
 
@@ -33,9 +34,10 @@ export default function CreateCampaign() {
         setDonateStart(minDate);
     }, []);
 
-    const handleSubmit = () => {
-        if (!title || !content) {
-            alert('제목과 내용을 모두 입력해주세요.');
+    const handleSubmit = async () => {
+        // 필수 입력값 검증
+        if (!title || !content || !category || !goal || !image || !walletAddress) {
+            alert('필수 항목을 모두 입력해주세요.');
             return;
         }
 
@@ -48,18 +50,88 @@ export default function CreateCampaign() {
             return;
         }
 
+        if (!businessStart || !businessEnd) {
+            alert('사업 시작일과 종료일을 선택해주세요.');
+            return;
+        }
+        if (businessStart > businessEnd) {
+            alert('사업 종료일은 시작일 이후여야 합니다.');
+            return;
+        }
 
-        console.log('제출됨:', { title, content, image });
+        if (plans.some(plan => !plan.description || !plan.amount)) {
+            alert('모금액 사용 계획을 모두 입력해주세요.');
+            return;
+        }
 
-        setTitle('');
-        setContent('');
-        setImage(null);
-        setPreviewUrl(null);
-        setFileName('');
-        setCategory('');
-        setDonateStart('');
-        setDonateEnd('');
-        alert('게시글이 등록되었습니다!');
+        try {
+            // 이미지 업로드 처리
+            const formData = new FormData();
+            formData.append('image', image);
+
+            const imageUploadResponse = await fetch(`${SERVER_URL}/api/v1/upload`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!imageUploadResponse.ok) {
+                throw new Error('이미지 업로드에 실패했습니다.');
+            }
+
+            const imageData = await imageUploadResponse.json();
+            const imageUrl = imageData.result.url;
+
+            // 캠페인 생성 요청
+            const campaignData = {
+                name: title,
+                imageUrl: imageUrl,
+                description: content,
+                goal: parseInt(goal),
+                walletAddress: walletAddress,
+                category: category,
+                donateStart: donateStart,
+                donateEnd: donateEnd,
+                businessStart: businessStart,
+                businessEnd: businessEnd,
+                plans: plans.map(plan => ({
+                    title: plan.description,
+                    amount: parseInt(plan.amount)
+                }))
+            };
+
+            const response = await fetch(`${SERVER_URL}/api/v1/campaigns`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(campaignData)
+            });
+
+            const result = await response.json();
+
+            if (result.isSuccess) {
+                alert('캠페인이 성공적으로 등록되었습니다!');
+                // 폼 초기화
+                setTitle('');
+                setContent('');
+                setImage(null);
+                setPreviewUrl(null);
+                setFileName('');
+                setCategory('');
+                setGoal('');
+                setPlans([{ description: '', amount: '' }]);
+                setDonateStart(minDate);
+                setDonateEnd('');
+                setBusinessStart('');
+                setBusinessEnd('');
+                setWalletAddress('');
+            } else {
+                throw new Error(result.message || '캠페인 등록에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert(error.message || '캠페인 등록 중 오류가 발생했습니다.');
+        }
     };
 
     const handleFileChange = (e) => {
@@ -90,9 +162,11 @@ export default function CreateCampaign() {
                 setWalletAddress(accounts[0]);
                 setIsConnected(true); // ✅ 연결 성공 표시
                 log(`지갑 연결 성공: ${accounts[0]}`);
+                console.log(accounts[0]);
                 setStepEnabled((prev) => ({ ...prev, requestChallenge: true }));
             } catch (err) {
                 log(`에러: ${err.message}`);
+                console.log(err);
             }
         } else {
             alert("메타마스크를 설치해주세요.");
@@ -261,7 +335,10 @@ export default function CreateCampaign() {
                         <input
                             type="date"
                             value={businessStart}
-                            onChange={(e) => setBusinessStart(e.target.value)}
+                            onChange={(e) => {
+                                setBusinessStart(e.target.value);
+                                setBusinessEnd(''); // 시작일이 변경되면 종료일 초기화
+                            }}
                             min={donateEnd}
                             onKeyDown={(e) => e.preventDefault()}
                         />
@@ -273,8 +350,10 @@ export default function CreateCampaign() {
                             type="date"
                             value={businessEnd}
                             onChange={(e) => setBusinessEnd(e.target.value)}
-                            min={businessStart}
+                            min={businessStart || donateEnd}
+                            disabled={!businessStart}
                             onKeyDown={(e) => e.preventDefault()}
+                            placeholder={!businessStart ? "시작일을 먼저 선택해주세요" : ""}
                         />
                     </div>
                 </div>

@@ -1,0 +1,19 @@
+.campaign-news-container {
+    padding: 20px;
+}
+
+.create-news-button {
+    padding: 12px;
+    font-size: 1rem;
+    background-color: #0071ce;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 20px;
+}
+
+.create-news-button:hover {
+    background-color: #0056b3;
+} 
