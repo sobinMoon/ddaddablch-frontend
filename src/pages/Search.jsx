@@ -1,11 +1,32 @@
 import './Search.css';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { IoSearchSharp } from "react-icons/io5";
+import SERVER_URL from '../hooks/SeverUrl';
 
 export default function Search() {
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const searchCampaigns = async () => {
+            const params = new URLSearchParams(location.search);
+            const keyword = params.get('q');
+            
+            if (keyword) {
+                try {
+                    const response = await fetch(`${SERVER_URL}/api/v1/campaigns/search?keyword=${encodeURIComponent(keyword)}`);
+                    const data = await response.json();
+                    console.log('검색 결과:', data);
+                } catch (error) {
+                    console.error('검색 중 오류 발생:', error);
+                }
+            }
+        };
+
+        searchCampaigns();
+    }, [location.search]);
 
     const handleSearch = (e) => {
         e.preventDefault();

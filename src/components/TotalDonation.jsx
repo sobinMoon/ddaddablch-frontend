@@ -2,13 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './TotalDonation.css';
 import Image from '../assets/heart_noonsong.png';
 
-export default function TotalDonation() {
-    const totalDonation = {
-        amount: "1,234,567.89",
-        count: "12,345",
-        donors: "8,765"
-    };
-
+export default function TotalDonation({ totalDonation }) {
     const [currentTime, setCurrentTime] = useState('');
 
     useEffect(() => {
@@ -35,7 +29,7 @@ export default function TotalDonation() {
             </div>
             <div className='total-donation-content'>
                 <span className='total-donation-title'>총 기부금</span>
-                <span className='total-donation-amount'>{totalDonation.amount} ETH</span>
+                <span className='total-donation-amount'>{totalDonation} ETH</span>
             </div>
         </div>
     );

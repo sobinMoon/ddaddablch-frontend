@@ -76,7 +76,7 @@ export default function Home() {
       </div>
 
       <div className="home-right">
-        <TotalDonation />
+        <TotalDonation totalDonation={data.totalDonation} />
         <DonationReviews recentUpdates={data.recentUpdates} />
       </div>
     </div>

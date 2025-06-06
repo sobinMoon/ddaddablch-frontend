@@ -1,7 +1,9 @@
 import React from 'react';
 import './Donations.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function Donations({ recentDonations }) {
+    const navigate = useNavigate();
     console.log(recentDonations);
 
     /*"recentDonations": [
@@ -21,7 +23,9 @@ export default function Donations({ recentDonations }) {
             <div className="donations-list">    
                 {recentDonations && recentDonations.length > 0 ? (
                     recentDonations.map((donation) => (
-                        <div key={donation.donationId} className="mypage-donation-item">
+                        <div key={donation.donationId} className="mypage-donation-item" onClick={() => {
+                            navigate(`/donate/campaign/${donation.campaignId}`);
+                        }}>
                             <div className="mypage-donation-date">{new Date(donation.donationDate).toLocaleDateString()}</div>
                             <div className="mypage-donation-title">{donation.campaignName}</div>
                             <div className="mypage-donation-amount">{donation.donationAmount} ETH</div>

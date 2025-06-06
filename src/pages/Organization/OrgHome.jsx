@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import defaultImage from '../../assets/dog.jpg';
 import './OrgHome.css';
 import CampaignHorizontal from '../../components/CampaignHorizontal';
@@ -6,6 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import SERVER_URL from '../../hooks/SeverUrl';
 
 export default function OrgHome() {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+    
     const navigate = useNavigate();
     const organization = {
         id: 1,

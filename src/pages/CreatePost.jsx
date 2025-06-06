@@ -69,17 +69,23 @@ export default function CreatePost() {
         return;
       }
 
+      // JSON 데이터 생성
+      const jsonData = {
+        title: title,
+        content: content
+      };
+
+      const formData = new FormData();
+      const jsonBlob = new Blob([JSON.stringify(jsonData)], { type: "application/json" });
+      formData.append("request", jsonBlob);
+      formData.append("image", image);
+
       const response = await fetch(`${SERVER_URL}/api/v1/posts`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-          title: title,
-          content: content,
-          nft: previewUrl
-        })
+        body: formData
       });
 
       const data = await response.json();

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Donatecard.css';
 import SERVER_URL from '../hooks/SeverUrl';
 
-export default function Donatecard({ goal, remaining, participants, onDonate, campaignState, organization, walletAddress }) {
+export default function Donatecard({ goal, remaining, participants, onDonate, campaignState, organization, campaignId }) {
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -77,6 +77,7 @@ export default function Donatecard({ goal, remaining, participants, onDonate, ca
   };
 
   const handleWithdrawClick = () => {
+    console.log(campaignId);
     navigate('/organization/beneficiary-withdraw', { 
       state: { campaignId } 
     });

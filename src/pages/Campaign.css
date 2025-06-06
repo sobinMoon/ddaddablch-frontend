@@ -101,6 +101,7 @@
     order: 1;
     width: 100%;
     position: static;
+    padding: 20px 0px 20px 0px;
   }
 
   .left-wrap {
@@ -108,9 +109,11 @@
     width: 100%;
     padding: 0;
   }
+  
   .camp-img {
     width: 100%;
-    height: auto;
+    height: 280px;
+    object-fit: cover;
   }
 
   .camp-tab {

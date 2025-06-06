@@ -19,8 +19,13 @@ export default function Post() {
     useEffect(() => {
         const fetchPost = async () => {
             try {
+                const token = localStorage.getItem('token');
                 console.log(postId);
-                const response = await fetch(`${SERVER_URL}/api/v1/posts/${postId}`);
+                const response = await fetch(`${SERVER_URL}/api/v1/posts/${postId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 const data = await response.json();
                 console.log(data);
                 
@@ -123,7 +128,7 @@ export default function Post() {
                 <p className="post-content-text">
                     {post.content}
                 </p>
-                {post.nft && <img className='post-content-image' src={post.nft} alt="post" />}
+                {post.nft && <img className='post-content-image' src={`http://localhost:8080/images/${post.nft}`} alt="post" />}
             </div>
 
             <div className="post-footer">

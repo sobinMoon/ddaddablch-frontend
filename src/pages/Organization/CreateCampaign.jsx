@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './CreateCampaign.css';
 import SERVER_URL from '../../hooks/SeverUrl';
+import { useNavigate } from 'react-router-dom';
 
 const categories = ['아동청소년', '노인', '환경', '동물', '장애인', '사회'];
 
 export default function CreateCampaign() {
+    const navigate = useNavigate();
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -23,6 +25,7 @@ export default function CreateCampaign() {
     const [businessEnd, setBusinessEnd] = useState('');
     const [walletAddress, setWalletAddress] = useState('');
     const [logList, setLogList] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -71,6 +74,7 @@ export default function CreateCampaign() {
             return;
         }
 
+        setIsSubmitting(true);
         try {
             // JSON 데이터 생성
             const campaignData = {
@@ -108,6 +112,7 @@ export default function CreateCampaign() {
 
             if (result.isSuccess) {
                 alert('캠페인이 성공적으로 등록되었습니다!');
+                navigate('/organization/home');
                 // 폼 초기화
                 setTitle('');
                 setContent('');
@@ -128,6 +133,8 @@ export default function CreateCampaign() {
         } catch (error) {
             console.error('Error:', error);
             alert(error.message || '캠페인 등록 중 오류가 발생했습니다.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -362,8 +369,12 @@ export default function CreateCampaign() {
                 <button className='create-campaign-address-button' onClick={connectWallet}>+ 지갑 주소 연결하기</button>
             </div>
             
-            <button className="create-campaign-submit" onClick={handleSubmit}>
-                등록하기
+            <button 
+                className={`create-campaign-submit ${isSubmitting ? 'disabled' : ''}`} 
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+            >
+                {isSubmitting ? '등록 중...' : '등록하기'}
             </button>
         </div>
     );

@@ -204,6 +204,16 @@
     background-color: #0056b3;
 }
 
+.create-campaign-submit.disabled {
+    background-color: #cccccc;
+    cursor: default;
+    opacity: 0.7;
+}
+
+.create-campaign-submit.disabled:hover {
+    background-color: #cccccc;
+}
+
 .create-campaign-address-button{
     font-size: 0.9rem;
     padding: 12px;

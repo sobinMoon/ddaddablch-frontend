@@ -65,7 +65,7 @@ export default function Campaign() {
         donationInfo={donationInfo}
       />
       <div className='left-wrap'>
-        <img className='camp-img' src={campaign.imageUrl || defaultImage} alt="캠페인 이미지" />
+        <img className='camp-img' src={`${SERVER_URL}/images/${campaign.imageUrl}` || defaultImage} alt="캠페인 이미지" />
         <div className='camp-tabs'>
           <NavLink to={`/donate/campaign/${id}`} end className='camp-tab'>캠페인 소개</NavLink>
           <NavLink to={`/donate/campaign/${id}/plan`} className='camp-tab'>사용 계획</NavLink>
@@ -91,7 +91,6 @@ export default function Campaign() {
           onDonate={onDonate}
           campaignState={campaign.statusFlag}
           organization={campaign.organization}
-          walletAddress={campaign.walletAddress}
         />
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CampaignVertical.css';
+import SERVER_URL from '../hooks/SeverUrl';
 
 const CampaignVertical = ({ campaign }) => {
     const navigate = useNavigate();
@@ -14,7 +15,8 @@ const CampaignVertical = ({ campaign }) => {
     return (
         <div className="campaign-vertical-card" onClick={handleClick}>
             <div className="campaign-vertical-image">
-                <img src={campaign.imageUrl} alt={campaign.name} />
+                <img src={`${SERVER_URL}/images/${campaign.imageUrl}`} alt={campaign.name} />
+                
             </div>
             <div className="campaign-vertical-content">
                 <h3 className="campaign-vertical-title">{campaign.name}</h3>

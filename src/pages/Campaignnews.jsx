@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import SERVER_URL from '../hooks/SeverUrl';
+import './Campaignnews.css';
+import no_message from '../assets/no_message.png';
 
 export default function Campaignnews() {
   const { campaign } = useOutletContext();
   const navigate = useNavigate();
   const [isOrg, setIsOrg] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [userData, setUserData] = useState(null);
   useEffect(() => {
     const checkUserRole = async () => {
       try {
@@ -54,12 +56,14 @@ export default function Campaignnews() {
               const userData = await newResponse.json();
               console.log('userData (refresh):', userData);
               setIsOrg(userData.role === 'ROLE_ORGANIZATION');
+              setUserData(userData);
             }
           }
         } else if (response.ok) {
           const userData = await response.json();
           console.log('userData:', userData);
           setIsOrg(userData.role === 'ROLE_ORGANIZATION');
+          setUserData(userData);
         }
       } catch (error) {
         console.error('Error checking user role:', error);
@@ -81,41 +85,52 @@ export default function Campaignnews() {
 
   return (
     <div className="campaign-news-container">
-      { (!campaign.campaignSpendings || campaign.campaignSpendings.length === 0) && (
-        <div className='no-news-message-container'>
-          <div className='no-news-message'>아직 추가된 소식이 없어요.</div>
-          <div className='no-news-message'>모금기간: {campaign.donateStart} ~ {campaign.donateEnd}</div>
-          <div className='no-news-message'>사업기간: {campaign.businessStart} ~ {campaign.businessEnd}</div>
+      {(!campaign.campaignSpendings || campaign.campaignSpendings.length === 0) && (
+        <div className="news-center-wrapper">
+          <div className="no-news-message-container">
+            <img src={no_message} alt="no-message" className="no-news-image" />
+            <div className="no-news-message-title">아직 추가된 소식이 없어요.</div>
+            <div className="no-news-message">
+              모금기간: {campaign.donateStart} ~ {campaign.donateEnd}
+            </div>
+            <div className="no-news-message">
+              사업기간: {campaign.businessStart} ~ {campaign.businessEnd}
+            </div>
+          </div>
         </div>
       )}
-      {isOrg && (!campaign.campaignSpendings || campaign.campaignSpendings.length === 0) && (
-        <button 
-          className="create-news-button"
-          onClick={handleCreateNews}
-        >
-          캠페인 소식 작성
-        </button>
-      )}
 
-     {campaign.campaignSpendings && campaign.campaignSpendings.length > 0 && (
-      <div className='news-list-container'>
-        <h2>{campaign.campaignUpdate.title} 소식</h2>
-        {campaign.campaignUpdate.imageUrl && (
-          <img 
-            src={campaign.campaignUpdate.imageUrl} 
-            alt="캠페인 소식 이미지" 
-            className="news-image"
-            style={{
-              maxWidth: '100%',
-              height: 'auto',
-              borderRadius: '8px',
-              marginBottom: '16px'
-            }}
-          />
+      {isOrg
+        && campaign.statusFlag !== 'FUNDRAISING'
+        && campaign.organization.id === userData?.id
+        && (!campaign.campaignSpendings || campaign.campaignSpendings.length === 0) && (
+          <button
+            className="create-news-button"
+            onClick={handleCreateNews}
+          >
+            캠페인 소식 작성
+          </button>
         )}
-        <p>{campaign.campaignUpdate.content}</p>
-      </div>
-     )}
+
+      {campaign.campaignSpendings && campaign.campaignSpendings.length > 0 && (
+        <div className='news-list-container'>
+          <h2>{campaign.campaignUpdate.title} 소식</h2>
+          {campaign.campaignUpdate.imageUrl && (
+            <img
+              src={campaign.campaignUpdate.imageUrl}
+              alt="캠페인 소식 이미지"
+              className="news-image"
+              style={{
+                maxWidth: '100%',
+                height: 'auto',
+                borderRadius: '8px',
+                marginBottom: '16px'
+              }}
+            />
+          )}
+          <p>{campaign.campaignUpdate.content}</p>
+        </div>
+      )}
     </div>
   );
 }
