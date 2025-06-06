@@ -65,26 +65,9 @@ export default function CreateCampaign() {
         }
 
         try {
-            // 이미지 업로드 처리
-            const formData = new FormData();
-            formData.append('image', image);
-
-            const imageUploadResponse = await fetch(`${SERVER_URL}/api/v1/upload`, {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!imageUploadResponse.ok) {
-                throw new Error('이미지 업로드에 실패했습니다.');
-            }
-
-            const imageData = await imageUploadResponse.json();
-            const imageUrl = imageData.result.url;
-
-            // 캠페인 생성 요청
+            // JSON 데이터 생성
             const campaignData = {
                 name: title,
-                imageUrl: imageUrl,
                 description: content,
                 goal: parseInt(goal),
                 walletAddress: walletAddress,
@@ -99,12 +82,16 @@ export default function CreateCampaign() {
                 }))
             };
 
+            // FormData 생성 및 데이터 추가
+            const formData = new FormData();
+            const jsonBlob = new Blob([JSON.stringify(campaignData)], { type: 'application/json' });
+            formData.append('request', jsonBlob);
+            formData.append('image', image);
+
+            // API 요청
             const response = await fetch(`${SERVER_URL}/api/v1/campaigns`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(campaignData)
+                body: formData
             });
 
             const result = await response.json();

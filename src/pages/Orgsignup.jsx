@@ -171,6 +171,12 @@ export default function Orgsignup() {
       if (res.status === 201) {
         setMessage(data.message);
         setErrors({});
+        alert(data.message);
+        navigate('/login');
+      } else if (res.status === 409) {
+        setMessage(data.message || '이미 등록된 이메일입니다');
+        setErrors({});
+        alert(data.message);
       } else {
         setMessage(data.message || '오류 발생');
       }
@@ -272,7 +278,7 @@ export default function Orgsignup() {
 
       <button type="submit">가입하기</button>
 
-      {message && <p className="message">{message}</p>}
+      {/* {message && <p className="message">{message}</p>} */}
     </form>
   );
 }

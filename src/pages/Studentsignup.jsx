@@ -162,8 +162,8 @@ const Studentsignup = () => {
           if (res.status === 201) {
             setMessage(data.message);
             setErrors({});
-            navigate('/login');
             alert(data.message);
+            navigate('/login');
           } else if (res.status === 409) {
             setMessage(data.message || '이미 등록된 이메일입니다');
             setErrors({});

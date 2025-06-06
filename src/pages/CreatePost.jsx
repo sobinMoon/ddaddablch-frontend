@@ -69,7 +69,7 @@ export default function CreatePost() {
         return;
       }
 
-      const response = await fetch(`${SERVER_URL}/api/v1/community/posts`, {
+      const response = await fetch(`${SERVER_URL}/api/v1/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

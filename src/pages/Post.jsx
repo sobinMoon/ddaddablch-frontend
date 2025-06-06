@@ -40,14 +40,34 @@ export default function Post() {
 
     const handleLike = async () => {
         try {
-            // TODO: 좋아요 API 호출 구현
-            setIsLiked(!isLiked);
-            setPost(prev => ({
-                ...prev,
-                likeCount: isLiked ? prev.likeCount - 1 : prev.likeCount + 1
-            }));
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('로그인이 필요한 서비스입니다.');
+                navigate('/login');
+                return;
+            }
+
+            const response = await fetch(`${SERVER_URL}/api/v1/posts/${postId}/likes`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await response.json();
+            
+            if (data.isSuccess) {
+                setIsLiked(!isLiked);
+                setPost(prev => ({
+                    ...prev,
+                    likeCount: isLiked ? prev.likeCount - 1 : prev.likeCount + 1
+                }));
+            } else {
+                throw new Error(data.message || '좋아요 처리에 실패했습니다.');
+            }
         } catch (error) {
             console.error('좋아요 처리 중 오류가 발생했습니다:', error);
+            alert(error.message || '좋아요 처리 중 오류가 발생했습니다.');
         }
     };
 
