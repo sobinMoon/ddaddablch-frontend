@@ -4,6 +4,7 @@ import defaultImage from '../assets/cat.jpg';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { FaRegCommentDots } from "react-icons/fa";
 import { Link, useLocation } from 'react-router-dom';
+import SERVER_URL from '../hooks/SeverUrl';
 
 export default function Postcard({ post, onPostClick }) {
     const location = useLocation();
@@ -50,7 +51,7 @@ export default function Postcard({ post, onPostClick }) {
                 </div>
             </div>
 
-            <img src={post.nft || defaultImage} alt="post-image" className="post-card-image" />
+            <img src={`${SERVER_URL}/images/${post.nft}` || defaultImage} alt="post-image" className="post-card-image" />
         </div>
     );
 }

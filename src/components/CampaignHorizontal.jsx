@@ -14,8 +14,11 @@ const CampaignHorizontal = ({ campaign }) => {
     return (
         <div className="campaign-horizontal-card" onClick={handleClick}>
             <div className="campaign-horizontal-image">
-                <img src={campaign.imageUrl} alt={campaign.name} />
+                <div className="campaign-horizontal-image-wrapper">
+                    <img src={campaign.imageUrl} alt={campaign.name} />
+                </div>
             </div>
+
             <div className="campaign-horizontal-content">
                 <div className="campaign-horizontal-info">
                     <h3 className="campaign-horizontal-title">{campaign.name}</h3>
@@ -24,8 +27,8 @@ const CampaignHorizontal = ({ campaign }) => {
                 </div>
                 <div className="campaign-horizontal-progress-container">
                     <div className="campaign-horizontal-progress-bar">
-                        <div 
-                            className="campaign-horizontal-progress-fill" 
+                        <div
+                            className="campaign-horizontal-progress-fill"
                             style={{ width: `${progress}%` }}
                         />
                     </div>

@@ -780,7 +780,9 @@ function MetamaskDonate() {
 
   return (
     <div className="donate-section">
-      <h2>{campaign.name} 기부하기</h2>
+      <div className="donate-campaign-info">
+        <h3>캠페인 '{campaign.name}'에 기부하기</h3>
+      </div>
 
       <div className="input-group">
         <label htmlFor="donateAmount">기부 금액 (ETH)</label>

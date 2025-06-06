@@ -128,7 +128,7 @@ export default function Post() {
                 <p className="post-content-text">
                     {post.content}
                 </p>
-                {post.nft && <img className='post-content-image' src={`http://localhost:8080/images/${post.nft}`} alt="post" />}
+                {post.nft && <img className='post-content-image' src={`${SERVER_URL}/images/${post.nft}`} alt="post" />}
             </div>
 
             <div className="post-footer">

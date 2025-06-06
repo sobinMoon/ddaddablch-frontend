@@ -26,8 +26,14 @@ export default function Campaign() {
         campaignName: location.state.campaignName,
         category: location.state.campaignCategory
       });
+      navigate(location.pathname, { replace: true });
     }
-  }, [location.state]);
+  }, [location.state, navigate, location.pathname]);
+
+  const handleCloseModal = () => {
+    setShowDonationModal(false);
+    setDonationInfo(null);
+  };
 
   useEffect(() => {
     const fetchCampaign = async () => {
@@ -61,7 +67,7 @@ export default function Campaign() {
     <div className='campaign-wrap'>
       <DonationCompleteModal 
         isOpen={showDonationModal}
-        onClose={() => setShowDonationModal(false)}
+        onClose={handleCloseModal}
         donationInfo={donationInfo}
       />
       <div className='left-wrap'>

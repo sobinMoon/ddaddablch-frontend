@@ -3,6 +3,8 @@ import { ethers } from "ethers";
 import contractJSON from "./contractABI.json";
 const contractABI = contractJSON.abi;
 import SERVER_URL from "../hooks/SeverUrl";
+import "./BeneficiaryWithdraw.css";
+import { useLocation } from "react-router-dom";
 
 function BeneficiaryWithdraw() {
   const [account, setAccount] = useState("");
@@ -11,6 +13,9 @@ function BeneficiaryWithdraw() {
   const [contractBalance, setContractBalance] = useState("0");
   const [loading, setLoading] = useState(false);
   const [network, setNetwork] = useState(null);
+  const location = useLocation();
+  const campaignId = location.state?.campaignId;
+  console.log(campaignId);
 
   // 컨트랙트 주소 (Truffle migrate 후 콘솔에 표시된 주소)
   const CONTRACT_ADDRESS = "0x4D70a956151B917d35EE1D585E5A5c8262e1B9ED";
@@ -56,9 +61,6 @@ function BeneficiaryWithdraw() {
             userAddress
           );
           setContractBalance(ethers.utils.formatEther(balance));
-
-          // const balance2= await contractInstance.getContractBalance();
-          // console.log("ETH 잔액:", ethers.utils.formatEther(balance2));
 
           console.log("인출 전 잔액:", contractBalance);
           // 계정 변경 이벤트 리스너
@@ -133,25 +135,47 @@ function BeneficiaryWithdraw() {
   };
 
   return (
-    <div>
-      <h2>기부금 인출</h2>
-      <p>연결된 계정: {account || "계정이 연결되지 않음"}</p>
-      <p>
-        현재 네트워크:{" "}
-        {network
-          ? `${network.name} (체인 ID: ${network.chainId})`
-          : "네트워크 정보 없음"}
-      </p>
-      <p>인출 가능한 기부금: {contractBalance} ETH</p>
+    <div className="beneficiary-withdraw-container">
+      <div className="beneficiary-withdraw-campaign-info"> 
+        
+      </div>
+      <h2 className="beneficiary-withdraw-title">기부금 인출</h2>
+      
+      <div className="beneficiary-withdraw-info">
+        <div className="info-item">
+          <span className="info-label">캠페인 지갑 주소:</span>
+          <span className="info-value">0xef19E2f02F99eE4D474634D3A857240fbeDaF6Cc</span>
+        </div>
+        <div className="info-item">
+          <span className="info-label">연결된 지갑 주소:</span>
+          <span className="info-value">{account || "계정이 연결되지 않음"}</span>
+        </div>
+               
+        <div className="info-item">
+          <span className="info-label">인출 가능한 기부금:</span>
+          <span className="info-value balance-value">{contractBalance} ETH</span>
+        </div>
+      </div>
+
+      {network && network.chainId !== 1337 && network.chainId !== 5777 && (
+        <div className="network-warning">
+          메타마스크를 가나슈 네트워크에 연결해주세요!
+        </div>
+      )}
+
+      {Number(contractBalance) <= 0 && (
+        <p className="no-balance-message">인출할 기부금이 없습니다.</p>
+      )}
 
       <button
+        className={`withdraw-button ${loading ? 'loading' : ''}`}
         onClick={handleWithdraw}
         disabled={loading || Number(contractBalance) <= 0}
       >
         {loading ? "처리 중..." : "기부금 인출하기"}
       </button>
 
-      {Number(contractBalance) <= 0 && <p>인출할 기부금이 없습니다.</p>}
+     
     </div>
   );
 }

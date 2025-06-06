@@ -4,7 +4,7 @@
   padding: 24px;
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dee2e6;
 }
 
 .donate-section h2 {
@@ -16,6 +16,7 @@
 
 .input-group {
   margin-bottom: 20px;
+  
 }
 
 .input-group label {
@@ -32,11 +33,11 @@
   border-radius: 6px;
   font-size: 16px;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
 .input-group input:focus {
   outline: none;
-  border-color: #0071ce;
 }
 
 .input-group input:disabled {
