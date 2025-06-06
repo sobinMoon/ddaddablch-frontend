@@ -3,6 +3,7 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 import SERVER_URL from '../hooks/SeverUrl';
 import './Campaignnews.css';
 import no_message from '../assets/no_message.png';
+import ConfirmModal from '../components/ConfirmModal';
 
 export default function Campaignnews() {
   const { campaign } = useOutletContext();
@@ -10,6 +11,12 @@ export default function Campaignnews() {
   const [isOrg, setIsOrg] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState(null);
+  const [modalConfig, setModalConfig] = useState({
+    isOpen: false,
+    message: '',
+    onConfirm: null
+  });
+
   useEffect(() => {
     const checkUserRole = async () => {
       try {
@@ -75,8 +82,50 @@ export default function Campaignnews() {
     checkUserRole();
   }, []);
 
+  const showModal = (message, onConfirm) => {
+    setModalConfig({
+      isOpen: true,
+      message,
+      onConfirm: () => {
+        setModalConfig(prev => ({ ...prev, isOpen: false }));
+        onConfirm?.();
+      }
+    });
+  };
+
   const handleCreateNews = () => {
-    navigate(`/organization/create-campaign-news/${campaign.id}`, { state: { campaign } });
+    if (campaign.statusFlag === 'IN_PROGRESS') {
+      showModal('아직 사업기간이 끝나지 않았어요.\n지금 바로 사업기간을 종료하고 소식을 작성하시겠습니까?', async () => {
+        try {
+          const accessToken = localStorage.getItem('token');
+          const response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaign.id}/status`, {
+            method: 'PATCH',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              status: 'COMPLETED'
+            })
+          });
+
+          if (response.ok) {
+            navigate(`/organization/create-campaign-news/${campaign.id}`, { state: { campaign } });
+          } else {
+            const errorData = await response.json();
+            alert(errorData.message || '캠페인 상태 변경에 실패했습니다.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('캠페인 상태 변경 중 오류가 발생했습니다.');
+        }
+      });
+      return;
+    }
+    else {
+      navigate(`/organization/create-campaign-news/${campaign.id}`, { state: { campaign } });
+    }
   };
 
   if (isLoading) {
@@ -101,7 +150,7 @@ export default function Campaignnews() {
       )}
 
       {isOrg
-        && campaign.statusFlag !== 'FUNDRAISING'
+        && (campaign.statusFlag === 'IN_PROGRESS' || campaign.statusFlag === 'COMPLETED')
         && campaign.organization.id === userData?.id
         && (!campaign.campaignSpendings || campaign.campaignSpendings.length === 0) && (
           <button
@@ -117,7 +166,7 @@ export default function Campaignnews() {
           <h2>{campaign.campaignUpdate.title} 소식</h2>
           {campaign.campaignUpdate.imageUrl && (
             <img
-              src={campaign.campaignUpdate.imageUrl}
+              src={`${SERVER_URL}/images/${campaign.campaignUpdate.imageUrl}`}
               alt="캠페인 소식 이미지"
               className="news-image"
               style={{
@@ -128,9 +177,21 @@ export default function Campaignnews() {
               }}
             />
           )}
-          <p>{campaign.campaignUpdate.content}</p>
+          <p style={{
+          padding: '0px',
+          borderRadius: '10px',
+          whiteSpace: 'pre-line',
+          fontSize: '1.05rem',
+        }}>{campaign.campaignUpdate.content.replace(/\\n|¶/g, '\n')}</p>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={modalConfig.isOpen}
+        message={modalConfig.message}
+        onConfirm={modalConfig.onConfirm}
+        onCancel={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 }
