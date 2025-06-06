@@ -24,12 +24,14 @@ import CreateCampaign from './pages/Organization/CreateCampaign';
 import MetamaskDonate from './metamask/MetamaskDonate';
 import BeneficiaryWithdraw from './metamask/BeneficiaryWithdraw';
 import CreateCampaignNews from './pages/Organization/CreateCampaignNews';
+import Search from './pages/Search';
 
 function App() {
   return (
       <Routes>
         <Route element={<LayoutwithNav />}>
           <Route path='/' element={<Home />} />
+          <Route path='/search' element={<Search />} />
           <Route path='/mypage' element={<Mypage />} />
           <Route path='/donate' element={<Donate />} />
           <Route path='/reviews' element={<Reviews />} />

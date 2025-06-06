@@ -35,6 +35,13 @@ export default function CreateCampaign() {
     }, []);
 
     const handleSubmit = async () => {
+        // 토큰 체크
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('로그인이 필요합니다.');
+            return;
+        }
+
         // 필수 입력값 검증
         if (!title || !content || !category || !goal || !image || !walletAddress) {
             alert('필수 항목을 모두 입력해주세요.');
@@ -91,6 +98,9 @@ export default function CreateCampaign() {
             // API 요청
             const response = await fetch(`${SERVER_URL}/api/v1/campaigns`, {
                 method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
                 body: formData
             });
 

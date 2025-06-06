@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import "./Navbar.css"; 
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { IoSearchSharp } from "react-icons/io5";
 import defaultProfile from '../assets/cat.jpg';
 import SERVER_URL from '../hooks/SeverUrl';
@@ -9,6 +9,7 @@ export default function Navbar() {
     const [role, setRole] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -45,6 +46,7 @@ export default function Navbar() {
         };
 
         fetchUserInfo();
+        scrollTo(0, 0);
     }, []);
 
     if (isLoading) {
@@ -106,7 +108,7 @@ export default function Navbar() {
                     ) : (
                         <a href="/login" className="navbar-login">로그인</a>
                     )}
-                    <button className="navbar-search-icon" aria-label="검색">
+                    <button className="navbar-search-icon" aria-label="검색" onClick={() => navigate('/search')}>
                         <IoSearchSharp />
                     </button>
                 </div>

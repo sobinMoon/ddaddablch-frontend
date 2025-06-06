@@ -45,7 +45,7 @@ export default function Home() {
     fetchHomeCampaign();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div></div>;
   if (error) return <div>Error: {error}</div>;
   if (!data) return <div>No data available</div>;
 
@@ -77,7 +77,7 @@ export default function Home() {
 
       <div className="home-right">
         <TotalDonation />
-        <DonationReviews />
+        <DonationReviews recentUpdates={data.recentUpdates} />
       </div>
     </div>
   )

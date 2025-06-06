@@ -90,6 +90,8 @@ export default function Campaign() {
           participants={campaign.donateCount}
           onDonate={onDonate}
           campaignState={campaign.statusFlag}
+          organization={campaign.organization}
+          walletAddress={campaign.walletAddress}
         />
       </div>
     </div>
