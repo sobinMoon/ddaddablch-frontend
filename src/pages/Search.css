@@ -2,38 +2,39 @@
     width: 100%;
     min-height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     padding-top: 2rem;
     background-color: #fff;
 }
 
 .search-wrapper {
     width: 100%;
-    max-width: 600px;
+    max-width: 1000px;
     padding: 0 1rem;
 }
 
 .search-form {
     display: flex;
     gap: 0.5rem;
-    width: 100%;
+    width: 500px;
     background-color: #f6f6f6;
     border-radius: 100px;
     padding: 0.5rem;
+    margin: 0 auto 2rem;
 }
 
 .search-input {
     flex: 1;
     border: none;
     padding: 0.8rem 1rem;
-    font-size: 1rem;
+    font-size: 1.1rem;
     outline: none;
     background-color: #f6f6f6;
 }
 
 .search-input:focus {
-    border-color:none;
+    border-color: none;
 }
 
 .search-button {
@@ -43,5 +44,138 @@
     background-color: #f6f6f6;
     border: none;
     cursor: pointer;
+}
+
+.search-loading {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+.search-results {
+    width: 100%;
+    text-align: left;
+}
+
+.search-results-header {
+    margin-bottom: 0.2rem;
+    text-align: left;
+    width: 100%;
+}
+
+.search-results-header h2 {
+    font-size: 1.5rem;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+.search-results-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.search-result-item {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 8px;
+    transition: transform 0.2s;
+    border: 1px solid #dee2e6;
+    overflow: hidden;
+}
+
+.campaign-image {
+    width: 100%;
+    height: 200px;
+    flex-shrink: 0;
+}
+
+.campaign-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.campaign-info {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.campaign-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.campaign-description {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.campaign-details {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.campaign-category,
+.campaign-status {
+    padding: 0.3rem 0.8rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.campaign-category {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.campaign-status {
+    background-color: #f5f5f5;
+    color: #666;
+}
+
+.campaign-status.status-fundraising {
+    background-color: #e6f4ea;
+    color: #219653;
+}
+
+.campaign-status.status-inprogress {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.campaign-status.status-completed {
+    background-color: #e0e0e0;
+    color: #757575;
+}
+
+.progress-info {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: 500;
+}
+
+.campaign-dates {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+.no-results {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+    font-size: 1.1rem;
 }
 

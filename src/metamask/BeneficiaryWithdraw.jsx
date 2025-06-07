@@ -15,10 +15,14 @@ function BeneficiaryWithdraw() {
   const [network, setNetwork] = useState(null);
   const location = useLocation();
   const campaignId = location.state?.campaignId;
+  
   console.log(campaignId);
 
   // 컨트랙트 주소 (Truffle migrate 후 콘솔에 표시된 주소)
   const CONTRACT_ADDRESS = "0x4D70a956151B917d35EE1D585E5A5c8262e1B9ED";
+
+  // 캠페인 지갑 주소
+  const CAMPAIGN_WALLET = "0xef19E2f02F99eE4D474634D3A857240fbeDaF6Cc";
 
   useEffect(() => {
     const connectWallet = async () => {
@@ -136,23 +140,21 @@ function BeneficiaryWithdraw() {
 
   return (
     <div className="beneficiary-withdraw-container">
-      <div className="beneficiary-withdraw-campaign-info"> 
         
-      </div>
-      <h2 className="beneficiary-withdraw-title">기부금 인출</h2>
+      <h2 className="beneficiary-withdraw-title"> 캠페인 "어쩌구 저쩌구" 기부금 인출</h2>
       
       <div className="beneficiary-withdraw-info">
         <div className="info-item">
-          <span className="info-label">캠페인 지갑 주소:</span>
-          <span className="info-value">0xef19E2f02F99eE4D474634D3A857240fbeDaF6Cc</span>
+          <span className="info-label">캠페인 지갑 주소</span>
+          <span className="info-value">{CAMPAIGN_WALLET}</span>
         </div>
         <div className="info-item">
-          <span className="info-label">연결된 지갑 주소:</span>
+          <span className="info-label">연결된 지갑 주소</span>
           <span className="info-value">{account || "계정이 연결되지 않음"}</span>
         </div>
                
         <div className="info-item">
-          <span className="info-label">인출 가능한 기부금:</span>
+          <span className="info-label">인출 가능한 기부금</span>
           <span className="info-value balance-value">{contractBalance} ETH</span>
         </div>
       </div>
@@ -163,19 +165,32 @@ function BeneficiaryWithdraw() {
         </div>
       )}
 
-      {Number(contractBalance) <= 0 && (
-        <p className="no-balance-message">인출할 기부금이 없습니다.</p>
+      {/* {account && account.toLowerCase() !== CAMPAIGN_WALLET.toLowerCase() && (
+        <div className="wallet-warning">
+          캠페인 지갑 주소와 연결된 지갑 주소가 일치하지 않습니다.
+        </div>
       )}
 
-      <button
-        className={`withdraw-button ${loading ? 'loading' : ''}`}
-        onClick={handleWithdraw}
-        disabled={loading || Number(contractBalance) <= 0}
-      >
-        {loading ? "처리 중..." : "기부금 인출하기"}
-      </button>
+      {Number(contractBalance) <= 0 && (
+        <p className="no-balance-message">인출할 기부금이 없습니다.</p>
+      )} */}
 
-     
+      <div className="button-container">
+        <button
+          className={`withdraw-button ${loading ? 'loading' : ''}`}
+          onClick={handleWithdraw}
+          disabled={loading || Number(contractBalance) <= 0 || (account && account.toLowerCase() !== CAMPAIGN_WALLET.toLowerCase())}
+        >
+          {loading ? "처리 중..." : "기부금 인출하기"}
+        </button>
+        {!loading && (
+          <div className="button-tooltip">
+            {Number(contractBalance) <= 0 && "인출할 기부금이 없습니다."}
+            {account && account.toLowerCase() !== CAMPAIGN_WALLET.toLowerCase() && 
+              "\n캠페인 지갑 주소와 연결된 지갑 주소가 일치하지 않습니다."}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

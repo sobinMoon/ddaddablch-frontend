@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './OrganizationDetail.css';
 import defaultImage from '../assets/dog.jpg';
@@ -6,66 +6,48 @@ import CampaignHorizontal from '../components/CampaignHorizontal';
 
 export default function OrganizationDetail() {
     const { orgId } = useParams();
+    const [organization, setOrganization] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-      }, []);
+        fetchOrganizationData();
+    }, [orgId]);
 
-    const organization = {
-        id: orgId,
-        name: "사단 법인 위액트",
-        description: "동물구조단체 사단법인 위액트는 기획재정부가 승인한 지정 기부금 단체로 신뢰성과 투명성을 기반으로 위기에 놓인 동물을 위하여 활동하며 공익 법인의 의무를 다합니다. 위액트는 봉사와 재능기부, 최소한의 유급 인력으로 운영되어 위기 동물 구조와 구조 동물의 식주, 치료 및 재활에 주력하여 후원금을 운용합니다.",
-        image: defaultImage,
-        activeCampaigns: [
-            {
-                "cid": 1,
-                "oid": 4478,
-                "cname": "캠페인 1",
-                "cimageUrl": defaultImage,
-                "ccategory": "사회",
-                "cdescription": "이것은 캠페인 1에 대한 설명입니다.",
-                "cgoal": 10000,
-                "ccurrentAmount": 2000,
-                "donateCount": 2,
-                "donateStart": "2025-03-06T12:14:18",
-                "donateEnd": "2025-04-10T12:14:18",
-                "businessStart": "2025-04-20T12:14:18",
-                "businessEnd": "2025-07-19T12:14:18",
-                "cstatusFlag": "ACTIVE"
-              },
-        ],
-        completedCampaigns: [
-            {
-                "cid": 1,
-                "oid": 4478,
-                "cname": "캠페인 1",
-                "cimageUrl": defaultImage,
-                "ccategory": "사회",
-                "cdescription": "이것은 캠페인 1에 대한 설명입니다.",
-                "cgoal": 10000,   
-                "ccurrentAmount": 2000,
-                "donateCount": 2,
-                "donateStart": "2025-03-06T12:14:18",
-                "donateEnd": "2025-04-10T12:14:18",
-                "businessStart": "2025-04-20T12:14:18",
-                "businessEnd": "2025-07-19T12:14:18",
-                "cstatusFlag": "ENDED"
+    const fetchOrganizationData = async () => {
+        try {
+            const response = await fetch(`/api/v1/mypage/org/${orgId}`);
+            const data = await response.json();
+            
+            if (data.isSuccess) {
+                setOrganization(data.result);
+            } else {
+                setError(data.message);
             }
-        ]
+        } catch (err) {
+            setError('데이터를 불러오는 중 오류가 발생했습니다.');
+        } finally {
+            setLoading(false);
+        }
     };
+
+    if (loading) return <div></div>;
+    if (error) return <div>에러: {error}</div>;
+    if (!organization) return <div>단체 정보를 찾을 수 없습니다.</div>;
 
     return (
         <div className="organization-detail">
             <div className="orgdetail-info">
                 <div className="orgdetail-header">
-                    <img src={organization.image} alt={organization.name} className="orgdetail-img" />
+                    <img src={organization.oprofileImage || defaultImage} alt={organization.onName} className="orgdetail-img" />
                     <div className="orgdetail-title">
-                        <span className="orgdetail-name">{organization.name}</span>
+                        <span className="orgdetail-name">{organization.onName}</span>
                         <button className="orgdetail-subscribe-btn">구독</button>
                     </div>
                 </div>
                 <div className="orgdetail-description">
-                    <p>{organization.description}</p>
+                    <p>{organization.odescription || '설명이 없습니다.'}</p>
                 </div>
             </div>
 
@@ -73,7 +55,7 @@ export default function OrganizationDetail() {
                 <span className="orgdetail-active-campaigns-title">진행 중인 캠페인</span>
                 <div className="orgdetail-campaigns-list">
                     {organization.activeCampaigns.map(campaign => (
-                        <CampaignHorizontal campaign={campaign} />
+                        <CampaignHorizontal key={campaign.campaignId} campaign={campaign} />
                     ))}
                 </div>
             </div>
@@ -82,11 +64,19 @@ export default function OrganizationDetail() {
                 <span className="orgdetail-completed-campaigns-title">종료된 캠페인</span>
                 <div className="orgdetail-campaigns-list">
                     {organization.completedCampaigns.map(campaign => (
-                        <CampaignHorizontal campaign={campaign} />
+                        <CampaignHorizontal key={campaign.campaignId} campaign={campaign} />
                     ))}
                 </div>
             </div>
 
+            <div className="orgdetail-fundraising-campaigns">
+                <span className="orgdetail-fundraising-campaigns-title">모금 중인 캠페인</span>
+                <div className="orgdetail-campaigns-list">
+                    {organization.fundraisingCampaigns.map(campaign => (
+                        <CampaignHorizontal key={campaign.campaignId} campaign={campaign} />
+                    ))}
+                </div>
+            </div>
         </div>
     );
 } 
