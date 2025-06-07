@@ -3,7 +3,7 @@ import './MyInfo.css';
 
 
 export default function MyInfo({ userInfo, setActiveTab }) {
-
+    console.log('userInfo:', userInfo);
     // const userInfo = {
     //     "isSuccess": true,
     //     "code": "MYPAGE201",

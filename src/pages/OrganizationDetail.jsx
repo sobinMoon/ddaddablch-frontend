@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import './OrganizationDetail.css';
 import defaultImage from '../assets/dog.jpg';
 import CampaignHorizontal from '../components/CampaignHorizontal';
+import SERVER_URL from '../hooks/SeverUrl';
 
 export default function OrganizationDetail() {
     const { orgId } = useParams();
@@ -17,8 +18,9 @@ export default function OrganizationDetail() {
 
     const fetchOrganizationData = async () => {
         try {
-            const response = await fetch(`/api/v1/mypage/org/${orgId}`);
+            const response = await fetch(`${SERVER_URL}/api/v1/mypage/org/${orgId}`);
             const data = await response.json();
+            console.log('data:', data);
             
             if (data.isSuccess) {
                 setOrganization(data.result);
@@ -37,44 +39,93 @@ export default function OrganizationDetail() {
     if (!organization) return <div>단체 정보를 찾을 수 없습니다.</div>;
 
     return (
-        <div className="organization-detail">
+        <div className="orgdetail-container">
             <div className="orgdetail-info">
                 <div className="orgdetail-header">
-                    <img src={organization.oprofileImage || defaultImage} alt={organization.onName} className="orgdetail-img" />
+                    <img 
+                        src={organization.oprofileImage || defaultImage} 
+                        alt={organization.onName} 
+                        className="orgdetail-img" 
+                    />
                     <div className="orgdetail-title">
                         <span className="orgdetail-name">{organization.onName}</span>
                         <button className="orgdetail-subscribe-btn">구독</button>
                     </div>
                 </div>
                 <div className="orgdetail-description">
-                    <p>{organization.odescription || '설명이 없습니다.'}</p>
+                    <p>{organization.odescription || '단체 소개가 없습니다.'}</p>
                 </div>
             </div>
 
-            <div className="orgdetail-active-campaigns">
-                <span className="orgdetail-active-campaigns-title">진행 중인 캠페인</span>
+            <div className="orgdetail-campaigns">
+                <span className="orgdetail-campaigns-title">모금 중인 캠페인</span>
                 <div className="orgdetail-campaigns-list">
-                    {organization.activeCampaigns.map(campaign => (
-                        <CampaignHorizontal key={campaign.campaignId} campaign={campaign} />
-                    ))}
+                    {organization.fundraisingCampaigns.length === 0 ? (
+                        <div className="orgdetail-no-campaign">캠페인이 없습니다</div>
+                    ) : (
+                        organization.fundraisingCampaigns.map((campaign) => (
+                            <CampaignHorizontal 
+                                key={campaign.campaignId} 
+                                campaign={{
+                                    id: campaign.campaignId,
+                                    name: campaign.campaignName,
+                                    imageUrl: campaign.imageUrl,
+                                    description: campaign.description,
+                                    goal: campaign.goalAmount,
+                                    currentAmount: campaign.currentAmount,
+                                    statusFlag: campaign.status
+                                }}
+                            />
+                        ))
+                    )}
                 </div>
             </div>
 
-            <div className="orgdetail-completed-campaigns">
-                <span className="orgdetail-completed-campaigns-title">종료된 캠페인</span>
+            <div className="orgdetail-campaigns">
+                <span className="orgdetail-campaigns-title">사업 진행 중인 캠페인</span>
                 <div className="orgdetail-campaigns-list">
-                    {organization.completedCampaigns.map(campaign => (
-                        <CampaignHorizontal key={campaign.campaignId} campaign={campaign} />
-                    ))}
+                    {organization.activeCampaigns.length === 0 ? (
+                        <div className="orgdetail-no-campaign">캠페인이 없습니다</div>
+                    ) : (
+                        organization.activeCampaigns.map((campaign) => (
+                            <CampaignHorizontal 
+                                key={campaign.campaignId} 
+                                campaign={{
+                                    id: campaign.campaignId,
+                                    name: campaign.campaignName,
+                                    imageUrl: campaign.imageUrl,
+                                    description: campaign.description,
+                                    goal: campaign.goalAmount,
+                                    currentAmount: campaign.currentAmount,
+                                    statusFlag: campaign.status
+                                }}
+                            />
+                        ))
+                    )}
                 </div>
             </div>
 
-            <div className="orgdetail-fundraising-campaigns">
-                <span className="orgdetail-fundraising-campaigns-title">모금 중인 캠페인</span>
+            <div className="orgdetail-campaigns">
+                <span className="orgdetail-campaigns-title">종료된 캠페인</span>
                 <div className="orgdetail-campaigns-list">
-                    {organization.fundraisingCampaigns.map(campaign => (
-                        <CampaignHorizontal key={campaign.campaignId} campaign={campaign} />
-                    ))}
+                    {organization.completedCampaigns.length === 0 ? (
+                        <div className="orgdetail-no-campaign">캠페인이 없습니다</div>
+                    ) : (
+                        organization.completedCampaigns.map((campaign) => (
+                            <CampaignHorizontal 
+                                key={campaign.campaignId} 
+                                campaign={{
+                                    id: campaign.campaignId,
+                                    name: campaign.campaignName,
+                                    imageUrl: campaign.imageUrl,
+                                    description: campaign.description,
+                                    goal: campaign.goalAmount,
+                                    currentAmount: campaign.currentAmount,
+                                    statusFlag: campaign.status
+                                }}
+                            />
+                        ))
+                    )}
                 </div>
             </div>
         </div>

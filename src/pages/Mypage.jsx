@@ -113,7 +113,7 @@ export default function Mypage() {
             <div className="profile-section">
                 <div className="profile-info">
                     <img 
-                        src={userInfo.result.sprofileImage || defaultProfile} 
+                        src={`${SERVER_URL}/images/${userInfo.result.sprofileImage}` || defaultProfile} 
                         alt="프로필" 
                         className="profile-image" 
                     />

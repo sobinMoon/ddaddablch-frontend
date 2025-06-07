@@ -37,7 +37,7 @@ function App() {
           <Route path='/mypage-profile-edit'i element={<StudentProfileEdit />} />
           <Route path='/donate' element={<Donate />} />
           <Route path='/reviews' element={<Reviews />} />
-          <Route path='/org-detail/:id' element={<OrganizationDetail />} />
+          <Route path='/org-detail/:orgId' element={<OrganizationDetail />} />
           <Route path='/community' element={<Community />} />
           <Route path='/community/post/:postId' element={<Post />} />
           <Route path='/community/create-post' element={<CreatePost />} />
