@@ -93,13 +93,13 @@ export default function OrgHome() {
             <div className="orghome-info">
                 <div className="orghome-header">
                     <img 
-                        src={organization.oprofileImage || defaultImage} 
+                        src={`${SERVER_URL}/images/${organization.oprofileImage}` || defaultImage} 
                         alt={organization.onName} 
                         className="orghome-img" 
                     />
                     <div className="orghome-title">
                         <span className="orghome-name">{organization.onName}</span>
-                        <button className="orghome-edit-btn">수정</button>
+                        <button className="orghome-edit-btn" onClick={() => navigate('/organization/profile-edit', {state:{organization}})}>수정</button>
                     </div>
                 </div>
                 <div className="orghome-description">
@@ -110,20 +110,24 @@ export default function OrgHome() {
             <div className="orghome-campaigns">
                 <span className="orghome-campaigns-title">모금 중인 캠페인</span>
                 <div className="orghome-campaigns-list">
-                    {organization.fundraisingCampaigns.map((campaign) => (
-                        <CampaignHorizontal 
-                            key={campaign.campaignId} 
-                            campaign={{
-                                id: campaign.campaignId,
-                                name: campaign.campaignName,
-                                imageUrl: campaign.imageUrl,
-                                description: campaign.description,
-                                goal: campaign.goalAmount,
-                                currentAmount: campaign.currentAmount,
-                                statusFlag: campaign.status
-                            }} 
-                        />
-                    ))}
+                    {organization.fundraisingCampaigns.length === 0 ? (
+                        <div className="orghome-no-campaign">캠페인이 없습니다</div>
+                    ) : (
+                        organization.fundraisingCampaigns.map((campaign) => (
+                            <CampaignHorizontal 
+                                key={campaign.campaignId} 
+                                campaign={{
+                                    id: campaign.campaignId,
+                                    name: campaign.campaignName,
+                                    imageUrl: campaign.imageUrl,
+                                    description: campaign.description,
+                                    goal: campaign.goalAmount,
+                                    currentAmount: campaign.currentAmount,
+                                    statusFlag: campaign.status
+                                }}
+                            />
+                        ))
+                    )}
                 </div>
                 <div className="orghome-campaigns-button">
                     <button className="orghome-campaigns-button-text"
@@ -135,40 +139,48 @@ export default function OrgHome() {
             <div className="orghome-campaigns">
                 <span className="orghome-campaigns-title">사업 진행 중인 캠페인</span>
                 <div className="orghome-campaigns-list">
-                    {organization.activeCampaigns.map((campaign) => (
-                        <CampaignHorizontal 
-                            key={campaign.campaignId} 
-                            campaign={{
-                                id: campaign.campaignId,
-                                name: campaign.campaignName,
-                                imageUrl: campaign.imageUrl,
-                                description: campaign.description,
-                                goal: campaign.goalAmount,
-                                currentAmount: campaign.currentAmount,
-                                statusFlag: campaign.status
-                            }} 
-                        />
-                    ))}
+                    {organization.activeCampaigns.length === 0 ? (
+                        <div className="orghome-no-campaign">캠페인이 없습니다</div>
+                    ) : (
+                        organization.activeCampaigns.map((campaign) => (
+                            <CampaignHorizontal 
+                                key={campaign.campaignId} 
+                                campaign={{
+                                    id: campaign.campaignId,
+                                    name: campaign.campaignName,
+                                    imageUrl: campaign.imageUrl,
+                                    description: campaign.description,
+                                    goal: campaign.goalAmount,
+                                    currentAmount: campaign.currentAmount,
+                                    statusFlag: campaign.status
+                                }}
+                            />
+                        ))
+                    )}
                 </div>
             </div>
 
             <div className="orghome-campaigns">
                 <span className="orghome-campaigns-title">종료된 캠페인</span>
                 <div className="orghome-campaigns-list">
-                    {organization.completedCampaigns.map((campaign) => (
-                        <CampaignHorizontal 
-                            key={campaign.campaignId} 
-                            campaign={{
-                                id: campaign.campaignId,
-                                name: campaign.campaignName,
-                                imageUrl: campaign.imageUrl,
-                                description: campaign.description,
-                                goal: campaign.goalAmount,
-                                currentAmount: campaign.currentAmount,
-                                statusFlag: campaign.status
-                            }} 
-                        />
-                    ))}
+                    {organization.completedCampaigns.length === 0 ? (
+                        <div className="orghome-no-campaign">캠페인이 없습니다</div>
+                    ) : (
+                        organization.completedCampaigns.map((campaign) => (
+                            <CampaignHorizontal 
+                                key={campaign.campaignId} 
+                                campaign={{
+                                    id: campaign.campaignId,
+                                    name: campaign.campaignName,
+                                    imageUrl: campaign.imageUrl,
+                                    description: campaign.description,
+                                    goal: campaign.goalAmount,
+                                    currentAmount: campaign.currentAmount,
+                                    statusFlag: campaign.status
+                                }}
+                            />
+                        ))
+                    )}
                 </div>
             </div>
 

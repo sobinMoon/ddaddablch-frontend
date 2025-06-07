@@ -58,6 +58,8 @@
     object-fit: cover;
     border-radius: 12px;
     border: 2px solid #dee2e6;
+    margin: 10px 0 18px 0;
+
 }
 
 .profileimage-upload-edit {

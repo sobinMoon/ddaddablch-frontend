@@ -1,47 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import './StudentProfileEdit.css';
-import SERVER_URL from '../hooks/SeverUrl';
+import './OrgProfileEdit.css';
 import { useLocation } from 'react-router-dom';
+import SERVER_URL from '../hooks/SeverUrl';
 
-export default function StudentProfileEdit() {
-    const [profileImage, setProfileImage] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState('');
-    const [nickname, setNickname] = useState('');
+export default function OrgProfileEdit() {
+    const { organization } = useLocation().state;
+    const [activeTab, setActiveTab] = useState('profile');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
-    const [token, setToken] = useState(''); // 임시 토큰 입력용
+    const [previewUrl, setPreviewUrl] = useState(null);
     const [message, setMessage] = useState('');
-    const [activeTab, setActiveTab] = useState('profile');
-    const { userInfo } = useLocation().state;
-    const [userInfoState, setUserInfoState] = useState(null);
+    const [description, setDescription] = useState('');
+    const [profileImage, setProfileImage] = useState(null);
 
     useEffect(() => {
-        if (userInfo && userInfo.result && userInfo.result.snickname) {
-            setNickname(userInfo.result.snickname);
-            setPreviewUrl(`${SERVER_URL}/images/${userInfo.result.sprofileImage}`);
+        if (organization && organization.odescription) {
+            setDescription(organization.odescription);
         }
-    }, [userInfo]);
+    }, [organization]);
+
+    useEffect(() => {
+        if (organization && organization.oprofileImage) {
+            setPreviewUrl(`${SERVER_URL}/images/${organization.oprofileImage}`);
+        }
+    }, [organization]);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreviewUrl(reader.result);
-            };
-            reader.readAsDataURL(file);
+            setPreviewUrl(URL.createObjectURL(file));
             setProfileImage(file);
         }
     };
+    console.log('organization:', organization);
 
+    // 정보 수정 제출
     const handleProfileSubmit = async (e) => {
         e.preventDefault();
+        const formData = new FormData();
         const updateInfo = {
-            nickname,
+            description,
             currentPassword,
         };
-        const formData = new FormData();
         const jsonBlob = new Blob([JSON.stringify(updateInfo)], { type: 'application/json' });
         formData.append('updateInfo', jsonBlob);
         if (profileImage) {
@@ -49,7 +50,7 @@ export default function StudentProfileEdit() {
         }
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${SERVER_URL}/api/v1/mypage/student/update`, {
+            const res = await fetch(`${SERVER_URL}/api/v1/org/update`, {
                 method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -57,45 +58,51 @@ export default function StudentProfileEdit() {
                 body: formData,
             });
             if (res.ok) {
-                setMessage('프로필이 성공적으로 수정되었습니다.');
+                setMessage('정보가 성공적으로 수정되었습니다.');
             } else {
                 setMessage('수정 실패: ' + (await res.text()));
             }
         } catch (err) {
             setMessage('에러 발생: ' + err.message);
         }
-        console.log('닉네임:', nickname);
     };
-
-    const handlePasswordSubmit = async (e) => {
-        e.preventDefault();
-        const updateInfo = {
-            currentPassword,
-            newPassword,
-            confirmNewPassword,
-        };
-        const formData = new FormData();
-        const jsonBlob = new Blob([JSON.stringify(updateInfo)], { type: 'application/json' });
-        formData.append('updateInfo', jsonBlob);
-        try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${SERVER_URL}/api/v1/mypage/student/update/pwd`, {
-                method: 'PUT',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-                body: formData,
-            });
-            if (res.ok) {
-                setMessage('비밀번호가 성공적으로 변경되었습니다.');
-            } else {
-                setMessage('변경 실패: ' + (await res.text()));
-            }
-        } catch (err) {
-            setMessage('에러 발생: ' + err.message);
+// 비밀번호 변경 제출
+const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    
+    // FormData 방식으로 변경
+    const formData = new FormData();
+    const updatePwd = {
+        currentPassword,
+        newPassword,
+        confirmNewPassword,
+    };
+    
+    // JSON을 Blob으로 변환해서 추가
+    formData.append('updateInfo', new Blob([JSON.stringify(updatePwd)], {
+        type: 'application/json'
+    }));
+    
+    try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${SERVER_URL}/api/v1/org/update/pwd`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                // Content-Type 헤더 제거 (브라우저가 자동 설정)
+            },
+            body: formData, //  JSON 대신 FormData 사용
+        });
+        
+        if (res.ok) {
+            setMessage('비밀번호가 성공적으로 변경되었습니다.');
+        } else {
+            setMessage('비밀번호 변경 실패: ' + (await res.text()));
         }
-    };
-
+    } catch (err) {
+        setMessage('에러 발생: ' + err.message);
+    }
+};
     return (
         <div className="student-profile-edit-container">
             <div className="profile-edit-tab-menu">
@@ -103,7 +110,7 @@ export default function StudentProfileEdit() {
                     className={activeTab === 'profile' ? 'active' : 'inactive'}
                     onClick={() => setActiveTab('profile')}
                 >
-                    내 정보 수정
+                    정보 수정
                 </button>
                 <button
                     className={activeTab === 'password' ? 'active' : 'inactive'}
@@ -115,22 +122,17 @@ export default function StudentProfileEdit() {
 
             {activeTab === 'profile' && (
                 <form onSubmit={handleProfileSubmit}>
-                    <label >이름</label>
-                    <div className='profile-no-edit'>{userInfo.result.sname}</div>
+                    <label >단체명</label>
+                    <div className='profile-no-edit'>{organization.onName}</div>
 
                     <label>이메일</label>
-                    <div className='profile-no-edit'>{userInfo.result.semail}</div>
+                    <div className='profile-no-edit'>{organization.oemail}</div>
 
-                    <label htmlFor="nickname">닉네임</label>
-                    <input
-                        className="profile-edit-input"
-                        name="nickname"
-                        id="nickname"
-                        placeholder="닉네임을 입력하세요"
-                        value={nickname}
-                        onChange={e => setNickname(e.target.value)}
-                    />
+                    <label>사업자 번호</label>
+                    <div className='profile-no-edit'>{organization.obusinessNumber
+                    }</div>
 
+                   
                     <label>프로필 이미지</label>
                     <div className="profileimage-upload-edit-wrapper">
                         {previewUrl && (
@@ -147,6 +149,17 @@ export default function StudentProfileEdit() {
                             style={{ display: 'none' }}
                         />
                     </div>
+
+                    <label htmlFor="description">단체 소개</label>
+                    <input
+                        className="profile-edit-input"
+                        name="description"
+                        id="description"
+                        placeholder="단체 소개를 입력해주세요"
+                        value={description}
+                        onChange={e => setDescription(e.target.value)}
+                    />
+
                     <label htmlFor="currentPassword">현재 비밀번호</label>
                     <input
                         className="profile-edit-input"

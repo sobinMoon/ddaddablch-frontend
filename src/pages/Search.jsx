@@ -98,12 +98,9 @@ export default function Search() {
             if (keyword) {
                 setLoading(true);
                 try {
-                    // API 호출 대신 목업 데이터 사용
-                    // const response = await fetch(`${SERVER_URL}/api/v1/campaigns/search?keyword=${encodeURIComponent(keyword)}`);
-                    // const data = await response.json();
-
-                    // 목업 데이터 사용
-                    const data = mockData;
+                    // 실제 API 호출
+                    const response = await fetch(`${SERVER_URL}/api/v1/campaigns/search?keyword=${encodeURIComponent(keyword)}`);
+                    const data = await response.json();
                     setSearchResults(data.campaigns);
                     setTotalResults(data.totalElements);
                 } catch (error) {

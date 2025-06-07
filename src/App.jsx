@@ -26,6 +26,7 @@ import BeneficiaryWithdraw from './metamask/BeneficiaryWithdraw';
 import CreateCampaignNews from './pages/Organization/CreateCampaignNews';
 import Search from './pages/Search';
 import StudentProfileEdit from './pages/StudentProfileEdit';
+import OrgProfileEdit from './pages/OrgProfileEdit';
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
           <Route path='/organization/create-campaign' element={<CreateCampaign />} />
           <Route path='/organization/beneficiary-withdraw' element={<BeneficiaryWithdraw />} />
           <Route path='/organization/create-campaign-news/:campaignId' element={<CreateCampaignNews />} />
+          <Route path='/organization/profile-edit' element={<OrgProfileEdit />} />
         </Route>
       </Routes>
   );
