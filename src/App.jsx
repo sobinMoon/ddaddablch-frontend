@@ -25,6 +25,7 @@ import MetamaskDonate from './metamask/MetamaskDonate';
 import BeneficiaryWithdraw from './metamask/BeneficiaryWithdraw';
 import CreateCampaignNews from './pages/Organization/CreateCampaignNews';
 import Search from './pages/Search';
+import StudentProfileEdit from './pages/StudentProfileEdit';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/search' element={<Search />} />
           <Route path='/mypage' element={<Mypage />} />
+          <Route path='/mypage-profile-edit'i element={<StudentProfileEdit />} />
           <Route path='/donate' element={<Donate />} />
           <Route path='/reviews' element={<Reviews />} />
           <Route path='/org-detail/:id' element={<OrganizationDetail />} />

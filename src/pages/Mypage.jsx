@@ -120,7 +120,7 @@ export default function Mypage() {
                     <div className="profile-details">
                         <div className="profile-text">
                             <h2 className="profile-nickname">{userInfo.result.snickname}</h2>
-                            <button className="edit-profile-btn">수정</button>
+                            <button className="edit-profile-btn" onClick={() => navigate('/mypage-profile-edit')}>수정</button>
                         </div>
                     </div>
                 </div>

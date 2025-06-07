@@ -1,28 +1,30 @@
 .search-container {
-    width: 100%;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 2rem;
+    padding: 32px 200px;
     background-color: #fff;
 }
 
 .search-wrapper {
-    width: 100%;
-    max-width: 1000px;
-    padding: 0 1rem;
+  width: 100%;
+  margin: 0 auto; /* 화면 중앙에 정렬 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* ← 기본 왼쪽 정렬 */
 }
 
+/* ✅ search-form만 중앙으로 */
 .search-form {
+    align-self: center; /* ← 부모(.search-wrapper) 기준 중앙 */
     display: flex;
     gap: 0.5rem;
     width: 500px;
     background-color: #f6f6f6;
     border-radius: 100px;
     padding: 0.5rem;
-    margin: 0 auto 2rem;
-}
+    margin-bottom: 2rem;
+  }
 
 .search-input {
     flex: 1;
@@ -56,12 +58,12 @@
     width: 100%;
     text-align: left;
 }
-
+/* ✅ 제목은 기본 왼쪽 정렬 상태 유지 */
 .search-results-header {
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.7rem;
     text-align: left;
     width: 100%;
-}
+  }
 
 .search-results-header h2 {
     font-size: 1.5rem;
@@ -179,3 +181,8 @@
     font-size: 1.1rem;
 }
 
+.no-results img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}

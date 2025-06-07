@@ -5,6 +5,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import SERVER_URL from '../hooks/SeverUrl';
 import defaultImage from '../assets/dog.jpg';
 import heartImage from '../assets/cat.jpg';
+import noResultsImage from '../assets/no_message.png';
 
 // 목업 데이터
 const mockData = {
@@ -39,7 +40,7 @@ const mockData = {
             "donateEnd": "2025-06-27",
             "businessStart": "2025-07-10",
             "businessEnd": "2025-07-30",
-            "statusFlag": "FUNDRAISING",
+            "statusFlag": "IN_PROGRESS",
             "createdAt": "2025-06-06T14:35:07.750591",
             "updatedAt": "2025-06-06T14:35:12.699372"
         },
@@ -93,14 +94,14 @@ export default function Search() {
         const searchCampaigns = async () => {
             const params = new URLSearchParams(location.search);
             const keyword = params.get('q');
-            
+
             if (keyword) {
                 setLoading(true);
                 try {
                     // API 호출 대신 목업 데이터 사용
                     // const response = await fetch(`${SERVER_URL}/api/v1/campaigns/search?keyword=${encodeURIComponent(keyword)}`);
                     // const data = await response.json();
-                    
+
                     // 목업 데이터 사용
                     const data = mockData;
                     setSearchResults(data.campaigns);
@@ -167,9 +168,9 @@ export default function Search() {
                                     style={{ textDecoration: "none", color: "inherit" }}
                                 >
                                     <div className="campaign-image">
-                                        <img 
+                                        <img
                                             src={campaign.imageUrl}
-                                            alt={campaign.name} 
+                                            alt={campaign.name}
                                         />
                                     </div>
                                     <div className="campaign-info">
@@ -181,18 +182,18 @@ export default function Search() {
                                                 (campaign.statusFlag === "FUNDRAISING"
                                                     ? "status-fundraising"
                                                     : campaign.statusFlag === "IN_PROGRESS" || campaign.statusFlag === "FUNDED"
-                                                    ? "status-inprogress"
-                                                    : campaign.statusFlag === "COMPLETED"
-                                                    ? "status-completed"
-                                                    : "")
+                                                        ? "status-inprogress"
+                                                        : campaign.statusFlag === "COMPLETED"
+                                                            ? "status-completed"
+                                                            : "")
                                             }>
                                                 {campaign.statusFlag === "FUNDRAISING"
                                                     ? "진행중"
                                                     : campaign.statusFlag === "IN_PROGRESS" || campaign.statusFlag === "FUNDED"
-                                                    ? "사업 진행중"
-                                                    : campaign.statusFlag === "COMPLETED"
-                                                    ? "종료"
-                                                    : campaign.statusFlag}
+                                                        ? "사업 진행중"
+                                                        : campaign.statusFlag === "COMPLETED"
+                                                            ? "종료"
+                                                            : campaign.statusFlag}
                                             </span>
                                         </div>
                                         <div className="campaign-progress">
@@ -206,8 +207,11 @@ export default function Search() {
                         </div>
                     </div>
                 ) : location.search && (
-                    <div className="no-results">
-                        검색 결과가 없습니다.
+                    <div className="search-results">
+                        <div className="no-results">
+                            <img src={noResultsImage} alt="검색 결과가 없습니다." />
+                            <p>검색 결과가 없습니다.</p>
+                        </div>
                     </div>
                 )}
             </div>
