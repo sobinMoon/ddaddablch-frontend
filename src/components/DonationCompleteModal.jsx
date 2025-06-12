@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DonationCompleteModal.css';
-
 import { IoClose } from "react-icons/io5";
 import { createDonationImage } from '../hooks/imageUtils';
 import SERVER_URL from '../hooks/SeverUrl';
