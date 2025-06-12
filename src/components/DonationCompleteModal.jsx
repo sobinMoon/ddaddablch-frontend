@@ -1,69 +1,73 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DonationCompleteModal.css';
-import { fetchUserNickname } from '../hooks/imageUtils';
+
 import { IoClose } from "react-icons/io5";
 import { createDonationImage } from '../hooks/imageUtils';
 import SERVER_URL from '../hooks/SeverUrl';
 
-function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
+function DonationCompleteModal({ isOpen, onClose, donationInfo, userNickname }) {
   const navigate = useNavigate();
   const [compositeImage, setCompositeImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
-  const [nickname, setNickname] = useState('');
+  const [error, setError] = useState(null);
 
   const getDefaultImageByCategory = (category) => {
-    switch (category) {
-      case '아동청소년':
-        return '/image/IMG_children.png';
-      case '노인':
-        return '/image/IMG_elderly.png';
-      case '환경':
-        return '/image/IMG_environment.png';
-      case '사회':
-        return '/image/IMG_social.png';
-      case '동물':
-        return '/image/IMG_animal.png';
-      case '장애인':
-        return '/image/IMG_disabled.png';
-      default:
-        return '/image/IMG_animal.png';   
-    }
+    // 여러 가능한 경로를 시도할 수 있도록 기본 경로만 반환
+    const imagePath = `/image/IMG_${category === '아동청소년' ? 'children' : 
+                      category === '노인' ? 'elderly' : 
+                      category === '환경' ? 'environment' : 
+                      category === '사회' ? 'social' : 
+                      category === '동물' ? 'animal' : 
+                      category === '장애인' ? 'disabled' : 'animal'}.png`;
+    return imagePath;
   };
-
-  useEffect(() => {
-    fetchUserNickname().then(setNickname);
-  }, []);
 
   useEffect(() => {
     if (isOpen && donationInfo) {
       setIsLoading(true);
+      setError(null);
+      
       const defaultImage = getDefaultImageByCategory(donationInfo.category);
+      // nickname을 userNickname이나 donationInfo에서 가져오기
+      const nickname = userNickname || donationInfo.nickname || '익명';
+      
+      console.log('이미지 합성 시작:', { defaultImage, donationInfo, nickname });
+      
       createDonationImage(defaultImage, donationInfo, nickname)
         .then(async imageUrl => {
+          console.log('이미지 합성 성공:', imageUrl);
           setCompositeImage(imageUrl);
           setIsLoading(false);
+          
           // 이미지가 생성되면 자동으로 업로드
           try {
             await uploadNFTImage(imageUrl);
           } catch (error) {
             console.error('자동 업로드 실패:', error);
+            // 업로드 실패해도 이미지는 보여주기
           }
         })
         .catch(error => {
           console.error('이미지 합성 실패:', error);
-          setCompositeImage(defaultImage);
+          setError('이미지 생성에 실패했습니다: ' + error.message);
+          setCompositeImage(defaultImage); // 기본 이미지라도 보여주기
           setIsLoading(false);
         });
     }
-  }, [isOpen, donationInfo]);
+  }, [isOpen, donationInfo, userNickname]);
 
   const uploadNFTImage = async (imageUrl) => {
     try {
       setIsUploading(true);
+      
       // 이미지 URL을 Blob으로 변환
       const response = await fetch(imageUrl);
+      if (!response.ok) {
+        throw new Error('이미지 다운로드 실패');
+      }
+      
       const blob = await response.blob();
       
       // Blob을 File 객체로 변환
@@ -87,7 +91,8 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
         throw new Error(data.message || 'NFT 이미지 업로드에 실패했습니다.');
       }
 
-      return data.result[0]; // 업로드된 이미지 경로 반환
+      console.log('NFT 업로드 성공:', data.result[0]);
+      return data.result[0];
     } catch (error) {
       console.error('NFT 이미지 업로드 실패:', error);
       throw error;
@@ -106,6 +111,12 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
     });
   };
 
+  // 이미지 로드 에러 처리
+  const handleImageError = () => {
+    console.error('이미지 로드 실패');
+    setCompositeImage('/image/IMG_animal.png'); // fallback 이미지
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -119,8 +130,12 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
         <h2>기부 완료!</h2>
         <div className="donation-modal-info">
           <p className='donation-modal-info-text'>NFT 인증서가 발급되었어요</p>
-          {/*<p>캠페인: {donationInfo.campaignName}</p>*/}
-          {/*<p>기부 금액: {donationInfo.amount} ETH</p>*/}
+          
+          {/* 에러 메시지 표시 */}
+          {error && (
+            <p style={{ color: 'red', fontSize: '14px' }}>{error}</p>
+          )}
+          
           {isLoading ? (
             <div 
               className='donation-modal-img' 
@@ -130,14 +145,18 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
                 height: '300px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                color: '#666'
               }}
-            />
+            >
+              이미지 생성 중...
+            </div>
           ) : (
             <img 
               className='donation-modal-img' 
               src={compositeImage} 
               alt="기부 인증서" 
+              onError={handleImageError}
             />
           )}
         </div>
