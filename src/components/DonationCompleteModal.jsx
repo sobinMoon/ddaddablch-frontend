@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DonationCompleteModal.css';
 // import defaultImage1 from '../assets/IMG_environment.png';
-import defaultImage2 from '../assets/IMG_animal.png';
-import defaultImage3 from '../assets/IMG_elderly.png';
-import defaultImage4 from '../assets/IMG_children.png';
-import defaultImage5 from '../assets/IMG_disabled.png';
-import defaultImage6 from '../assets/IMG_social.jpg';
+// import defaultImage2 from '../assets/IMG_animal.png';
+// import defaultImage3 from '../assets/IMG_elderly.png';
+// import defaultImage4 from '../assets/IMG_children.png';
+// import defaultImage5 from '../assets/IMG_disabled.png';
+// import defaultImage6 from '../assets/IMG_social.jpg';
 import { IoClose } from "react-icons/io5";
 import { createDonationImage } from '../hooks/imageUtils';
 
@@ -17,19 +17,19 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
   const getDefaultImageByCategory = (category) => {
     switch (category) {
       case '아동청소년':
-        return defaultImage4;
+        return "/images/IMG_elderly.png";
       case '노인':
-        return defaultImage3;
+        return "/images/IMG_environment.png";
       case '환경':
         return "/images/IMG_environment.png";
       case '사회':
-        return defaultImage6;
+        return "/images/IMG_social.png";
       case '동물':
-        return defaultImage2;
+        return "/images/IMG_animal.png";
       case '장애인':
-        return defaultImage5;
+        return "/images/IMG_disabled.png";
       default:
-        return defaultImage2; // 기본값으로 동물 이미지 사용
+        return "/images/IMG_animal.png"; // 기본값으로 동물 이미지 사용
     }
   };
 
@@ -51,7 +51,7 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
     onClose();
     navigate('/community/create-post', {
       state: {
-        defaultImage: compositeImage || defaultImage2,
+        defaultImage: compositeImage || "/images/IMG_animal.png",
         donationInfo: donationInfo
       }
     });
