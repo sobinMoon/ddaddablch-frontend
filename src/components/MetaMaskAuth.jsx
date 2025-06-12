@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Web3 from "web3";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./MetaMaskAuth.css"; // CSS 분리
@@ -22,6 +22,10 @@ const MetaMaskAuth = () => {
     sign: false,
     verify: false,
   });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const [isConnected, setIsConnected] = useState(false);
 

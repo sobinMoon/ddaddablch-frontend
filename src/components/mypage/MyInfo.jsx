@@ -98,7 +98,7 @@ export default function MyInfo({ userInfo, setActiveTab }) {
                 </div>
                 <div className="myinfo-nft-content">
                     {isLoadingNfts ? (
-                        <div className="myinfo-nft-loading">로딩 중...</div>
+                        <div className="myinfo-nft-loading"></div>
                     ) : nfts.length > 0 ? (
                         <div className="myinfo-nft-grid">
                             {nfts.map((nft, index) => (

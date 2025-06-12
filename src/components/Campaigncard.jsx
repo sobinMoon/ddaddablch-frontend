@@ -45,7 +45,7 @@ export default function Campaigncard({ campaign, sortOption }) {
         <div className="campaign-card" onClick={handleClick} style={{ cursor: 'pointer' }}>
             <img className='campaign-img' src={`${SERVER_URL}/images/${campaign.imageUrl}`} alt="캠페인 이미지" />
             <p className='campaign-name'>{campaign.name}</p>
-            <p className='campaign-info'>{renderExtraInfo()}</p>
+            <p className='campaign-card-info'>{renderExtraInfo()}</p>
         </div>
     );
 }

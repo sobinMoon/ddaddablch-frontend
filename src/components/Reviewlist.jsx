@@ -50,11 +50,15 @@ export default function Reviewlist() {
       <div className="review-header">
         <h2 className='review-title'>완료된 캠페인</h2>
       </div>
-      <div className="review-grid">
-        {campaigns.map(campaign => (
-          <Reviewcard key={campaign.id} campaign={campaign} />
-        ))}
-      </div>
+      {campaigns.length === 0 ? (
+        <div className="no-campaigns-message">아직 완료된 캠페인이 없습니다</div>
+      ) : (
+        <div className="review-grid">
+          {campaigns.map(campaign => (
+            <Reviewcard key={campaign.id} campaign={campaign} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

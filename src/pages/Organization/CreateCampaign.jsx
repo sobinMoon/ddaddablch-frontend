@@ -51,6 +51,12 @@ export default function CreateCampaign() {
             return;
         }
 
+        if (content.length < 500) {
+            alert('소개글은 최소 500자 이상이어야 합니다.');
+            return;
+        }
+
+
         if (!donateStart || !donateEnd) {
             alert('모금 시작일과 종료일을 선택해주세요.');
             return;
@@ -353,7 +359,9 @@ export default function CreateCampaign() {
                                 setBusinessEnd(''); // 시작일이 변경되면 종료일 초기화
                             }}
                             min={donateEnd}
+                            disabled={!donateEnd}
                             onKeyDown={(e) => e.preventDefault()}
+                            placeholder={!donateEnd ? "모금 종료일을 먼저 선택해주세요" : ""}
                         />
                     </div>
 

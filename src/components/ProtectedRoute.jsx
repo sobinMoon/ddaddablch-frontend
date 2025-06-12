@@ -72,7 +72,7 @@ export default function ProtectedRoute({ children, allowedRoles }) {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   if (!isAuthenticated) {
