@@ -5,7 +5,7 @@ import SERVER_URL from '../hooks/SeverUrl';
 
 const CampaignHorizontal = ({ campaign }) => {
     const navigate = useNavigate();
-    console.log("캠페인 정보", campaign);
+    //console.log("캠페인 정보", campaign);
     const handleClick = () => {
         navigate(`/donate/campaign/${campaign.id}`);
     };
