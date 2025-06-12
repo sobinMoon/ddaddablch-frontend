@@ -15,7 +15,7 @@ export default function Orgcard({ organization }) {
         <div className="orgcard-container">
             <div className="orgcard-header">
                 <img
-                    src={organization.profileImage ? `${SERVER_URL}/api/v1/images/${organization.profileImage}` : "https://via.placeholder.com/40"}
+                    src={organization.profileImage ? `${SERVER_URL}/images/${organization.profileImage}` : "https://via.placeholder.com/40"}
                     alt={organization.name}
                     className="orgcard-img"
                 />

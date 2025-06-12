@@ -7,6 +7,7 @@ import Notifications from '../components/mypage/Notifications';
 import Posts from '../components/mypage/Posts';
 import { useNavigate } from 'react-router-dom';
 import SERVER_URL from '../hooks/SeverUrl';
+import { FaCheckCircle } from "react-icons/fa";
 
 export default function Mypage() {
     const [activeTab, setActiveTab] = useState('my');
@@ -60,7 +61,7 @@ export default function Mypage() {
             case 'donations':
                 return <Donations recentDonations={userInfo.result.recentDonations} />;
             case 'notifications':
-                return <Notifications notifications={userInfo.result.unreadNotifications} />;
+                return <Notifications userInfo={userInfo} />;
             case 'posts':
                 return <Posts recentPosts={userInfo.result.recentPosts} />;
             default:
@@ -115,7 +116,7 @@ export default function Mypage() {
                     <img 
                         src={`${SERVER_URL}/images/${userInfo.result.sprofileImage}` || defaultProfile} 
                         alt="프로필" 
-                        className="profile-image" 
+                        className="mypage-profile-image" 
                     />
                     <div className="profile-details">
                         <div className="profile-text">

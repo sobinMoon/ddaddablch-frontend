@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CampaignHorizontal.css';
+import SERVER_URL from '../hooks/SeverUrl';
 
 const CampaignHorizontal = ({ campaign }) => {
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ const CampaignHorizontal = ({ campaign }) => {
         <div className="campaign-horizontal-card" onClick={handleClick}>
             <div className="campaign-horizontal-image">
                 <div className="campaign-horizontal-image-wrapper">
-                    <img src={campaign.imageUrl} alt={campaign.name} />
+                    <img src={`${SERVER_URL}/images/${campaign.imageUrl}`} alt={campaign.name} />
                 </div>
             </div>
 

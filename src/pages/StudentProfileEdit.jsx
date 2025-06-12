@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './StudentProfileEdit.css';
 import SERVER_URL from '../hooks/SeverUrl';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function StudentProfileEdit() {
     const [profileImage, setProfileImage] = useState(null);
@@ -13,8 +13,10 @@ export default function StudentProfileEdit() {
     const [token, setToken] = useState(''); // 임시 토큰 입력용
     const [message, setMessage] = useState('');
     const [activeTab, setActiveTab] = useState('profile');
+    const [isLoading, setIsLoading] = useState(false);
     const { userInfo } = useLocation().state;
     const [userInfoState, setUserInfoState] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (userInfo && userInfo.result && userInfo.result.snickname) {
@@ -37,6 +39,7 @@ export default function StudentProfileEdit() {
 
     const handleProfileSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         const updateInfo = {
             nickname,
             currentPassword,
@@ -57,18 +60,22 @@ export default function StudentProfileEdit() {
                 body: formData,
             });
             if (res.ok) {
-                setMessage('프로필이 성공적으로 수정되었습니다.');
+                alert('프로필이 성공적으로 수정되었습니다.');
+                navigate('/mypage');
             } else {
                 setMessage('수정 실패: ' + (await res.text()));
             }
         } catch (err) {
             setMessage('에러 발생: ' + err.message);
+        } finally {
+            setIsLoading(false);
         }
         console.log('닉네임:', nickname);
     };
 
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         const updateInfo = {
             currentPassword,
             newPassword,
@@ -87,12 +94,15 @@ export default function StudentProfileEdit() {
                 body: formData,
             });
             if (res.ok) {
-                setMessage('비밀번호가 성공적으로 변경되었습니다.');
+                alert('비밀번호가 성공적으로 변경되었습니다.');
+                navigate('/mypage');
             } else {
                 setMessage('변경 실패: ' + (await res.text()));
             }
         } catch (err) {
             setMessage('에러 발생: ' + err.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -102,12 +112,14 @@ export default function StudentProfileEdit() {
                 <button
                     className={activeTab === 'profile' ? 'active' : 'inactive'}
                     onClick={() => setActiveTab('profile')}
+                    disabled={isLoading}
                 >
                     내 정보 수정
                 </button>
                 <button
                     className={activeTab === 'password' ? 'active' : 'inactive'}
                     onClick={() => setActiveTab('password')}
+                    disabled={isLoading}
                 >
                     비밀번호 변경
                 </button>
@@ -157,8 +169,15 @@ export default function StudentProfileEdit() {
                         value={currentPassword}
                         onChange={e => setCurrentPassword(e.target.value)}
                     />
-                    <button className='profile-edit-submit-btn' type="submit" style={{ marginTop: '24px', width: '100%' }}>수정하기</button>
-                    {message && <div style={{ marginTop: '16px', color: 'red' }}>{message}</div>}
+                    <button 
+                        className='profile-edit-submit-btn' 
+                        type="submit" 
+                        style={{ marginTop: '24px', width: '100%' }}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? '수정하기' : '수정하기'}
+                    </button>
+                    {message && <div className='profile-edit-message'>{message}</div>}
                 </form>
             )}
             {activeTab === 'password' && (
@@ -194,8 +213,15 @@ export default function StudentProfileEdit() {
                         value={currentPassword}
                         onChange={e => setCurrentPassword(e.target.value)}
                     />
-                    <button className='profile-edit-submit-btn' type="submit" style={{ marginTop: '24px', width: '100%' }}>비밀번호 변경</button>
-                    {message && <div style={{ marginTop: '16px', color: 'red' }}>{message}</div>}
+                    <button 
+                        className='profile-edit-submit-btn' 
+                        type="submit" 
+                        style={{ marginTop: '24px', width: '100%' }}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? '비밀번호 변경' : '비밀번호 변경'}
+                    </button>
+                    {message && <div className='profile-edit-message'>{message}</div>}
                 </form>
             )}
         </div>

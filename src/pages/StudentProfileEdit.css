@@ -128,3 +128,12 @@
 .profile-edit-submit-btn:hover {
     background-color: #0056b3;
 }
+
+.profile-edit-message {
+    color: #ff4d4f;
+    background-color: #fff1f0;
+    font-size: 0.85rem;
+    margin-top: 16px;
+    padding: 10px;
+    border-radius: 4px;
+}

@@ -11,7 +11,7 @@ export default function ProtectedRoute({ children, allowedRoles }) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const accessToken = localStorage.getItem('accessToken');
+        const accessToken = localStorage.getItem('token');
         if (!accessToken) {
           setIsLoading(false);
           return;

@@ -250,7 +250,7 @@ export default function Comments({ type, id }) {
         {comments.map((comment) => (
           <li key={comment.id} className="comment-item">
             <img
-              src={comment.profileImage ? `${SERVER_URL}/api/v1/images/${comment.profileImage}` : "https://via.placeholder.com/40"}
+              src={comment.profileImage ? `${SERVER_URL}/images/${comment.profileImage}` : "https://via.placeholder.com/40"}
               alt={comment.nickname}
               className="comment-profile"
             />

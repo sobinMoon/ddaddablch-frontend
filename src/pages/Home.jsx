@@ -47,7 +47,7 @@ export default function Home() {
 
   if (loading) return <div></div>;
   if (error) return <div>Error: {error}</div>;
-  if (!data) return <div>No data available</div>;
+  if (!data) return <div></div>;
 
   const urgentCampaigns = data.popular || [];
   const newCampaigns = data.latest || [];

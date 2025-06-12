@@ -145,7 +145,7 @@ export default function OrganizationDetail() {
             <div className="orgdetail-info">
                 <div className="orgdetail-header">
                     <img 
-                        src={organization.oprofileImage || defaultImage} 
+                        src={`${SERVER_URL}/images/${organization.oprofileImage}` || defaultImage} 
                         alt={organization.onName} 
                         className="orgdetail-img" 
                     />

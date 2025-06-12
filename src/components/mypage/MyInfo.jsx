@@ -1,8 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './MyInfo.css';
+import SERVER_URL from '../../hooks/SeverUrl';
+import { useNavigate } from 'react-router-dom';
 
+export default function MyInfo  ({ userInfo, setActiveTab }) {
+    const [subscriptions, setSubscriptions] = useState([]);
+    const navigate = useNavigate();
 
-export default function MyInfo({ userInfo, setActiveTab }) {
+    useEffect(() => {
+        const fetchSubscriptions = async () => {
+            try {
+                const response = await fetch(`${SERVER_URL}/api/organizations/subscriptions/student/${userInfo.result.sid}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setSubscriptions(data);
+                }
+            } catch (error) {
+                console.error('Error fetching subscriptions:', error);
+            }
+        };
+
+        if (userInfo?.result?.sid) {
+            fetchSubscriptions();
+        }
+    }, [userInfo]);
+
     console.log('userInfo:', userInfo);
     // const userInfo = {
     //     "isSuccess": true,
@@ -70,9 +92,13 @@ export default function MyInfo({ userInfo, setActiveTab }) {
     //         "semail": "seobeen624@sookmyung.ac.kr"
     //     }
     // };
-    
+
     const handleDonationsClick = () => {
         setActiveTab('donations');
+    };
+
+    const handleOrganizationClick = (organizationId) => {
+        navigate(`/org-detail/${organizationId}`);
     };
 
     return (
@@ -99,13 +125,37 @@ export default function MyInfo({ userInfo, setActiveTab }) {
                 </div>
             </div>
 
-
             <div className="myinfo-nft-container">
                 <div className="myinfo-nft-header">
                     <span className="myinfo-nft-header-title">NFT 보유 내역</span>
                 </div>
                 <div className="myinfo-nft-content">
                     <div className="myinfo-nft-content-item"></div>
+                </div>
+            </div>
+
+            <div className="myinfo-subscriptions-container">
+                <div className="myinfo-subscriptions-header">
+                    <span className="myinfo-subscriptions-header-title">구독 중인 단체</span>
+                </div>
+                <div className="myinfo-subscriptions-content">
+                    {subscriptions.length > 0 ? (
+                        subscriptions.map((subscription) => (
+                            <div 
+                                key={subscription.subscriptionId} 
+                                className="myinfo-subscription-item"
+                                onClick={() => handleOrganizationClick(subscription.organizationId)}
+                            >
+                                <div className="myinfo-subscription-info">
+                                    <h3 className="myinfo-subscription-name">{subscription.organizationName}</h3>
+                                    <p className="myinfo-subscription-description">{subscription.organizationDescription.replace(/\\n|¶/g, ' ')}</p>
+                                    <p className="myinfo-subscription-date">구독일: {new Date(subscription.subscribedAt).toLocaleDateString()}</p>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="myinfo-subscription-empty">구독 중인 단체가 없습니다.</p>
+                    )}
                 </div>
             </div>
         </div>

@@ -1,0 +1,119 @@
+.notifications-container {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #dee2e6;
+}
+
+.notifications-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.notifications-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333333;
+    margin: 0;
+}
+
+.notifications-count {
+    font-size: 14px;
+    color: #666666;
+    background: #F0F0F0;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.notification-item {
+    background: #F8F9FA;
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.notification-item.notification-read {
+    background: #fff;
+    opacity: 0.8;
+}
+
+.notification-item.notification-read .notification-title,
+.notification-item.notification-read .notification-message {
+    color: #888888;
+}
+
+
+.notification-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.notification-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    margin: 0;
+}
+
+.notification-message {
+    font-size: 14px;
+    color: #666666;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.notification-date {
+    font-size: 12px;
+    color: #888888;
+}
+
+.notifications-loading {
+    text-align: center;
+    padding: 40px;
+    color: #666666;
+    font-size: 14px;
+}
+
+.notifications-empty {
+    text-align: center;
+    padding: 40px;
+    color: #666666;
+    font-size: 14px;
+    background: #F8F9FA;
+    border-radius: 8px;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.notification-read-button {
+    background: #0071ce;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.notification-read-button:hover {
+    background: #0056b3;
+    color: white;
+} 

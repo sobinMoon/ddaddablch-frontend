@@ -118,11 +118,11 @@
 }
 
 .orghome-no-campaign {
-    color: #888;
-    background-color: #f5f5f5;
+    color: #666666;
+    background-color: #F8F9FA;
     text-align: center;
     padding: 24px 0;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     border-radius: 12px;
 }
 

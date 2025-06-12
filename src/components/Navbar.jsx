@@ -102,8 +102,8 @@ export default function Navbar() {
                 </div>
                 <div className="navbar-right">
                     {isLoggedIn ? (
-                        <NavLink to="/mypage" className="profile-link">
-                            <img src={defaultProfile} alt="프로필" className="profile-img" />
+                        <NavLink to="/mypage" className="navbar-login">
+                            마이페이지
                         </NavLink>
                     ) : (
                         <a href="/login" className="navbar-login">로그인</a>
