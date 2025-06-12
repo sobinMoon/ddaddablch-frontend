@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DonationCompleteModal.css';
-import { fetchUserNickname } from '../hooks/imageUtils';
 import { IoClose } from "react-icons/io5";
 import { createDonationImage } from '../hooks/imageUtils';
 import SERVER_URL from '../hooks/SeverUrl';
@@ -13,32 +12,50 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
   const [isUploading, setIsUploading] = useState(false);
   const [nickname, setNickname] = useState('');
 
+  const fetchUserInfo = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${SERVER_URL}/api/v1/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      if (data.nickname) {
+        setNickname(data.nickname);
+      }
+    } catch (error) {
+      console.error('사용자 정보 조회 실패:', error);
+    }
+  };
+
   const getDefaultImageByCategory = (category) => {
     switch (category) {
       case '아동청소년':
-        return '/image/IMG_children.png';
+        return '/image/IMG_children.PNG';
       case '노인':
-        return '/image/IMG_elderly.png';
+        return '/image/IMG_elderly.PNG';
       case '환경':
-        return '/image/IMG_environment.png';
+        return '/image/IMG_environment.PNG';
       case '사회':
-        return '/image/IMG_social.png';
+        return '/image/IMG_social.PNG';
       case '동물':
-        return '/image/IMG_animal.png';
+        return '/image/IMG_animal.PNG';
       case '장애인':
-        return '/image/IMG_disabled.png';
+        return '/image/IMG_disabled.PNG';
       default:
-        return '/image/IMG_animal.png';   
+        return '/image/IMG_animal.PNG';   
     }
   };
 
   useEffect(() => {
-    fetchUserNickname().then(setNickname);
+    fetchUserInfo();
   }, []);
 
   useEffect(() => {
     if (isOpen && donationInfo) {
       setIsLoading(true);
+      fetchUserInfo();
       const defaultImage = getDefaultImageByCategory(donationInfo.category);
       createDonationImage(defaultImage, donationInfo, nickname)
         .then(async imageUrl => {
@@ -57,7 +74,7 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
           setIsLoading(false);
         });
     }
-  }, [isOpen, donationInfo]);
+  }, [isOpen, donationInfo, nickname]); // nickname 의존성 추가
 
   const uploadNFTImage = async (imageUrl) => {
     try {

@@ -1,22 +1,3 @@
-import SERVER_URL from './SeverUrl';
-
-export const fetchUserNickname = async () => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) throw new Error('Access token not found');
-
-  const res = await fetch(`${SERVER_URL}/auth/me`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  if (!res.ok) throw new Error('Failed to fetch user info');
-
-  const data = await res.json();
-  return data.nickname;
-};
-
-
 export const createDonationImage = async (imageUrl, donationInfo, nickname) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
