@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import defaultImage from '../assets/dog.jpg';
 import './Reviewcard.css';
+import SERVER_URL from "../hooks/SeverUrl";
 
 export default function Reviewcard({ campaign }) {
     const navigate = useNavigate();
@@ -20,7 +20,7 @@ export default function Reviewcard({ campaign }) {
 
     return (
         <div className="review-card" onClick={handleClick} style={{ cursor: 'pointer' }}>
-            <img className='review-img' src={campaign.imageUrl} alt="캠페인 이미지" />
+            <img className='review-img' src={`${SERVER_URL}/images/${campaign.imageUrl}`} alt="캠페인 이미지" />
             <p className='review-name'>{campaign.name}</p>
             <p className='review-period'>
                 {formatDate(campaign.donateStart)} ~ {formatDate(campaign.donateEnd)}

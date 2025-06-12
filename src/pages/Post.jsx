@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import './Post.css';
-import defaultImage from '../assets/cat.jpg';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { FaRegCommentDots } from "react-icons/fa";
 import Comments from '../components/Comments';
@@ -106,7 +105,7 @@ export default function Post() {
             <div className="post-info">
                 <div className="post-info-left">
                     <span className='post-profile-image'>
-                        <img src={`${SERVER_URL}/images/${post.studentUser.profileImage}` || defaultImage} alt="profile" />
+                        <img src={`${SERVER_URL}/images/${post.studentUser.profileImage}`} alt="profile" />
                     </span>
                     <span className="post-nickname">{post.studentUser.nickname}</span>
                     <span>|</span>
@@ -125,8 +124,8 @@ export default function Post() {
             </div>
 
             <div className="post-content">
-                <p className="post-content-text">
-                    {post.content.replace(/\\n|¶/g, '\n')}
+                <p className="post-content-text" style={{ whiteSpace: 'pre-wrap' }}>
+                    {post.content}
                 </p>
                 {post.nft && <img className='post-content-image' src={`${SERVER_URL}/images/${post.nft}`} alt="post" />}
             </div>

@@ -13,6 +13,7 @@ function BeneficiaryWithdraw() {
   const [contractBalance, setContractBalance] = useState("0");
   const [loading, setLoading] = useState(false);
   const [network, setNetwork] = useState(null);
+  const [campaignInfo, setCampaignInfo] = useState(null);
   const location = useLocation();
   const campaignId = location.state?.campaignId;
   
@@ -22,7 +23,29 @@ function BeneficiaryWithdraw() {
   const CONTRACT_ADDRESS = "0x63a637EC05f243208B2125Fd15707cEbA3AF570A";
 
   // 캠페인 지갑 주소
-  const CAMPAIGN_WALLET = "0xef19E2f02F99eE4D474634D3A857240fbeDaF6Cc";
+
+  useEffect(() => {
+    const fetchCampaignInfo = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaignId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const data = await response.json();
+        if (data.isSuccess) {
+          setCampaignInfo(data.result);
+        }
+      } catch (error) {
+        console.error('캠페인 정보를 불러오는 중 오류가 발생했습니다:', error);
+      }
+    };
+
+    if (campaignId) {
+      fetchCampaignInfo();
+    }
+  }, [campaignId]);
 
   useEffect(() => {
     const connectWallet = async () => {
@@ -105,6 +128,8 @@ function BeneficiaryWithdraw() {
         setContractBalance(ethers.utils.formatEther(balance));
       }
     }
+    // 계정이 변경되면 페이지 새로고침
+    window.location.reload();
   };
 
   // 기부금 인출 함수
@@ -140,13 +165,14 @@ function BeneficiaryWithdraw() {
 
   return (
     <div className="beneficiary-withdraw-container">
-        
-      <h2 className="beneficiary-withdraw-title"> 캠페인 "어쩌구 저쩌구" 기부금 인출</h2>
+      <h2 className="beneficiary-withdraw-title">
+        캠페인 "{campaignInfo?.name || '로딩 중...'}" 기부금 인출
+      </h2>
       
       <div className="beneficiary-withdraw-info">
         <div className="info-item">
           <span className="info-label">캠페인 지갑 주소</span>
-          <span className="info-value">{CAMPAIGN_WALLET}</span>
+          <span className="info-value">{campaignInfo?.walletAddress || '로딩 중...'}</span>
         </div>
         <div className="info-item">
           <span className="info-label">연결된 지갑 주소</span>
@@ -179,14 +205,14 @@ function BeneficiaryWithdraw() {
         <button
           className={`withdraw-button ${loading ? 'loading' : ''}`}
           onClick={handleWithdraw}
-          disabled={loading || Number(contractBalance) <= 0 || (account && account.toLowerCase() !== CAMPAIGN_WALLET.toLowerCase())}
+          disabled={loading || Number(contractBalance) <= 0 || (account && campaignInfo && account.toLowerCase() !== campaignInfo.walletAddress.toLowerCase())}
         >
           {loading ? "처리 중..." : "기부금 인출하기"}
         </button>
-        {!loading && (
+        {!loading && (Number(contractBalance) <= 0 || (account && campaignInfo && account.toLowerCase() !== campaignInfo.walletAddress.toLowerCase())) && (
           <div className="button-tooltip">
             {Number(contractBalance) <= 0 && "인출할 기부금이 없습니다."}
-            {account && account.toLowerCase() !== CAMPAIGN_WALLET.toLowerCase() && 
+            {account && campaignInfo && account.toLowerCase() !== campaignInfo.walletAddress.toLowerCase() && 
               "\n캠페인 지갑 주소와 연결된 지갑 주소가 일치하지 않습니다."}
           </div>
         )}

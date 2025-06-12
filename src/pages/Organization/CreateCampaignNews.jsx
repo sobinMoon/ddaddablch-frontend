@@ -41,7 +41,7 @@ export default function CreateCampaignNews() {
         }
 
         // 사용내역 금액 총합 계산
-        const totalUsageAmount = usages.reduce((sum, usage) => sum + parseInt(usage.amount || 0), 0);
+        const totalUsageAmount = usages.reduce((sum, usage) => sum + parseFloat(usage.amount || 0), 0);
         
         // 총 기부금과 사용내역 총합 비교
         if (totalUsageAmount !== campaign.currentAmount) {
@@ -63,7 +63,7 @@ export default function CreateCampaignNews() {
                 imageUrl: 'ㅁㅇㄻㄴㅇㄻㄴㄹㄴㅁㅁ', // 실제로는 이미지 업로드 후 URL을 넣거나, 필요시 입력값 사용
                 spendings: usages.map(u => ({
                     title: u.description,
-                    amount: parseInt(u.amount)
+                    amount: parseFloat(u.amount)
                 }))
             };
 
@@ -168,10 +168,13 @@ export default function CreateCampaignNews() {
                             placeholder="금액 (ETH)"
                             value={usage.amount}
                             onChange={(e) => {
-                                const onlyNums = e.target.value.replace(/[^0-9]/g, '');
-                                const newUsages = [...usages];
-                                newUsages[index].amount = onlyNums;
-                                setUsages(newUsages);
+                                const value = e.target.value;
+                                // 소수점을 포함한 숫자만 허용하는 정규식
+                                if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                                    const newUsages = [...usages];
+                                    newUsages[index].amount = value;
+                                    setUsages(newUsages);
+                                }
                             }}
                         />
                         <button
