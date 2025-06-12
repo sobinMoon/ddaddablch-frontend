@@ -871,8 +871,7 @@ function MetamaskDonate() {
           </button>
         )}
       </div>
-
-      {/* 🎯 개선된 디버그 정보 (개발 환경에서만) */}
+{/* 
       {process.env.NODE_ENV === "development" && (
         <div
           style={{
@@ -942,7 +941,7 @@ function MetamaskDonate() {
             API 연결 테스트
           </button>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

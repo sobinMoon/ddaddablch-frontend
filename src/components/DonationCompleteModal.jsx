@@ -15,19 +15,19 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
   const getDefaultImageByCategory = (category) => {
     switch (category) {
       case '아동청소년':
-        return '/image/IMG_children.png';
+        return '../../public/image/IMG_children.png';
       case '노인':
-        return '/image/IMG_elderly.png';
+        return '../../public/image/IMG_elderly.png';
       case '환경':
-        return '/image/IMG_environment.png';
+        return '../../public/image/IMG_environment.png';
       case '사회':
-        return '/image/IMG_social.png';
+        return '../../public/image/IMG_social.png';
       case '동물':
-        return '/image/IMG_animal.png';
+        return '../../public/image/IMG_animal.png';
       case '장애인':
-        return '/image/IMG_disabled.png';
+        return '../../public/image/IMG_disabled.png';
       default:
-        return '/image/IMG_animal.png';   
+        return '../../public/image/IMG_animal.png';   
     }
   };
 

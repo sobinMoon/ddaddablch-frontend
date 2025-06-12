@@ -244,34 +244,34 @@ const MetaMaskAuth = () => {
         >
           인증 요청
         </button>
-        {(message || authEventId) && (
+        {/* {(message || authEventId) && (
           <button
             onClick={resetAuth}
             style={{ backgroundColor: "#f0f0f0", color: "#333" }}
           >
             초기화
           </button>
-        )}
-        <button
+        )} */}
+        {/* <button
           onClick={debugCurrentState}
           style={{ backgroundColor: "#e7f3ff", color: "#0066cc" }}
         >
           상태 확인
-        </button>
+        </button> */}
       </div>
 
       {message && (
         <div className="metamask-connected-msg-container">
           <p className="metamask-connected-msg">✅ 인증 메시지를 수신했어요!</p>
           <p className="metamask-connected-msg-content">{message}</p>
-          {authEventId && (
+          {/* {authEventId && (
             <p className="metamask-connected-msg-content">
               AuthEvent ID: {authEventId}
             </p>
           )}
           {nonce && (
             <p className="metamask-connected-msg-content">Nonce: {nonce}</p>
-          )}
+          )} */}
         </div>
       )}
 
@@ -307,7 +307,7 @@ const MetaMaskAuth = () => {
       <div className="divider"></div>
 
       {/* ✅ 현재 상태 표시 개선 */}
-      <h3 className="metamask-auth-subtitle">현재 상태</h3>
+      {/* <h3 className="metamask-auth-subtitle">현재 상태</h3>
       <div className="metamask-connected-msg-container">
         <p>지갑 연결: {isConnected ? "✅ 완료" : "❌ 미완료"}</p>
         <p>인증 요청: {authEventId ? "✅ 완료" : "❌ 미완료"}</p>
@@ -322,10 +322,10 @@ const MetaMaskAuth = () => {
             ? "메시지 서명"
             : "서명 검증"}
         </p>
-      </div>
+      </div> */}
 
-      <div className="divider"></div>
-
+      {/* <div className="divider"></div> */}
+{/* 
       <h3 className="metamask-auth-subtitle">로그</h3>
       <div
         className="log"
@@ -363,7 +363,7 @@ const MetaMaskAuth = () => {
             </div>
           ))
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -7,81 +7,6 @@ import defaultImage from '../assets/dog.jpg';
 import heartImage from '../assets/cat.jpg';
 import noResultsImage from '../assets/no_message.png';
 
-// 목업 데이터
-const mockData = {
-    "campaigns": [
-        {
-            "id": 229,
-            "name": "캠페인 개설 테스트입니다",
-            "imageUrl": heartImage,
-            "description": "캠페인 개설 테스트 내용입니다",
-            "goal": 1111,
-            "currentAmount": 0,
-            "category": "사회",
-            "donateCount": 0,
-            "donateStart": "2025-06-06",
-            "donateEnd": "2025-06-27",
-            "businessStart": "2025-07-10",
-            "businessEnd": "2025-07-30",
-            "statusFlag": "FUNDRAISING",
-            "createdAt": "2025-06-06T14:35:07.748595",
-            "updatedAt": "2025-06-06T14:35:12.692661"
-        },
-        {
-            "id": 228,
-            "name": "캠페인 개설 테스트입니다",
-            "imageUrl": heartImage,
-            "description": "캠페인 개설 테스트 내용입니다",
-            "goal": 1111,
-            "currentAmount": 0,
-            "category": "사회",
-            "donateCount": 0,
-            "donateStart": "2025-06-06",
-            "donateEnd": "2025-06-27",
-            "businessStart": "2025-07-10",
-            "businessEnd": "2025-07-30",
-            "statusFlag": "IN_PROGRESS",
-            "createdAt": "2025-06-06T14:35:07.750591",
-            "updatedAt": "2025-06-06T14:35:12.699372"
-        },
-        {
-            "id": 227,
-            "name": "캠페인 개설 테스트입니다",
-            "imageUrl": heartImage,
-            "description": "캠페인 개설 테스트 내용입니다",
-            "goal": 1111,
-            "currentAmount": 0,
-            "category": "사회",
-            "donateCount": 0,
-            "donateStart": "2025-06-06",
-            "donateEnd": "2025-06-27",
-            "businessStart": "2025-07-10",
-            "businessEnd": "2025-07-30",
-            "statusFlag": "FUNDRAISING",
-            "createdAt": "2025-06-06T14:35:07.775988",
-            "updatedAt": "2025-06-06T14:35:12.934031"
-        },
-        {
-            "id": 225,
-            "name": "새로운캠페인입니다~~~~",
-            "imageUrl": defaultImage,
-            "description": "A campaign to support education in underprivileged areas.\n\n설명입니\n다",
-            "goal": 50,
-            "currentAmount": 8.01,
-            "category": "환경",
-            "donateCount": 2,
-            "donateStart": "2025-06-01",
-            "donateEnd": "2025-06-30",
-            "businessStart": "2025-07-01",
-            "businessEnd": "2025-06-06",
-            "statusFlag": "COMPLETED",
-            "createdAt": "2025-06-04T23:08:12.356894",
-            "updatedAt": "2025-06-06T18:52:37.068139"
-        }
-    ],
-    "totalElements": 4
-};
-
 export default function Search() {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -166,7 +91,7 @@ export default function Search() {
                                 >
                                     <div className="campaign-image">
                                         <img
-                                            src={campaign.imageUrl}
+                                            src={`${SERVER_URL}/images/${campaign.imageUrl}`}
                                             alt={campaign.name}
                                         />
                                     </div>
