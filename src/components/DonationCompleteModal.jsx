@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DonationCompleteModal.css';
+import { fetchUserNickname } from '../hooks/imageUtils';
 import { IoClose } from "react-icons/io5";
 import { createDonationImage } from '../hooks/imageUtils';
 import SERVER_URL from '../hooks/SeverUrl';
@@ -10,31 +11,36 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
   const [compositeImage, setCompositeImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
+  const [nickname, setNickname] = useState('');
 
   const getDefaultImageByCategory = (category) => {
     switch (category) {
       case '아동청소년':
-        return '../../public/image/IMG_children.png';
+        return '/image/IMG_children.png';
       case '노인':
-        return '../../public/image/IMG_elderly.png';
+        return '/image/IMG_elderly.png';
       case '환경':
-        return '../../public/image/IMG_environment.png';
+        return '/image/IMG_environment.png';
       case '사회':
-        return '../../public/image/IMG_social.png';
+        return '/image/IMG_social.png';
       case '동물':
-        return '../../public/image/IMG_animal.png';
+        return '/image/IMG_animal.png';
       case '장애인':
-        return '../../public/image/IMG_disabled.png';
+        return '/image/IMG_disabled.png';
       default:
-        return '../../public/image/IMG_animal.png';   
+        return '/image/IMG_animal.png';   
     }
   };
+
+  useEffect(() => {
+    fetchUserNickname().then(setNickname);
+  }, []);
 
   useEffect(() => {
     if (isOpen && donationInfo) {
       setIsLoading(true);
       const defaultImage = getDefaultImageByCategory(donationInfo.category);
-      createDonationImage(defaultImage, donationInfo)
+      createDonationImage(defaultImage, donationInfo, nickname)
         .then(async imageUrl => {
           setCompositeImage(imageUrl);
           setIsLoading(false);

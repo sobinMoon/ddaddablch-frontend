@@ -1,4 +1,23 @@
-export const createDonationImage = async (imageUrl, donationInfo) => {
+import SERVER_URL from './SeverUrl';
+
+export const fetchUserNickname = async () => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) throw new Error('Access token not found');
+
+  const res = await fetch(`${SERVER_URL}/auth/me`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!res.ok) throw new Error('Failed to fetch user info');
+
+  const data = await res.json();
+  return data.nickname;
+};
+
+
+export const createDonationImage = async (imageUrl, donationInfo, nickname) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = "Anonymous";
@@ -23,7 +42,7 @@ export const createDonationImage = async (imageUrl, donationInfo) => {
       ctx.textBaseline = 'middle';
       ctx.textAlign = 'left';
 
-      ctx.fillText(`박은수님의 기부증서`, canvas.width / 14, 150);
+      ctx.fillText(`${nickname}님의 기부증서`, canvas.width / 14, 150);
 
       ctx.font = '60px Arial';
       ctx.fillText(`기부금 ${donationInfo.amount}ETH`, canvas.width / 14, 250);

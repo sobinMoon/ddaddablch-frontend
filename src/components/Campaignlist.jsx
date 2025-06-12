@@ -27,7 +27,7 @@ export default function Campaignlist() {
         }
 
         const data = await response.json();
-        console.log(data);
+        //console.log(data);
         setCampaigns(data.campaigns); // ⬅️ 핵심: campaigns 배열만 저장
       } catch (err) {
         setError(err.message);
