@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import SERVER_URL from '../hooks/SeverUrl';
+import { IoSnow } from 'react-icons/io5';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -68,7 +69,26 @@ export default function Login() {
     <div className='login-container'>
       <form className="login-form" onSubmit={handleSubmit}>
         <div className="login-header">
-          <h2>LOGO</h2>
+        <a href="/" className="navbar-logo"
+                        style={{
+                            fontSize: '1.5rem',
+                            fontWeight: '800',
+                            color: '#0071ce',
+                            textDecoration: 'none',
+                            fontFamily: '"Fauna One", serif',
+                            letterSpacing: '-0.03em',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.1rem',
+                            justifyContent: 'center',
+                            marginBottom: '1.2rem',
+                            marginTop: '0.5rem',
+                            
+                        }}
+                    >
+                        <IoSnow />
+                        SOOKCHAIN
+                    </a>
         </div>
         <div className="login-type-buttons">
           <button
@@ -83,7 +103,7 @@ export default function Login() {
             className={userType === 'organization' ? 'login-type-active' : 'login-type-inactive'}
             onClick={() => setUserType('organization')}
           >
-            🏢단체 로그인
+            ❤️수혜자 로그인
           </button>
         </div>
         <div className="login-input-group">

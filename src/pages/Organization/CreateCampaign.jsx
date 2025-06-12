@@ -51,6 +51,12 @@ export default function CreateCampaign() {
             return;
         }
 
+        if (content.length < 500) {
+            alert('소개글은 최소 500자 이상이어야 합니다.');
+            return;
+        }
+
+
         if (!donateStart || !donateEnd) {
             alert('모금 시작일과 종료일을 선택해주세요.');
             return;
@@ -71,6 +77,15 @@ export default function CreateCampaign() {
 
         if (plans.some(plan => !plan.description || !plan.amount)) {
             alert('모금액 사용 계획을 모두 입력해주세요.');
+            return;
+        }
+
+        // 사용계획 금액 총합 계산
+        const totalPlanAmount = plans.reduce((sum, plan) => sum + parseInt(plan.amount || 0), 0);
+        
+        // 목표금액과 사용계획 총합 비교
+        if (totalPlanAmount !== parseInt(goal)) {
+            alert(`사용계획 금액 총합(${totalPlanAmount})이 목표금액(${goal})과 일치하지 않습니다.`);
             return;
         }
 
@@ -344,7 +359,9 @@ export default function CreateCampaign() {
                                 setBusinessEnd(''); // 시작일이 변경되면 종료일 초기화
                             }}
                             min={donateEnd}
+                            disabled={!donateEnd}
                             onKeyDown={(e) => e.preventDefault()}
+                            placeholder={!donateEnd ? "모금 종료일을 먼저 선택해주세요" : ""}
                         />
                     </div>
 

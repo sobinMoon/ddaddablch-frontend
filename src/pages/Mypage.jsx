@@ -52,6 +52,16 @@ export default function Mypage() {
         fetchUserInfo();
     }, [navigate]);
 
+    const handlePostDelete = (postId) => {
+        setUserInfo(prev => ({
+            ...prev,
+            result: {
+                ...prev.result,
+                recentPosts: prev.result.recentPosts.filter(post => post.postId !== postId)
+            }
+        }));
+    };
+
     const renderContent = () => {
         if (!userInfo) return null;
 
@@ -63,7 +73,7 @@ export default function Mypage() {
             case 'notifications':
                 return <Notifications userInfo={userInfo} />;
             case 'posts':
-                return <Posts recentPosts={userInfo.result.recentPosts} />;
+                return <Posts recentPosts={userInfo.result.recentPosts} onPostDelete={handlePostDelete} />;
             default:
                 return null;
         }

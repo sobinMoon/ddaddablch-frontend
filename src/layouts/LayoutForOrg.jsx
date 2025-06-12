@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Footer from '../components/Footer';
+import { IoSnow } from "react-icons/io5";
 
 export default function LayoutForOrg() {
     return (
@@ -18,12 +19,18 @@ export default function LayoutForOrg() {
                 <a href="/organization/home" className="navbar-logo"
                     style={{
                         fontSize: '1.5rem',
-                        fontWeight: 'bold',
-                        color: '#333',
-                        textDecoration: 'none'
+                        fontWeight: '800',
+                        color: '#0071ce',
+                        textDecoration: 'none',
+                        fontFamily: '"Fauna One", serif',
+                        letterSpacing: '-0.01em',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.1rem'
                     }}
                 >
-                    Logo
+                    <IoSnow />
+                    SOOKCHAIN
                 </a>
             </div>
             <Outlet />

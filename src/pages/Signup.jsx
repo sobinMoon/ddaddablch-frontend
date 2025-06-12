@@ -21,7 +21,7 @@ const Signup = () => {
           className={userType === 'organization' ? 'active' : 'inactive'}
           onClick={() => setUserType('organization')}
         >
-          🏢단체 회원
+          ❤️수혜자 회원
         </button>
       </div>
 

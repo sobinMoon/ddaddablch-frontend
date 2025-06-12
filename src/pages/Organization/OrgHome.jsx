@@ -34,15 +34,16 @@ export default function OrgHome() {
                 const data = await response.json();
                 if (data.isSuccess) {
                     setOrganization(data.result);
+                    console.log("data", data);
                 } else {
-                    alert(data.message || '단체 정보를 불러오는데 실패했습니다.');
+                    alert(data.message || '수혜자 정보를 불러오는데 실패했습니다.');
                 }
             } else {
-                alert('단체 정보를 불러오는데 실패했습니다.');
+                alert('수혜자 정보를 불러오는데 실패했습니다.');
             }
         } catch (error) {
             console.error('Error fetching organization data:', error);
-            alert('단체 정보를 불러오는 중 오류가 발생했습니다.');
+            alert('수혜자 정보를 불러오는 중 오류가 발생했습니다.');
         } finally {
             setIsLoading(false);
         }
@@ -85,7 +86,7 @@ export default function OrgHome() {
     }
 
     if (!organization) {
-        return <div>단체 정보를 불러올 수 없습니다.</div>;
+        return <div>수혜자 정보를 불러올 수 없습니다.</div>;
     }
 
     return (
@@ -103,7 +104,7 @@ export default function OrgHome() {
                     </div>
                 </div>
                 <div className="orghome-description">
-                    <p>{organization.odescription || '단체 소개가 없습니다.'}</p>
+                    <p>{organization.odescription || '소개가 없습니다.'}</p>
                 </div>
             </div>
 

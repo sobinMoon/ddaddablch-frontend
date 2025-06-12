@@ -87,11 +87,19 @@ export default function Campaignlist() {
       {loading && <p></p>}
       {error && <p style={{ color: 'red' }}>에러: {error}</p>}
 
-      <div className="campaign-grid">
-        {filteredData.map(c => (
-          <Campaigncard key={c.id} campaign={c} sortOption={sortOption} />
-        ))}
-      </div>
+      {!loading && filteredData.length === 0 ? (
+        <div className="no-campaigns-message">
+          {selectedCategory === '전체' 
+            ? '현재 진행 중인 캠페인이 없습니다' 
+            : `${selectedCategory} 카테고리의 진행 중인 캠페인이 없습니다`}
+        </div>
+      ) : !loading && (
+        <div className="campaign-grid">
+          {filteredData.map(c => (
+            <Campaigncard key={c.id} campaign={c} sortOption={sortOption} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

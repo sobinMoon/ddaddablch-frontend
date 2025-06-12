@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './UrgentCampaignBanner.css';
+import SERVER_URL from '../hooks/SeverUrl';
 
 const UrgentCampaignBanner = ({ campaigns }) => {
   const navigate = useNavigate();
@@ -99,7 +100,7 @@ const UrgentCampaignBanner = ({ campaigns }) => {
           key={campaign.id}
           className={`campaign-slide ${index === currentIndex ? 'active' : ''}`}
           style={{
-            backgroundImage: `url(${campaign.imageUrl})`,
+            backgroundImage: `url(${SERVER_URL}/images/${campaign.imageUrl})`,
           }}
         >
           <div className="campaign-overlay">

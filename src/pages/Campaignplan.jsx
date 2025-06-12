@@ -6,6 +6,6 @@ export default function Campaignplan() {
   const { campaign } = useOutletContext();
   
   return (
-    <Plandetailcard campaignPlans={campaign.campaignPlans} goal={campaign.goal}/>
+    <Plandetailcard flag="isPlan" campaignPlans={campaign.campaignPlans} goal={campaign.goal} amount={campaign.currentAmount}/>
   )
 }

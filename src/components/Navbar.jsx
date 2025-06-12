@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import "./Navbar.css"; 
+import "./Navbar.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { IoSearchSharp } from "react-icons/io5";
 import defaultProfile from '../assets/cat.jpg';
 import SERVER_URL from '../hooks/SeverUrl';
+import { IoSnow } from "react-icons/io5";
+
+// Google Font import
+const fontStyle = document.createElement('style');
+fontStyle.textContent = `@import url('https://fonts.googleapis.com/css2?family=Fauna+One&display=swap');`;
+document.head.appendChild(fontStyle);
 
 export default function Navbar() {
     const [role, setRole] = useState(null);
@@ -60,36 +66,52 @@ export default function Navbar() {
     const renderMenu = () => {
         if (role === 'ROLE_ORGANIZATION') return (
             <div className='org-navbar'
-            style={{
-                backgroundColor: '#fff',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '70px',
-                width: '100%'
-            }}
-        >
-            <a href="/organization/home" className="navbar-logo"
                 style={{
-                    fontSize: '1.5rem',
-                    fontWeight: 'bold',
-                    color: '#333',
-                    textDecoration: 'none',
-                    position: 'absolute',
-                    left: '50%',
-                    transform: 'translateX(-50%)'
+                    backgroundColor: '#fff',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '70px',
+                    width: '100%'
                 }}
             >
-                Logo
-            </a>
-        </div>
+                <a href="/organization/home" className="navbar-logo"
+                    style={{
+                        fontSize: '1.5rem',
+                        fontWeight: '800',
+                        color: '#0071ce',
+                        textDecoration: 'none',
+                        fontFamily: '"Fauna One", serif',
+                        letterSpacing: '-0.01em',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.1rem'
+                    }}
+                >
+                    <IoSnow />
+                    SOOKCHAIN
+                </a>
+            </div>
         );
 
         return (
             <>
                 <div className="navbar-left">
-                    <a href="/" className="navbar-logo">
-                        Logo
+                    <a href="/" className="navbar-logo"
+                        style={{
+                            fontSize: '1.5rem',
+                            fontWeight: '800',
+                            color: '#0071ce',
+                            textDecoration: 'none',
+                            fontFamily: '"Fauna One", serif',
+                            letterSpacing: '-0.03em',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.1rem'
+                        }}
+                    >
+                        <IoSnow />
+                        SOOKCHAIN
                     </a>
                 </div>
                 <div className="navbar-center">
@@ -118,7 +140,7 @@ export default function Navbar() {
 
     return (
         <nav className="navbar">
-                {renderMenu()}
+            {renderMenu()}
         </nav>
     );
 }

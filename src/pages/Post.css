@@ -43,6 +43,7 @@
 
 .post-content {
     margin-top: 32px;
+    white-space: pre-wrap;
 }
 
 .post-content-text {

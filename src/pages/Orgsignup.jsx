@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './Signup.css';
 import SERVER_URL from '../hooks/SeverUrl';
+import { useNavigate } from 'react-router-dom';
 
 export default function Orgsignup() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     businessNumber: '',
@@ -161,13 +163,41 @@ export default function Orgsignup() {
     }
 
     try {
+      // JSON 데이터 생성
+      const requestData = {
+        name: formData.name,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+        businessNumber: formData.businessNumber,
+        walletAddress: formData.walletAddress,
+        email: formData.email,
+        description: formData.description,
+        profileImage: ""
+      };
+
+      // FormData 생성
+      const formDataToSend = new FormData();
+      
+      // JSON 데이터를 문자열로 변환하여 추가
+      formDataToSend.append('request', new Blob([JSON.stringify(requestData)], {
+        type: 'application/json'
+      }));
+      
+      // 이미지가 있다면 추가
+      if (formData.profileImage) {
+        // Base64 이미지를 Blob으로 변환
+        const base64Response = await fetch(formData.profileImage);
+        const blob = await base64Response.blob();
+        formDataToSend.append('image', blob, 'profile.jpg');
+      }
+
       const res = await fetch(`${SERVER_URL}/api/org/sign-up/organization`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: formDataToSend
       });
 
       const data = await res.json();
+      console.log("data", data);
       if (res.status === 201) {
         setMessage(data.message);
         setErrors({});
@@ -180,7 +210,8 @@ export default function Orgsignup() {
       } else {
         setMessage(data.message || '오류 발생');
       }
-    } catch {
+    } catch (error) {
+      console.error('회원가입 에러:', error);
       setMessage('서버 오류 발생');
     }
   };

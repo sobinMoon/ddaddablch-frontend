@@ -27,6 +27,7 @@ import CreateCampaignNews from './pages/Organization/CreateCampaignNews';
 import Search from './pages/Search';
 import StudentProfileEdit from './pages/StudentProfileEdit';
 import OrgProfileEdit from './pages/OrgProfileEdit';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -34,14 +35,14 @@ function App() {
         <Route element={<LayoutwithNav />}>
           <Route path='/' element={<Home />} />
           <Route path='/search' element={<Search />} />
-          <Route path='/mypage' element={<Mypage />} />
-          <Route path='/mypage-profile-edit'i element={<StudentProfileEdit />} />
+          <Route path='/mypage' element={<ProtectedRoute allowedRoles={['ROLE_STUDENT']}><Mypage /></ProtectedRoute>} />
+          <Route path='/mypage-profile-edit' element={<ProtectedRoute allowedRoles={['ROLE_STUDENT']}><StudentProfileEdit /></ProtectedRoute>} />
+          <Route path='/community/create-post' element={<ProtectedRoute allowedRoles={['ROLE_STUDENT']}><CreatePost /></ProtectedRoute>} />
           <Route path='/donate' element={<Donate />} />
           <Route path='/reviews' element={<Reviews />} />
           <Route path='/org-detail/:orgId' element={<OrganizationDetail />} />
           <Route path='/community' element={<Community />} />
           <Route path='/community/post/:postId' element={<Post />} />
-          <Route path='/community/create-post' element={<CreatePost />} />
           <Route path='/donate/campaign/:id' element={<Campaign />}>
             <Route index element={<Campaignintro />} />
             <Route path='plan' element={<Campaignplan />} />
@@ -56,7 +57,7 @@ function App() {
           <Route path='/signup' element={<Signup />} />
         </Route>
 
-        <Route element={<LayoutForOrg />}>
+        <Route element={<ProtectedRoute allowedRoles={['ROLE_ORGANIZATION']}><LayoutForOrg /></ProtectedRoute>}>
           <Route path='/organization/home' element={<OrgHome />} />
           <Route path='/organization/create-campaign' element={<CreateCampaign />} />
           <Route path='/organization/beneficiary-withdraw' element={<BeneficiaryWithdraw />} />

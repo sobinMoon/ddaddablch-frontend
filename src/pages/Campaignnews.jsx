@@ -4,6 +4,7 @@ import SERVER_URL from '../hooks/SeverUrl';
 import './Campaignnews.css';
 import no_message from '../assets/no_message.png';
 import ConfirmModal from '../components/ConfirmModal';
+import Plandetailcard from '../components/Plandetailcard';
 
 export default function Campaignnews() {
   const { campaign } = useOutletContext();
@@ -145,44 +146,49 @@ export default function Campaignnews() {
             <div className="no-news-message">
               사업기간: {campaign.businessStart} ~ {campaign.businessEnd}
             </div>
+            <div style={{ marginTop: '12px' }}></div>
+
+            {isOrg
+              && (campaign.statusFlag === 'IN_PROGRESS' || campaign.statusFlag === 'COMPLETED')
+              && campaign.organization.id === userData?.id
+              && (!campaign.campaignSpendings || campaign.campaignSpendings.length === 0) && (
+                <button
+                  className="create-news-button"
+                  onClick={handleCreateNews}
+                >
+                  캠페인 소식 작성
+                </button>
+              )}
+
           </div>
         </div>
       )}
 
-      {isOrg
-        && (campaign.statusFlag === 'IN_PROGRESS' || campaign.statusFlag === 'COMPLETED')
-        && campaign.organization.id === userData?.id
-        && (!campaign.campaignSpendings || campaign.campaignSpendings.length === 0) && (
-          <button
-            className="create-news-button"
-            onClick={handleCreateNews}
-          >
-            캠페인 소식 작성
-          </button>
-        )}
-
       {campaign.campaignSpendings && campaign.campaignSpendings.length > 0 && (
-        <div className='news-list-container'>
-          <h2>{campaign.campaignUpdate.title} 소식</h2>
-          {campaign.campaignUpdate.imageUrl && (
-            <img
-              src={`${SERVER_URL}/images/${campaign.campaignUpdate.imageUrl}`}
-              alt="캠페인 소식 이미지"
-              className="news-image"
-              style={{
-                maxWidth: '100%',
-                height: 'auto',
-                borderRadius: '8px',
-                marginBottom: '16px'
-              }}
-            />
-          )}
-          <p style={{
-          padding: '0px',
-          borderRadius: '10px',
-          whiteSpace: 'pre-line',
-          fontSize: '1.05rem',
-        }}>{campaign.campaignUpdate.content.replace(/\\n|¶/g, '\n')}</p>
+        <div>
+          <div className='news-list-container'>
+            <h2>{campaign.campaignUpdate.title}</h2>
+            {campaign.campaignUpdate.imageUrl && (
+              <img
+                src={`${SERVER_URL}/images/${campaign.campaignUpdate.imageUrl}`}
+                alt="캠페인 소식 이미지"
+                className="news-image"
+                style={{
+                  maxWidth: '100%',
+                  height: 'auto',
+                  borderRadius: '8px',
+                  marginBottom: '16px'
+                }}
+              />
+            )}
+            <p style={{
+              padding: '0px',
+              borderRadius: '10px',
+              whiteSpace: 'pre-line',
+              fontSize: '1.05rem',
+            }}>{campaign.campaignUpdate.content.replace(/\\n|¶/g, '\n')}</p>
+          </div>
+          <Plandetailcard flag="isNews" campaignPlans={campaign.campaignSpendings} goal={campaign.goal} amount={campaign.currentAmount} />
         </div>
       )}
 
