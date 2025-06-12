@@ -4,7 +4,7 @@ import './Plandetailcard.css'
 export default function Plandetailcard({ flag, campaignPlans, goal, amount }) {
     return (
         <div className='plan-wrap'>
-            <h2 className="plan-title">{flag === 'isNews' ? '기부금 사용 내역' : '기부금 사용계획 상세'}</h2>
+            <h2 className="plan-title">{flag === 'isNews' ? '모금액 사용 내역' : '기부금 사용계획 상세'}</h2>
 
             <div className="plan-box">
                 {campaignPlans.map((plan) => (
@@ -16,7 +16,7 @@ export default function Plandetailcard({ flag, campaignPlans, goal, amount }) {
                 <hr className="plan-divider" />
 
                 <div className="plan-goal">
-                    <span>{flag === 'isNews' ? '기부금액' : '목표 금액'}</span>
+                    <span>{flag === 'isNews' ? '모금액' : '목표 금액'}</span>
                     <span>{flag === 'isNews' ? amount : goal}ETH</span>
                 </div>
                 

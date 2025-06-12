@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './DonationReviews.css';
 
-const ReviewContent = ({ title, content }) => (
-    <div className="review-content">
+const ReviewContent = ({ title, content, onClick }) => (
+    <div className="review-content" onClick={onClick} style={{ cursor: 'pointer' }}>
         <p className="review-content-title">"{title}"</p>
         <p className="review-content-text">{content}</p>
     </div>
@@ -23,6 +24,7 @@ const DonationReviews = ({ recentUpdates = [] }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const startX = useRef(null);
     const isDragging = useRef(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (recentUpdates.length === 0) return;
@@ -68,6 +70,11 @@ const DonationReviews = ({ recentUpdates = [] }) => {
         isDragging.current = false;
     };
 
+    const handleReviewClick = () => {
+        const currentUpdate = recentUpdates[currentIndex];
+        navigate(`/donate/campaign/${currentUpdate.campaignId}/news`);
+    };
+
     if (recentUpdates.length === 0) {
         return null;
     }
@@ -87,7 +94,8 @@ const DonationReviews = ({ recentUpdates = [] }) => {
             </div>
             <ReviewContent 
                 title={currentUpdate.name} 
-                content={currentUpdate.previewContent} 
+                content={currentUpdate.previewContent}
+                onClick={handleReviewClick}
             />
             <ReviewIndicators 
                 total={recentUpdates.length} 
