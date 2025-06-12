@@ -1,0 +1,128 @@
+.orghome-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 32px 0;
+}
+
+.orghome-info {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    border: 1px solid #dee2e6;
+    padding: 36px 42px;
+    border-radius: 12px;
+}
+
+.orghome-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.orghome-img {
+    width: 70px;
+    height: 70px;
+    border-radius: 32%;
+    object-fit: cover;
+    border: 1px solid #dee2e6;
+}
+
+.orghome-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.orghome-name {
+    font-weight: bold;
+    font-size: 1.4rem;
+}
+
+.orghome-edit-btn {
+    padding: 0.5rem 1.2rem;
+    background-color: #fff;
+    color: #0071ce;
+    border: 2px solid #0071ce;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+
+.orghome-description {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555;
+}
+
+.orghome-campaigns {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    border: 1px solid #dee2e6;
+    padding: 36px 42px;
+    border-radius: 12px;
+}
+
+.orghome-campaigns-title {
+    font-weight: bold;
+    font-size: 1.4rem;
+    color: #333;
+}
+
+.orghome-campaigns-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+
+.orghome-campaigns-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+.orghome-campaigns-button {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.orghome-campaigns-button-text {
+    background-color: #0071ce;
+    color: #fff;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 100px;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.orghome-campaigns-button-text:hover {
+    background-color: #0056b3;
+}
+
+.orghome-no-campaign {
+    color: #666666;
+    background-color: #F8F9FA;
+    text-align: center;
+    padding: 24px 0;
+    font-size: 0.95rem;
+    border-radius: 12px;
+}
+

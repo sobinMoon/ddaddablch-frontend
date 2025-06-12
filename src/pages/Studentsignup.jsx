@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './Signup.css';
-
-// 서버 URL을 상수로 정의
-const SERVER_URL = "http://10.101.48.92:8080";
+import SERVER_URL from '../hooks/SeverUrl';
+import { FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 const Studentsignup = () => {
     const [formData, setFormData] = useState({
         name: '',
         nickname: '',
         email: '',
-        walletAddress: '',
         password: '',
         confirmPassword: '',
         verificationToken: ''
@@ -27,11 +26,38 @@ const Studentsignup = () => {
       const [isVerifying, setIsVerifying] = useState(false);
       const [verificationCheckInterval, setVerificationCheckInterval] = useState(null);
     
+      const isValidEmail = (email) => {
+        const emailRegex = /^[^\s@]+@sookmyung\.ac\.kr$/;
+        return emailRegex.test(email);
+      };
+    
       const handleChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-        if (e.target.name === 'nickname') {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        
+        if (name === 'nickname') {
           setIsNicknameAvailable(null);
           setNicknameCheckMsg('');
+        }
+        
+        if (name === 'email') {
+          if (!value) {
+            setErrors(prev => ({ ...prev, email: '이메일은 필수입니다.' }));
+          } else if (!isValidEmail(value)) {
+            setErrors(prev => ({ ...prev, email: '숙명여대 이메일(@sookmyung.ac.kr)만 사용 가능합니다.' }));
+          } else {
+            setErrors(prev => {
+              const newErrors = { ...prev };
+              delete newErrors.email;
+              return newErrors;
+            });
+          }
+        } else if (errors[name]) {
+          setErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors[name];
+            return newErrors;
+          });
         }
       };
     
@@ -39,7 +65,7 @@ const Studentsignup = () => {
         const newErrors = {};
         if (!formData.name) newErrors.name = '이름은 필수입니다.';
         if (!formData.email) newErrors.email = '이메일은 필수입니다.';
-        else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = '이메일 형식이 올바르지 않습니다.';
+        else if (!isValidEmail(formData.email)) newErrors.email = '숙명여대 이메일(@sookmyung.ac.kr)만 사용 가능합니다.';
         if (!formData.password) newErrors.password = '비밀번호는 필수입니다.';
         if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
         if (!emailVerified) newErrors.emailVerified = '이메일 인증을 완료해주세요.';
@@ -56,12 +82,12 @@ const Studentsignup = () => {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                credentials: 'include',
                 body: JSON.stringify({ email: formData.email })
             });
     
             const data = await res.json();
-            
+            console.log(data);
+
             if (!res.ok) {
                 throw new Error(data.message || '서버 응답 오류');
             }
@@ -105,6 +131,8 @@ const Studentsignup = () => {
         }
       };
     
+      const navigate = useNavigate();
+      
       const handleSubmit = async e => {
         e.preventDefault();
         const validationErrors = validate();
@@ -112,25 +140,42 @@ const Studentsignup = () => {
           setErrors(validationErrors);
           return;
         }
-    
+      
         try {
           const res = await fetch(`${SERVER_URL}/api/v1/user/sign-up/student`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
           });
-    
-          const data = await res.json();
+      
+          let data;
+          const contentType = res.headers.get("Content-Type");
+          if (contentType && contentType.includes("application/json")) {
+            data = await res.json();
+          } else {
+            const text = await res.text();
+            data = { message: text };  // fallback
+          }
+      
+          console.log(data);
+      
           if (res.status === 201) {
             setMessage(data.message);
             setErrors({});
+            alert(data.message);
+            navigate('/login');
+          } else if (res.status === 409) {
+            setMessage(data.message || '이미 등록된 이메일입니다');
+            setErrors({});
+            alert(data.message);
           } else {
             setMessage(data.message || '오류 발생');
           }
-        } catch {
+        } catch (error) {
           setMessage('서버 오류 발생');
         }
       };
+      
     
       const verifyEmailToken = async () => {
         if (!formData.verificationToken) {
@@ -144,7 +189,6 @@ const Studentsignup = () => {
                 headers: {
                     'Accept': 'application/json'
                 },
-                credentials: 'include'
             });
 
             const data = await res.json();
@@ -164,15 +208,19 @@ const Studentsignup = () => {
       return (
         <form className="student-signup" onSubmit={handleSubmit}>
           <label>이름*</label>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} />
+          <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="이름을 입력해주세요" />
           {errors.name && <p className="error">{errors.name}</p>}
     
           <label>닉네임 (선택)</label>
           <div className="row">
-            <input type="text" name="nickname" value={formData.nickname} onChange={handleChange} />
+            <input type="text" name="nickname" value={formData.nickname} onChange={handleChange} placeholder="닉네임을 입력해주세요" />
             <button type="button" onClick={checkNicknameDuplicate}>중복 확인</button>
           </div>
-          {nicknameCheckMsg && <p className={isNicknameAvailable ? 'info' : 'error'}>{nicknameCheckMsg}</p>}
+          {nicknameCheckMsg && 
+          <p className={isNicknameAvailable ? 'nickname-info' : 'error'}>
+            {isNicknameAvailable ? <FaRegCheckCircle /> : <FaRegTimesCircle />}
+            {nicknameCheckMsg}
+          </p>}
     
           <label>이메일*</label>
           <div className="email-verification-container">
@@ -182,15 +230,17 @@ const Studentsignup = () => {
                 value={formData.email} 
                 onChange={handleChange}
                 disabled={isVerifying}
+                placeholder="example@sookmyung.ac.kr"
             />
             <button 
                 type="button" 
                 onClick={sendVerificationEmail}
-                disabled={isVerifying || !formData.email}
+                disabled={isVerifying || !formData.email || !isValidEmail(formData.email)}
             >
-                {isVerifying ? '인증 중...' : '인증 메일 보내기'}
+                {isVerifying ? '인증 중...' : '인증메일 전송'}
             </button>
           </div>
+          {errors.email && <p className="error">{errors.email}</p>}
           {emailVerificationMsg && (
             <p className={`verification-message ${emailVerified ? 'success' : 'info'}`}>
                 {emailVerificationMsg}
@@ -203,7 +253,7 @@ const Studentsignup = () => {
                     name="verificationToken"
                     value={formData.verificationToken}
                     onChange={handleChange}
-                    placeholder="인증 토큰을 입력하세요"
+                    placeholder="인증 토큰을 입력해주세요"
                 />
                 <button
                     type="button"
@@ -214,26 +264,23 @@ const Studentsignup = () => {
                 </button>
             </div>
           )}
-          {errors.email && <p className="error">{errors.email}</p>}
           {errors.emailVerified && <p className="error">{errors.emailVerified}</p>}
     
-          <label>지갑 주소 (선택)</label>
-          <input type="text" name="walletAddress" value={formData.walletAddress} onChange={handleChange} />
-    
           <label>비밀번호*</label>
-          <input type="password" name="password" value={formData.password} onChange={handleChange} />
+          <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="비밀번호를 입력해주세요" />
           {errors.password && <p className="error">{errors.password}</p>}
     
           <label>비밀번호 확인*</label>
-          <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
+          <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="비밀번호를 다시 입력해주세요" />
           {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
     
           <button type="submit">가입하기</button>
     
-          {message && <p className="message">{message}</p>}
+          {/* {message && <p className="message">{message}</p>} */}
         </form>
       );
 };
 
-
 export default Studentsignup;
+
+//(409로 에러나면 이메일 중복)

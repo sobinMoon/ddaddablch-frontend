@@ -1,0 +1,64 @@
+.total-donation {
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 200, 0, 0.5),
+        rgba(255, 150, 0, 0.5)
+    );
+    border-radius: 12px;
+    padding: 32px;
+}
+
+.total-donation-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.total-donation-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+}
+.total-donation-msg {
+    white-space: pre-wrap;
+    display: block;
+    line-height: 1.5;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #222;
+}
+.total-donation-date {
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.5);
+
+}
+.total-donation-image {
+    width: 30%;
+    height: 30%;
+    filter: drop-shadow(8px 2px 8px rgba(255, 255, 255, 0.5));
+
+}
+
+.total-donation-content {
+    background-color: #fff;
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+    border-radius: 12px;
+}
+
+.total-donation-title {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.total-donation-amount {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+}

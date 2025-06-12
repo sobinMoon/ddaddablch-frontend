@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import mockData from '../datas/mock_campaign_data.json';
 import Donatetab from './Donatetab';
 import Campaigncard from './Campaigncard';
 import './Campaignlist.css';
-
+import SERVER_URL from '../hooks/SeverUrl';
 const categories = ['전체', '아동청소년', '노인', '환경', '동물', '장애인', '사회'];
 const sortOptions = ['인기순', '최신순', '종료임박순'];
 
@@ -11,31 +10,59 @@ export default function Campaignlist() {
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [sortOption, setSortOption] = useState('인기순');
   const [filteredData, setFilteredData] = useState([]);
+  const [campaigns, setCampaigns] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // ✅ API에서 캠페인 가져오기
   useEffect(() => {
-    let result = [...mockData];
-  
-    result = result.filter(c => c.c_status_flag === 'ACTIVE');
-  
-    if (selectedCategory !== '전체') {
-      result = result.filter(c => c.c_category === selectedCategory);
+    async function fetchCampaigns() {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${SERVER_URL}/api/v1/campaigns/fundraising`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+        setCampaigns(data.campaigns); // ⬅️ 핵심: campaigns 배열만 저장
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     }
-  
+
+    fetchCampaigns();
+  }, []);
+
+  // ✅ 카테고리 및 정렬 필터링
+  useEffect(() => {
+    let result = [...campaigns];
+
+    if (selectedCategory !== '전체') {
+      result = result.filter(c => c.category === selectedCategory);
+    }
+
     switch (sortOption) {
       case '인기순':
-        result.sort((a, b) => b.donate_count - a.donate_count);
+        result.sort((a, b) => b.donateCount - a.donateCount);
         break;
       case '최신순':
-        result.sort((a, b) => new Date(b.donate_start) - new Date(a.donate_start));
+        result.sort((a, b) => new Date(b.donateStart) - new Date(a.donateStart));
         break;
       case '종료임박순':
-        result.sort((a, b) => new Date(a.donate_end) - new Date(b.donate_end));
+        result.sort((a, b) => new Date(a.donateEnd) - new Date(b.donateEnd));
         break;
       default:
         break;
     }
-  
+
     setFilteredData(result);
-  }, [selectedCategory, sortOption]);
+  }, [campaigns, selectedCategory, sortOption]);
 
   return (
     <div className="campaign-list">
@@ -56,11 +83,15 @@ export default function Campaignlist() {
         </div>
       </div>
 
+      {/* ✅ 로딩/에러 처리 */}
+      {loading && <p></p>}
+      {error && <p style={{ color: 'red' }}>에러: {error}</p>}
+
       <div className="campaign-grid">
-  {filteredData.map(c => (
-    <Campaigncard key={c.c_id} campaign={c} sortOption={sortOption} />
-  ))}
-</div>
+        {filteredData.map(c => (
+          <Campaigncard key={c.id} campaign={c} sortOption={sortOption} />
+        ))}
+      </div>
     </div>
   );
 }

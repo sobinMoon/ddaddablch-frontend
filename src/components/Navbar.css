@@ -85,10 +85,25 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.3em;
+  font-size: 1.5em;
   color: #555;
   padding: 7px 0px 0px 0px;
 }
+
+.profile-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.profile-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 40%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
 
 @media (max-width: 768px) {
   .navbar {

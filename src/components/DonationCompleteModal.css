@@ -1,0 +1,93 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 0;
+  border-radius: 14px;
+  max-width: 454px;
+  width: 90%;
+  text-align: center;
+}
+
+.modal-header {
+  padding-top: 12px;
+  height: 24px;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 12px;
+}
+
+.modal-close-btn {
+  margin-left: 86%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.8rem;
+  font-weight: 500;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  color: #555;
+}
+
+.modal-content h2 {
+  margin: 0;
+  color: #333;
+}
+
+.donation-modal-info {
+  margin: 0;
+  padding: 0;
+
+}
+
+.donation-modal-info-text {
+  margin: 10px 0 20px 0;
+  padding: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #777;
+}
+
+.modal-actions {
+  margin-top: 1.5rem;
+}
+
+.modal-actions button {
+  padding: 10px 82px;
+  background: #0071ce;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-bottom: 42px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.modal-actions button:hover {
+  background: #0056b3;
+}
+
+.donation-modal-img {
+  width: 280px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}

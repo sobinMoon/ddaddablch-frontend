@@ -1,10 +1,11 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // ✅ 추가
+import { useNavigate } from 'react-router-dom';
 import defaultImage from '../assets/dog.jpg';
 import './Campaigncard.css';
+import SERVER_URL from '../hooks/SeverUrl';
 
 export default function Campaigncard({ campaign, sortOption }) {
-    const navigate = useNavigate(); // ✅ 추가
+    const navigate = useNavigate(); 
 
     const formatDate = (dateStr) => {
         const date = new Date(dateStr);
@@ -26,24 +27,24 @@ export default function Campaigncard({ campaign, sortOption }) {
     const renderExtraInfo = () => {
         switch (sortOption) {
             case '인기순':
-                return `총 ${campaign.donate_count}명 참여함`;
+                return `총 ${campaign.donateCount}명 참여함`;
             case '최신순':
-                return `${formatDate(campaign.donate_start)}`;
+                return `${formatDate(campaign.donateStart)}`;
             case '종료임박순':
-                return `${getRemainingTime(campaign.donate_end)}`;
+                return `${getRemainingTime(campaign.donateEnd)}`;
             default:
                 return '';
         }
     };
 
     const handleClick = () => {
-        navigate(`/donate/campaign/${campaign.c_id}`); // ✅ 상세 페이지 이동
+        navigate(`/donate/campaign/${campaign.id}`); // 상세 페이지 이동
     };
 
     return (
         <div className="campaign-card" onClick={handleClick} style={{ cursor: 'pointer' }}>
-            <img className='campaign-img' src={defaultImage} alt="캠페인 이미지" />
-            <p className='campaign-name'>{campaign.c_name}</p>
+            <img className='campaign-img' src={`${SERVER_URL}/images/${campaign.imageUrl}`} alt="캠페인 이미지" />
+            <p className='campaign-name'>{campaign.name}</p>
             <p className='campaign-info'>{renderExtraInfo()}</p>
         </div>
     );
