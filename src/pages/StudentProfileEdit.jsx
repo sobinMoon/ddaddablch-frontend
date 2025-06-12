@@ -59,22 +59,46 @@ export default function StudentProfileEdit() {
                 },
                 body: formData,
             });
+            const responseText = await res.text();
+            console.log('프로필 수정 서버 응답:', {
+                status: res.status,
+                ok: res.ok,
+                response: responseText
+            });
             if (res.ok) {
                 alert('프로필이 성공적으로 수정되었습니다.');
                 navigate('/mypage');
             } else {
-                setMessage('수정 실패: ' + (await res.text()));
+                setMessage('수정 실패: ' + responseText);
             }
         } catch (err) {
+            console.error('프로필 수정 에러:', err);
             setMessage('에러 발생: ' + err.message);
         } finally {
             setIsLoading(false);
         }
-        console.log('닉네임:', nickname);
     };
 
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
+        
+        // 현재 비밀번호 검증
+        if (!currentPassword) {
+            setMessage('현재 비밀번호를 입력해주세요.');
+            return;
+        }
+
+        // 새 비밀번호 검증
+        if (!newPassword || !confirmNewPassword) {
+            setMessage('새 비밀번호를 모두 입력해주세요.');
+            return;
+        }
+
+        if (newPassword !== confirmNewPassword) {
+            setMessage('새 비밀번호가 일치하지 않습니다.');
+            return;
+        }
+
         setIsLoading(true);
         const updateInfo = {
             currentPassword,
@@ -93,13 +117,20 @@ export default function StudentProfileEdit() {
                 },
                 body: formData,
             });
+            const responseText = await res.text();
+            console.log('비밀번호 변경 서버 응답:', {
+                status: res.status,
+                ok: res.ok,
+                response: responseText
+            });
             if (res.ok) {
                 alert('비밀번호가 성공적으로 변경되었습니다.');
                 navigate('/mypage');
             } else {
-                setMessage('변경 실패: ' + (await res.text()));
+                setMessage('변경 실패: ' + responseText);
             }
         } catch (err) {
+            console.error('비밀번호 변경 에러:', err);
             setMessage('에러 발생: ' + err.message);
         } finally {
             setIsLoading(false);

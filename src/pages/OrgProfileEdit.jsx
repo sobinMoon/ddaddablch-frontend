@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './OrgProfileEdit.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SERVER_URL from '../hooks/SeverUrl';
 
 export default function OrgProfileEdit() {
     const { organization } = useLocation().state;
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('profile');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -13,6 +14,7 @@ export default function OrgProfileEdit() {
     const [message, setMessage] = useState('');
     const [description, setDescription] = useState('');
     const [profileImage, setProfileImage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (organization && organization.odescription) {
@@ -38,6 +40,14 @@ export default function OrgProfileEdit() {
     // 정보 수정 제출
     const handleProfileSubmit = async (e) => {
         e.preventDefault();
+        
+        // 현재 비밀번호 검증
+        if (!currentPassword) {
+            setMessage('현재 비밀번호를 입력해주세요.');
+            return;
+        }
+
+        setIsLoading(true);
         const formData = new FormData();
         const updateInfo = {
             description,
@@ -58,63 +68,96 @@ export default function OrgProfileEdit() {
                 body: formData,
             });
             if (res.ok) {
-                setMessage('정보가 성공적으로 수정되었습니다.');
+                alert('프로필이 성공적으로 수정되었습니다.');
+                navigate('/organization/home');
             } else {
-                setMessage('수정 실패: ' + (await res.text()));
+                const errorText = await res.text();
+                setMessage(errorText || '수정 실패');
             }
         } catch (err) {
             setMessage('에러 발생: ' + err.message);
+        } finally {
+            setIsLoading(false);
         }
     };
-// 비밀번호 변경 제출
-const handlePasswordSubmit = async (e) => {
-    e.preventDefault();
-    
-    // FormData 방식으로 변경
-    const formData = new FormData();
-    const updatePwd = {
-        currentPassword,
-        newPassword,
-        confirmNewPassword,
-    };
-    
-    // JSON을 Blob으로 변환해서 추가
-    formData.append('updateInfo', new Blob([JSON.stringify(updatePwd)], {
-        type: 'application/json'
-    }));
-    
-    try {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${SERVER_URL}/api/v1/org/update/pwd`, {
-            method: 'PUT',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                // Content-Type 헤더 제거 (브라우저가 자동 설정)
-            },
-            body: formData, //  JSON 대신 FormData 사용
-        });
+
+    // 비밀번호 변경 제출
+    const handlePasswordSubmit = async (e) => {
+        e.preventDefault();
         
-        if (res.ok) {
-            setMessage('비밀번호가 성공적으로 변경되었습니다.');
-        } else {
-            setMessage('비밀번호 변경 실패: ' + (await res.text()));
+        // 현재 비밀번호 검증
+        if (!currentPassword) {
+            setMessage('현재 비밀번호를 입력해주세요.');
+            return;
         }
-    } catch (err) {
-        setMessage('에러 발생: ' + err.message);
-    }
-};
+
+        // 새 비밀번호 검증
+        if (!newPassword || !confirmNewPassword) {
+            setMessage('새 비밀번호를 모두 입력해주세요.');
+            return;
+        }
+
+        if (newPassword !== confirmNewPassword) {
+            setMessage('새 비밀번호가 일치하지 않습니다.');
+            return;
+        }
+
+        setIsLoading(true);
+        const formData = new FormData();
+        const updatePwd = {
+            currentPassword,
+            newPassword,
+            confirmNewPassword,
+        };
+        formData.append('updateInfo', new Blob([JSON.stringify(updatePwd)], {
+            type: 'application/json'
+        }));
+        
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${SERVER_URL}/api/v1/org/update/pwd`, {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+            });
+            
+            const responseText = await res.text();
+            console.log('비밀번호 변경 서버 응답:', {
+                status: res.status,
+                ok: res.ok,
+                response: responseText
+            });
+            
+            if (res.ok) {
+                alert('비밀번호가 성공적으로 변경되었습니다.');
+                navigate('/organization/home');
+            } else {
+                setMessage(responseText || '비밀번호 변경 실패');
+            }
+        } catch (err) {
+            console.error('비밀번호 변경 에러:', err);
+            setMessage('에러 발생: ' + err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="student-profile-edit-container">
             <div className="profile-edit-tab-menu">
                 <button
                     className={activeTab === 'profile' ? 'active' : 'inactive'}
                     onClick={() => setActiveTab('profile')}
+                    disabled={isLoading}
                 >
                     정보 수정
                 </button>
                 <button
                     className={activeTab === 'password' ? 'active' : 'inactive'}
                     onClick={() => setActiveTab('password')}
+                    disabled={isLoading}
                 >
                     비밀번호 변경
                 </button>
@@ -122,17 +165,15 @@ const handlePasswordSubmit = async (e) => {
 
             {activeTab === 'profile' && (
                 <form onSubmit={handleProfileSubmit}>
-                    <label >단체명</label>
+                    <label >이름</label>
                     <div className='profile-no-edit'>{organization.onName}</div>
 
                     <label>이메일</label>
                     <div className='profile-no-edit'>{organization.oemail}</div>
 
                     <label>사업자 번호</label>
-                    <div className='profile-no-edit'>{organization.obusinessNumber
-                    }</div>
+                    <div className='profile-no-edit'>{organization.obusinessNumber}</div>
 
-                   
                     <label>프로필 이미지</label>
                     <div className="profileimage-upload-edit-wrapper">
                         {previewUrl && (
@@ -150,12 +191,12 @@ const handlePasswordSubmit = async (e) => {
                         />
                     </div>
 
-                    <label htmlFor="description">단체 소개</label>
+                    <label htmlFor="description">소개글</label>
                     <input
                         className="profile-edit-input"
                         name="description"
                         id="description"
-                        placeholder="단체 소개를 입력해주세요"
+                        placeholder="소개글을 입력해주세요"
                         value={description}
                         onChange={e => setDescription(e.target.value)}
                     />
@@ -170,8 +211,15 @@ const handlePasswordSubmit = async (e) => {
                         value={currentPassword}
                         onChange={e => setCurrentPassword(e.target.value)}
                     />
-                    <button className='profile-edit-submit-btn' type="submit" style={{ marginTop: '24px', width: '100%' }}>수정하기</button>
-                    {message && <div style={{ marginTop: '16px', color: 'red' }}>{message}</div>}
+                    <button 
+                        className='profile-edit-submit-btn' 
+                        type="submit" 
+                        style={{ marginTop: '24px', width: '100%' }}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? '수정 중...' : '수정하기'}
+                    </button>
+                    {message && <div className='profile-edit-message'>{message}</div>}
                 </form>
             )}
             {activeTab === 'password' && (
@@ -207,8 +255,15 @@ const handlePasswordSubmit = async (e) => {
                         value={currentPassword}
                         onChange={e => setCurrentPassword(e.target.value)}
                     />
-                    <button className='profile-edit-submit-btn' type="submit" style={{ marginTop: '24px', width: '100%' }}>비밀번호 변경</button>
-                    {message && <div style={{ marginTop: '16px', color: 'red' }}>{message}</div>}
+                    <button 
+                        className='profile-edit-submit-btn' 
+                        type="submit" 
+                        style={{ marginTop: '24px', width: '100%' }}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? '변경 중...' : '비밀번호 변경'}
+                    </button>
+                    {message && <div className='profile-edit-message'>{message}</div>}
                 </form>
             )}
         </div>

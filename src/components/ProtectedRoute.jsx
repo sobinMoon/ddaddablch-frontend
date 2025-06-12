@@ -17,7 +17,7 @@ export default function ProtectedRoute({ children, allowedRoles }) {
           return;
         }
 
-        const response = await fetch(`${SERVER_URL}/api/v1/auth/me`, {
+        const response = await fetch(`${SERVER_URL}/auth/me`, {
           headers: {
             'Authorization': `Bearer ${accessToken}`
           }
@@ -41,10 +41,10 @@ export default function ProtectedRoute({ children, allowedRoles }) {
 
           if (refreshResponse.ok) {
             const { accessToken: newAccessToken } = await refreshResponse.json();
-            localStorage.setItem('accessToken', newAccessToken);
+            localStorage.setItem('token', newAccessToken);
 
             // 새로운 토큰으로 다시 사용자 정보 요청
-            const newResponse = await fetch(`${SERVER_URL}/api/v1/auth/me`, {
+            const newResponse = await fetch(`${SERVER_URL}/auth/me`, {
               headers: {
                 'Authorization': `Bearer ${newAccessToken}`
               }

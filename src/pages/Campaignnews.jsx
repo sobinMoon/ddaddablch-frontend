@@ -4,6 +4,7 @@ import SERVER_URL from '../hooks/SeverUrl';
 import './Campaignnews.css';
 import no_message from '../assets/no_message.png';
 import ConfirmModal from '../components/ConfirmModal';
+import Plandetailcard from '../components/Plandetailcard';
 
 export default function Campaignnews() {
   const { campaign } = useOutletContext();
@@ -162,6 +163,7 @@ export default function Campaignnews() {
         )}
 
       {campaign.campaignSpendings && campaign.campaignSpendings.length > 0 && (
+        <div>
         <div className='news-list-container'>
           <h2>{campaign.campaignUpdate.title} 소식</h2>
           {campaign.campaignUpdate.imageUrl && (
@@ -183,6 +185,8 @@ export default function Campaignnews() {
           whiteSpace: 'pre-line',
           fontSize: '1.05rem',
         }}>{campaign.campaignUpdate.content.replace(/\\n|¶/g, '\n')}</p>
+        </div>
+        <Plandetailcard campaignPlans={campaign.campaignSpendings} goal={campaign.goal}/>
         </div>
       )}
 

@@ -40,6 +40,15 @@ export default function CreateCampaignNews() {
             return;
         }
 
+        // 사용내역 금액 총합 계산
+        const totalUsageAmount = usages.reduce((sum, usage) => sum + parseInt(usage.amount || 0), 0);
+        
+        // 총 기부금과 사용내역 총합 비교
+        if (totalUsageAmount !== campaign.currentAmount) {
+            alert(`사용내역 금액 총합(${totalUsageAmount})이 총 기부금(${campaign.currentAmount})과 일치하지 않습니다.`);
+            return;
+        }
+
         try {
             const accessToken = localStorage.getItem('token');
             if (!accessToken) {

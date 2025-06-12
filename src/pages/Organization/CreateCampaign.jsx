@@ -74,6 +74,15 @@ export default function CreateCampaign() {
             return;
         }
 
+        // 사용계획 금액 총합 계산
+        const totalPlanAmount = plans.reduce((sum, plan) => sum + parseInt(plan.amount || 0), 0);
+        
+        // 목표금액과 사용계획 총합 비교
+        if (totalPlanAmount !== parseInt(goal)) {
+            alert(`사용계획 금액 총합(${totalPlanAmount})이 목표금액(${goal})과 일치하지 않습니다.`);
+            return;
+        }
+
         setIsSubmitting(true);
         try {
             // JSON 데이터 생성

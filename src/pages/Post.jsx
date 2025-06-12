@@ -83,7 +83,7 @@ export default function Post() {
     };
 
     if (loading) {
-        return <div className="post-container">로딩 중...</div>;
+        return <div className="post-container"></div>;
     }
 
     if (!post) {

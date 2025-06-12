@@ -27,6 +27,7 @@ import CreateCampaignNews from './pages/Organization/CreateCampaignNews';
 import Search from './pages/Search';
 import StudentProfileEdit from './pages/StudentProfileEdit';
 import OrgProfileEdit from './pages/OrgProfileEdit';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -56,7 +57,7 @@ function App() {
           <Route path='/signup' element={<Signup />} />
         </Route>
 
-        <Route element={<LayoutForOrg />}>
+        <Route element={<ProtectedRoute allowedRoles={['ROLE_ORGANIZATION']}><LayoutForOrg /></ProtectedRoute>}>
           <Route path='/organization/home' element={<OrgHome />} />
           <Route path='/organization/create-campaign' element={<CreateCampaign />} />
           <Route path='/organization/beneficiary-withdraw' element={<BeneficiaryWithdraw />} />

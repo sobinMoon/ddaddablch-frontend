@@ -5,7 +5,7 @@ import SERVER_URL from '../hooks/SeverUrl';
 
 const CampaignHorizontal = ({ campaign }) => {
     const navigate = useNavigate();
-
+    console.log("캠페인 정보", campaign);
     const handleClick = () => {
         navigate(`/donate/campaign/${campaign.id}`);
     };
@@ -23,7 +23,6 @@ const CampaignHorizontal = ({ campaign }) => {
             <div className="campaign-horizontal-content">
                 <div className="campaign-horizontal-info">
                     <h3 className="campaign-horizontal-title">{campaign.name}</h3>
-                    <p className="campaign-horizontal-org">단체명</p>
                     <p className="campaign-horizontal-description">{campaign.description}</p>
                 </div>
                 <div className="campaign-horizontal-progress-container">
@@ -35,7 +34,7 @@ const CampaignHorizontal = ({ campaign }) => {
                     </div>
                     <div className="campaign-horizontal-progress-info">
                         <span className="campaign-horizontal-current-amount">
-                            {campaign.currentAmount.toLocaleString()}원
+                            {campaign.currentAmount.toLocaleString()}ETH
                         </span>
                         <span className="campaign-horizontal-percentage">
                             {Math.round(progress)}%
