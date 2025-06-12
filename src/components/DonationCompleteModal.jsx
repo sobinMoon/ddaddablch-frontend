@@ -15,7 +15,7 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
   const fetchUserInfo = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${SERVER_URL}/api/v1/auth/me`, {
+      const response = await fetch(`${SERVER_URL}/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
