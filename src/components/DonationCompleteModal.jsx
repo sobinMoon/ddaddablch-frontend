@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DonationCompleteModal.css';
-import defaultImage1 from '../assets/IMG_environment.png';
+// import defaultImage1 from '../assets/IMG_environment.png';
 import defaultImage2 from '../assets/IMG_animal.png';
 import defaultImage3 from '../assets/IMG_elderly.png';
 import defaultImage4 from '../assets/IMG_children.png';
@@ -21,7 +21,7 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
       case '노인':
         return defaultImage3;
       case '환경':
-        return defaultImage1;
+        return "/images/IMG_environment.png";
       case '사회':
         return defaultImage6;
       case '동물':
