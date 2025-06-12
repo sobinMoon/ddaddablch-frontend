@@ -104,7 +104,7 @@ export default function OrgHome() {
                     </div>
                 </div>
                 <div className="orghome-description">
-                    <p>{organization.odescription || '소개가 없습니다.'}</p>
+                    <p style={{whiteSpace: 'pre-line'}}>{organization.odescription || '소개가 없습니다.'}</p>
                 </div>
             </div>
 
@@ -185,11 +185,11 @@ export default function OrgHome() {
                 </div>
             </div>
 
-            <div className="orghome-footer">
-                <button className="logout-btn" onClick={handleLogout}>
-                    로그아웃
-                </button>
-            </div>
-        </div>
+        <div className="orghome-footer">    
+            <button className="orghome-logout-btn" onClick={handleLogout}>
+             로그아웃
+         </button>
+     </div>
+     </div>
     );
 }

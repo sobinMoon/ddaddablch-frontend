@@ -218,8 +218,8 @@ export default function Orgsignup() {
 
   return (
     <form className="student-signup" onSubmit={handleSubmit}>
-      <label>기관명*</label>
-      <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="기관명을 입력해주세요" />
+      <label>이름/기관명*</label>
+      <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="이름 또는 기관명을 입력해주세요" />
       {errors.name && <p className="error">{errors.name}</p>}
 
       <label>사업자 등록번호 (선택)</label>

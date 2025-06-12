@@ -126,3 +126,21 @@
     border-radius: 12px;
 }
 
+.orghome-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    justify-content: right;
+}
+
+.orghome-logout-btn {   
+    padding: 0;
+    font-size: 0.9rem;
+    color: #ff4444;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #ff4444;
+    cursor: pointer;
+    width: fit-content;
+    margin-left: auto;
+}
