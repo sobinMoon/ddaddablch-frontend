@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import defaultImage from '../assets/dog.jpg';
 import './Campaigncard.css';
 import SERVER_URL from '../hooks/SeverUrl';
 

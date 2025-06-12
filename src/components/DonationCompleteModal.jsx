@@ -21,7 +21,7 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
       case '환경':
         return '/image/IMG_environment.png';
       case '사회':
-        return '/image/IMG_social.jpg';
+        return '/image/IMG_social.png';
       case '동물':
         return '/image/IMG_animal.png';
       case '장애인':
