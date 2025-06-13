@@ -17,10 +17,10 @@ function BeneficiaryWithdraw() {
   const location = useLocation();
   const campaignId = location.state?.campaignId;
   
-  console.log(campaignId);
+  // console.log(campaignId);
 
   // 컨트랙트 주소 (Truffle migrate 후 콘솔에 표시된 주소)
-  const CONTRACT_ADDRESS = "0xCa32413067e66A1604163bF1740b9F5B32699023";
+  const CONTRACT_ADDRESS = "0x6E7C4411F212f342B5e38f717a40D77166c9F2b7";
 
   // 캠페인 지갑 주소
 
@@ -89,7 +89,7 @@ function BeneficiaryWithdraw() {
           );
           setContractBalance(ethers.utils.formatEther(balance));
 
-          console.log("인출 전 잔액:", contractBalance);
+          // console.log("인출 전 잔액:", contractBalance);
           // 계정 변경 이벤트 리스너
           window.ethereum.on("accountsChanged", handleAccountsChanged);
           window.ethereum.on("chainChanged", () => window.location.reload());
@@ -138,23 +138,23 @@ function BeneficiaryWithdraw() {
 
     setLoading(true);
     try {
-      console.log("인출 시작...");
+      // console.log("인출 시작...");
 
       // withdraw 함수 호출
       const tx = await contract.withdraw();
-      console.log("트랜잭션 전송됨:", tx.hash);
+      // console.log("트랜잭션 전송됨:", tx.hash);
 
       // 트랜잭션 완료 대기
       alert("메타마스크에서 트랜잭션을 확인해주세요. 처리 중입니다...");
       const receipt = await tx.wait();
-      console.log("트랜잭션 완료:", receipt);
+      // console.log("트랜잭션 완료:", receipt);
 
       alert("기부금 인출에 성공했습니다!");
 
       // 잔액 갱신
       const newBalance = await contract.getBeneficiaryBalance(account);
       setContractBalance(ethers.utils.formatEther(newBalance));
-      console.log("인출 후 잔액:", contractBalance);
+      // console.log("인출 후 잔액:", contractBalance);
     } catch (error) {
       console.error("인출 오류:", error);
       alert("인출 처리 중 오류가 발생했습니다: " + error.message);

@@ -71,10 +71,10 @@ export default function CreateCampaignNews() {
             const jsonBlob = new Blob([JSON.stringify(jsonData)], { type: "application/json" });
             formData.append("request", jsonBlob);
             formData.append("image", image);
-            console.log(jsonData);
+            // console.log(jsonData);
 
             for (let pair of formData.entries()) {
-                console.log(pair[0], pair[1]);
+                // console.log(pair[0], pair[1]);
             }
 
             const response = await fetch(`${SERVER_URL}/api/v1/campaigns/${campaignId}/updates`, {
@@ -94,7 +94,7 @@ export default function CreateCampaignNews() {
             } else {
                 alert(result.message || '캠페인 소식 등록에 실패했습니다.');
                 if (result.result) {
-                    console.log('상세 에러:', result.result);
+                    // console.log('상세 에러:', result.result);
                 }
             }
         } catch (error) {

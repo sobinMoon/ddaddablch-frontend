@@ -38,13 +38,13 @@ export default function Campaign() {
   useEffect(() => {
     const fetchCampaign = async () => {
       try {
-        console.log(id);
+        // console.log(id);
         const res = await fetch(`${SERVER_URL}/api/v1/campaigns/${id}`);
 
         const data = await res.json();
         if (res.ok && data.isSuccess) {
           setCampaign(data.result);
-          console.log(data.result);
+          // console.log(data.result);
         } else {
           console.error('캠페인 정보를 불러오는 데 실패했습니다.');
         }

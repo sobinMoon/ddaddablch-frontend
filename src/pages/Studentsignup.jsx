@@ -86,13 +86,13 @@ const Studentsignup = () => {
             });
     
             const data = await res.json();
-            console.log(data);
+            // console.log(data);
 
             if (!res.ok) {
                 throw new Error(data.message || '서버 응답 오류');
             }
     
-            console.log('서버 응답:', data);
+            // console.log('서버 응답:', data);
             setEmailVerificationMsg('인증 메일이 발송되었습니다. 이메일을 확인한 후 토큰을 입력해주세요.');
         } catch (err) {
             console.error('이메일 인증 요청 중 오류:', err);
@@ -157,7 +157,7 @@ const Studentsignup = () => {
             data = { message: text };  // fallback
           }
       
-          console.log(data);
+          // console.log(data);
       
           if (res.status === 201) {
             setMessage(data.message);

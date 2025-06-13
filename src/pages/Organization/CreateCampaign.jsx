@@ -181,7 +181,7 @@ export default function CreateCampaign() {
                 setWalletAddress(accounts[0]);
                 setIsConnected(true); // ✅ 연결 성공 표시
                 log(`지갑 연결 성공: ${accounts[0]}`);
-                console.log(accounts[0]);
+                // console.log(accounts[0]);
                 setStepEnabled((prev) => ({ ...prev, requestChallenge: true }));
             } catch (err) {
                 log(`에러: ${err.message}`);
