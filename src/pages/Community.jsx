@@ -9,7 +9,7 @@ export default function Community() {
     const location = useLocation();
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
-    console.log(currentPage);
+    // console.log(currentPage);
     const [posts, setPosts] = useState([]);
     const [pagination, setPagination] = useState({
         totalPage: 0,
@@ -41,7 +41,7 @@ export default function Community() {
             try {
                 const response = await fetch(`${SERVER_URL}/api/v1/posts?page=${currentPage-1}`);
                 const data = await response.json();
-                console.log('응답 텍스트:', data);
+                // console.log('응답 텍스트:', data);
 
                 if (data.isSuccess) {
                     setPosts(data.result.postList);

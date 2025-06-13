@@ -62,14 +62,14 @@ export default function Campaignnews() {
 
             if (newResponse.ok) {
               const userData = await newResponse.json();
-              console.log('userData (refresh):', userData);
+              // console.log('userData (refresh):', userData);
               setIsOrg(userData.role === 'ROLE_ORGANIZATION');
               setUserData(userData);
             }
           }
         } else if (response.ok) {
           const userData = await response.json();
-          console.log('userData:', userData);
+          // console.log('userData:', userData);
           setIsOrg(userData.role === 'ROLE_ORGANIZATION');
           setUserData(userData);
         }

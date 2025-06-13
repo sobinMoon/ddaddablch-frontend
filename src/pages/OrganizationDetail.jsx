@@ -49,7 +49,7 @@ export default function OrganizationDetail() {
         try {
             const response = await fetch(`${SERVER_URL}/api/v1/mypage/org/${orgId}`);
             const data = await response.json();
-            console.log('data:', data);
+            // console.log('data:', data);
             
             if (data.isSuccess) {
                 setOrganization(data.result);

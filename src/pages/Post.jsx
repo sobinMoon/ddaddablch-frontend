@@ -19,14 +19,14 @@ export default function Post() {
         const fetchPost = async () => {
             try {
                 const token = localStorage.getItem('token');
-                console.log(postId);
+                // console.log(postId);
                 const response = await fetch(`${SERVER_URL}/api/v1/posts/${postId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 const data = await response.json();
-                console.log(data);
+                // console.log(data);
                 
                 if (data.isSuccess) {
                     setPost(data.result);

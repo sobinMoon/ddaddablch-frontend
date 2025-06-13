@@ -27,7 +27,7 @@ export default function Home() {
         }
 
         const result = await response.json();
-        console.log(result);
+        // console.log(result);
         
         if (result.isSuccess && result.result) {
           setData(result.result);

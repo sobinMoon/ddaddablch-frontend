@@ -77,7 +77,7 @@ export default function Donatecard({ goal, remaining, participants, onDonate, ca
   };
 
   const handleWithdrawClick = () => {
-    console.log(campaignId);
+    //console.log(campaignId);
     navigate('/organization/beneficiary-withdraw', { 
       state: { campaignId } 
     });

@@ -60,11 +60,11 @@ export default function StudentProfileEdit() {
                 body: formData,
             });
             const responseText = await res.text();
-            console.log('프로필 수정 서버 응답:', {
-                status: res.status,
-                ok: res.ok,
-                response: responseText
-            });
+            // console.log('프로필 수정 서버 응답:', {
+            //     status: res.status,
+            //     ok: res.ok,
+            //     response: responseText
+            // });
             if (res.ok) {
                 alert('프로필이 성공적으로 수정되었습니다.');
                 navigate('/mypage');
@@ -118,11 +118,11 @@ export default function StudentProfileEdit() {
                 body: formData,
             });
             const responseText = await res.text();
-            console.log('비밀번호 변경 서버 응답:', {
-                status: res.status,
-                ok: res.ok,
-                response: responseText
-            });
+            // console.log('비밀번호 변경 서버 응답:', {
+            //     status: res.status,
+            //     ok: res.ok,
+            //     response: responseText
+            // });
             if (res.ok) {
                 alert('비밀번호가 성공적으로 변경되었습니다.');
                 navigate('/mypage');

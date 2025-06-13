@@ -5,7 +5,7 @@ import { useOutletContext } from 'react-router-dom';
 export default function Campaignintro() {
   const { campaign } = useOutletContext();
   const text = campaign.description;
-  console.log(text);
+  // console.log(text);
 
   return (
     <div>

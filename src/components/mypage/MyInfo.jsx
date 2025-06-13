@@ -41,7 +41,7 @@ export default function MyInfo({ userInfo, setActiveTab }) {
                 }
 
                 const data = await response.json();
-                console.log("NFT 데이터", data);
+                //console.log("NFT 데이터", data);
                 if (data.isSuccess) {
                     setNfts(data.result);
                 }
@@ -58,7 +58,7 @@ export default function MyInfo({ userInfo, setActiveTab }) {
         }
     }, [userInfo]);
 
-    console.log('userInfo:', userInfo);
+    //console.log('userInfo:', userInfo);
  
     const handleDonationsClick = () => {
         setActiveTab('donations');

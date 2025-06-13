@@ -34,7 +34,7 @@ export default function OrgHome() {
                 const data = await response.json();
                 if (data.isSuccess) {
                     setOrganization(data.result);
-                    console.log("data", data);
+                    // console.log("data", data);
                 } else {
                     alert(data.message || '수혜자 정보를 불러오는데 실패했습니다.');
                 }

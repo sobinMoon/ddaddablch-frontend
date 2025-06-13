@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Donations({ recentDonations }) {
     const navigate = useNavigate();
-    console.log(recentDonations);
+    //console.log(recentDonations);
 
     /*"recentDonations": [
             {
