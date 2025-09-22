@@ -1,4 +1,4 @@
-const SERVER_URL = "https://7464-61-40-226-235.ngrok-free.app";
+const SERVER_URL = "http://10.115.8.3:8080";
 
 export default SERVER_URL;
 
