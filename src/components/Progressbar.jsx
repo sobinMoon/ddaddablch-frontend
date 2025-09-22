@@ -2,7 +2,7 @@ import React from 'react'
 import './Progressbar.css';
 
 export default function Progressbar({ current, goal }) {
-    const percentage = Math.min((current / goal) * 100, 100);
+    const percentage = goal > 0 ? (current / goal) * 100 : 0;
     const formattedPercentage = percentage.toFixed(1); // 소수점 1자리
 
     return (
@@ -16,7 +16,7 @@ export default function Progressbar({ current, goal }) {
             </div>
 
             <div className="progress-container">
-                <div className="progress-bar" style={{ width: `${percentage}%` }}></div>
+                <div className="progress-bar" style={{ width: `${percentage}%`, maxWidth:'100%' }}></div>
             </div>
         </div>
     );
