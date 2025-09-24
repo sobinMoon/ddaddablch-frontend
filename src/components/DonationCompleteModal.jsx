@@ -5,7 +5,7 @@ import { IoClose } from "react-icons/io5";
 import { createDonationImage } from '../hooks/imageUtils';
 import SERVER_URL from '../hooks/SeverUrl';
 
-function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
+function DonationCompleteModal({ isOpen, onClose, donationInfo, id }) {
   const navigate = useNavigate();
   const [compositeImage, setCompositeImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -122,6 +122,55 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
       }
     });
   };
+  const handleKakaoShare = async () => {
+    if (!compositeImage) {
+      alert('이미지가 준비되지 않았습니다. 잠시 후 다시 시도해주세요.');
+      return;
+    }
+
+    try {
+      // 이미지를 서버에 업로드하여 공개 URL 얻기
+      let imageUrl = compositeImage;
+      
+      // data URL인 경우 서버에 업로드
+      if (compositeImage.startsWith('data:')) {
+        try {
+          const uploadedImageUrl = await uploadNFTImage(compositeImage);
+          imageUrl = uploadedImageUrl;
+        } catch (uploadError) {
+          console.error('이미지 업로드 실패:', uploadError);
+          // 업로드 실패시 기본 이미지 사용
+          imageUrl = 'https://mud-kage.kakao.com/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg';
+        }
+      }
+
+      window.Kakao.Share.sendDefault({
+          objectType: "feed",
+          content: {
+              title: `${donationInfo?.campaignName || '기부 캠페인'}에 기부했습니다!`,
+              description: `${donationInfo?.amount || '0'} ETH를 기부하여 ${donationInfo?.campaignCategory || '사회'} 분야에 도움을 주었습니다.`,
+              imageUrl: imageUrl,
+              link: {
+                  mobileWebUrl: `http://localhost:5173/donate/campaign/${id}`,
+                  webUrl: `http://localhost:5173/donate/campaign/${id}`,
+              },
+          },
+      });
+    } catch (error) {
+      console.error('카카오 공유 오류:', error);
+      alert('카카오 공유 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+};
+
+function shareTwitter() {
+  const sendText = `${donationInfo?.campaignName || '기부 캠페인'}에 기부했습니다!`;
+  const sendUrl = `http://localhost:5173/donate/campaign/${id}`;
+
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(sendText)}&url=${encodeURIComponent(sendUrl)}`;
+  window.open(twitterUrl, "_blank");
+}
+
+
 
   if (!isOpen) return null;
 
@@ -136,8 +185,8 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
         <h2>기부 완료!</h2>
         <div className="donation-modal-info">
           <p className='donation-modal-info-text'>NFT 인증서가 발급되었어요</p>
-          {/*<p>캠페인: {donationInfo.campaignName}</p>*/}
-          {/*<p>기부 금액: {donationInfo.amount} ETH</p>*/}
+          
+
           {isLoading ? (
             <div 
               className='donation-modal-img' 
@@ -165,6 +214,16 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo }) {
           >
             {isUploading ? '업로드 중...' : '커뮤니티에 공유하기'}
           </button>
+        </div>
+        <div className="share-btn">
+          <img 
+          src='/images/kakao.png'
+          className='share-btn-kakao' onClick={handleKakaoShare}/>
+
+          <img 
+          src='/images/x.png'
+          className='share-btn-twitter' 
+          onClick={shareTwitter}/>
         </div>
       </div>
     </div>

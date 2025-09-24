@@ -65,7 +65,7 @@
 }
 
 .modal-actions {
-  margin-top: 1.5rem;
+  margin-top: 0.8rem;
 }
 
 .modal-actions button {
@@ -76,7 +76,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.3s ease;
-  margin-bottom: 42px;
+  margin-bottom: 20px;
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -86,8 +86,31 @@
 }
 
 .donation-modal-img {
-  width: 280px;
+  width: 240px;
   height: 100%;
   object-fit: cover;
   border-radius: 12px;
+}
+
+.share-btn {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.share-btn-kakao {
+  width: 42px;
+  height: 42px;
+  border-radius: 15%;
+  cursor: pointer;
+  object-fit: cover;
+}
+
+.share-btn-twitter {
+  width: 42px;
+  height: 42px;
+  border-radius: 15%;
+  cursor: pointer;
+  object-fit: cover;
 }

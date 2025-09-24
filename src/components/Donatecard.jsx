@@ -95,7 +95,7 @@ export default function Donatecard({ goal, remaining, participants, onDonate, ca
 
       <div className="donation-row">
         <span>모금 완료까지</span>
-        <span>{remaining.toLocaleString()}ETH</span>
+        <span>{remaining <= 0 ? '목표 달성' : `${remaining.toLocaleString()}ETH`}</span>
       </div>
       <hr className="donation-divider" />
 

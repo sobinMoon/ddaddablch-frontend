@@ -5,6 +5,17 @@
     <link rel="icon" type="image/png" href="/public/sookchain_logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SOOKCHAIN</title>
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.8/kakao.min.js"
+    integrity="sha384-WUSirVbD0ASvo37f3qQZuDap8wy76aJjmGyXKOYgPL/NdAs8HhgmPlk9dz2XQsNv" crossorigin="anonymous"></script>    <script>
+      // SDK를 초기화 합니다. 사용할 앱의 JavaScript 키를 설정해야 합니다.
+      Kakao.init('9c2807e4fdd124fb9ffdb3d974d7c1bc');
+  
+      // SDK 초기화 여부를 판단합니다.
+      if (Kakao.isInitialized()) {
+        //console.log("카카오 SDK 초기화 완료");
+      }
+
+    </script>
   </head>
   <body>
     <div id="root"></div>

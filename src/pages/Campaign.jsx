@@ -65,10 +65,13 @@ export default function Campaign() {
 
   return (
     <div className='campaign-wrap'>
+     
+      
       <DonationCompleteModal 
         isOpen={showDonationModal}
         onClose={handleCloseModal}
         donationInfo={donationInfo}
+        id={campaign.id}
       />
       <div className='left-wrap'>
         <img className='camp-img' src={`${SERVER_URL}/images/${campaign.imageUrl}` || defaultImage} alt="캠페인 이미지" />
