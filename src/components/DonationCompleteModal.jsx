@@ -11,6 +11,7 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo, id }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [nickname, setNickname] = useState('');
+  const [nicknameLoaded, setNicknameLoaded] = useState(false);
 
   const fetchUserInfo = async () => {
     try {
@@ -26,6 +27,9 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo, id }) {
       }
     } catch (error) {
       console.error('사용자 정보 조회 실패:', error);
+    } finally {
+      // 닉네임이 없더라도 로딩 완료 상태로 표시
+      setNicknameLoaded(true);
     }
   };
 
@@ -53,28 +57,27 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo, id }) {
   }, []);
 
   useEffect(() => {
-    if (isOpen && donationInfo) {
-      setIsLoading(true);
-      fetchUserInfo();
-      const defaultImage = getDefaultImageByCategory(donationInfo.category);
-      createDonationImage(defaultImage, donationInfo, nickname)
-        .then(async imageUrl => {
-          setCompositeImage(imageUrl);
-          setIsLoading(false);
-          // 이미지가 생성되면 자동으로 업로드
-          try {
-            await uploadNFTImage(imageUrl);
-          } catch (error) {
-            console.error('자동 업로드 실패:', error);
-          }
-        })
-        .catch(error => {
-          console.error('이미지 합성 실패:', error);
-          setCompositeImage(defaultImage);
-          setIsLoading(false);
-        });
-    }
-  }, [isOpen, donationInfo, nickname]); // nickname 의존성 추가
+    if (!isOpen || !donationInfo || !nicknameLoaded) return;
+
+    setIsLoading(true);
+    const defaultImage = getDefaultImageByCategory(donationInfo.category);
+    createDonationImage(defaultImage, donationInfo, nickname)
+      .then(async imageUrl => {
+        setCompositeImage(imageUrl);
+        setIsLoading(false);
+        // 이미지가 생성되면 자동으로 업로드
+        try {
+          await uploadNFTImage(imageUrl);
+        } catch (error) {
+          console.error('자동 업로드 실패:', error);
+        }
+      })
+      .catch(error => {
+        console.error('이미지 합성 실패:', error);
+        setCompositeImage(defaultImage);
+        setIsLoading(false);
+      });
+  }, [isOpen, donationInfo, nicknameLoaded]);
 
   const uploadNFTImage = async (imageUrl) => {
     try {
@@ -123,33 +126,17 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo, id }) {
     });
   };
   const handleKakaoShare = async () => {
-    if (!compositeImage) {
-      alert('이미지가 준비되지 않았습니다. 잠시 후 다시 시도해주세요.');
-      return;
-    }
-
+   
     try {
       // 이미지를 서버에 업로드하여 공개 URL 얻기
       let imageUrl = compositeImage;
       
-      // data URL인 경우 서버에 업로드
-      if (compositeImage.startsWith('data:')) {
-        try {
-          const uploadedImageUrl = await uploadNFTImage(compositeImage);
-          imageUrl = uploadedImageUrl;
-        } catch (uploadError) {
-          console.error('이미지 업로드 실패:', uploadError);
-          // 업로드 실패시 기본 이미지 사용
-          imageUrl = 'https://mud-kage.kakao.com/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg';
-        }
-      }
-
+     
       window.Kakao.Share.sendDefault({
           objectType: "feed",
           content: {
               title: `${donationInfo?.campaignName || '기부 캠페인'}에 기부했습니다!`,
               description: `${donationInfo?.amount || '0'} ETH를 기부하여 ${donationInfo?.campaignCategory || '사회'} 분야에 도움을 주었습니다.`,
-              imageUrl: imageUrl,
               link: {
                   mobileWebUrl: `http://localhost:5173/donate/campaign/${id}`,
                   webUrl: `http://localhost:5173/donate/campaign/${id}`,
