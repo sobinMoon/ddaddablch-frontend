@@ -1,3 +1,3 @@
-const SERVER_URL = "http://172.20.62.228:8080";
+const SERVER_URL = "unreproductive-marty-unremorsefully.ngrok-free.dev";
 
 export default SERVER_URL;
