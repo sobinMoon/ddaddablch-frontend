@@ -138,8 +138,8 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo, id }) {
               title: `${donationInfo?.campaignName || '기부 캠페인'}에 기부했습니다!`,
               description: `${donationInfo?.amount || '0'} ETH를 기부하여 ${donationInfo?.campaignCategory || '사회'} 분야에 도움을 주었습니다.`,
               link: {
-                  mobileWebUrl: `http://localhost:5173/donate/campaign/${id}`,
-                  webUrl: `http://localhost:5173/donate/campaign/${id}`,
+                  mobileWebUrl: `https://sookchain.vercel.app/donate/campaign/${id}`,
+                  webUrl: `https://sookchain.vercel.app/donate/campaign/${id}`,
               },
           },
       });
@@ -151,7 +151,7 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo, id }) {
 
 function shareTwitter() {
   const sendText = `${donationInfo?.campaignName || '기부 캠페인'}에 기부했습니다!`;
-  const sendUrl = `http://localhost:5173/donate/campaign/${id}`;
+  const sendUrl = `https://sookchain.vercel.app/donate/campaign/${id}`;
 
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(sendText)}&url=${encodeURIComponent(sendUrl)}`;
   window.open(twitterUrl, "_blank");
