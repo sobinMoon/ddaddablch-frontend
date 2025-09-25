@@ -20,7 +20,7 @@ function MetamaskDonate() {
   const [validationError, setValidationError] = useState("");
   const [provider, setProvider] = useState(null);
   const [donationStep, setDonationStep] = useState(""); // 기부 진행 단계 표시
-  const contractAddress = "0x4c9081937C9e8b9057878b781E2969e1096e8d03";
+  const contractAddress = "0x9F83a56127205e9e8836Ff85324112524531AA1A";
 
   // 🎯 개선된 한글 카테고리 매핑 함수
   const getDonationCategoryValue = (categoryString) => {
