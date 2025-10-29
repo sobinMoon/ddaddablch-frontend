@@ -20,7 +20,7 @@ function BeneficiaryWithdraw() {
   // console.log(campaignId);
 
   // 컨트랙트 주소 (Truffle migrate 후 콘솔에 표시된 주소)
-  const CONTRACT_ADDRESS = "0xaA5220fd16a591e743c1e9b6Ee7506d85715feF7";
+  const CONTRACT_ADDRESS = "0xc9579EbbB3b4EfA2eC70CD3e0F7329334eE60d59";
 
   // 캠페인 지갑 주소
 
