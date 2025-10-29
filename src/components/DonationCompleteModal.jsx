@@ -136,7 +136,7 @@ function DonationCompleteModal({ isOpen, onClose, donationInfo, id }) {
           objectType: "feed",
           content: {
               title: `${donationInfo?.campaignName || '기부 캠페인'}에 기부했습니다!`,
-              description: `${donationInfo?.amount || '0'} ETH를 기부하여 ${donationInfo?.campaignCategory || '사회'} 분야에 도움을 주었습니다.`,
+              description: `${(donationInfo?.amount*10000).toLocaleString()}SCN를 기부하여 ${donationInfo?.campaignCategory || '사회'} 분야에 도움을 주었습니다.`,
               link: {
                   mobileWebUrl: `https://sookchain.vercel.app/donate/campaign/${id}`,
                   webUrl: `https://sookchain.vercel.app/donate/campaign/${id}`,

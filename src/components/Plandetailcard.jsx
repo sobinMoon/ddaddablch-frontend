@@ -10,14 +10,14 @@ export default function Plandetailcard({ flag, campaignPlans, goal, amount }) {
                 {campaignPlans.map((plan) => (
                     <div key={plan.id} className="plan-row">
                         <span>{plan.title}</span>
-                        <span>{plan.amount}ETH</span>
+                        <span>{(plan.amount*10000).toLocaleString()}SCN</span>
                     </div>
                 ))}
                 <hr className="plan-divider" />
 
                 <div className="plan-goal">
                     <span>{flag === 'isNews' ? '모금액' : '목표 금액'}</span>
-                    <span>{flag === 'isNews' ? amount : goal}ETH</span>
+                    <span>{flag === 'isNews' ? (amount*10000).toLocaleString() : (goal*10000).toLocaleString()}SCN</span>
                 </div>
                 
             </div>

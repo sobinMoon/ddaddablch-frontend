@@ -29,7 +29,7 @@ const CampaignVertical = ({ campaign }) => {
                     </div>
                     <div className="campaign-vertical-progress-info">
                         <span className="campaign-vertical-current-amount">
-                            {campaign.currentAmount.toLocaleString()}ETH
+                            {(campaign.currentAmount*10000).toLocaleString()}SCN
                         </span>
                         <span className="campaign-vertical-percentage">
                             {Math.round(progress)}%

@@ -32,7 +32,7 @@ export default function CreatePost() {
       // 기부 정보가 있으면 제목과 내용에 추가
       if (location.state.donationInfo) {
         setTitle(`기부 인증- ${location.state.donationInfo.campaignName}`);
-        setContent(`캠페인 "${location.state.donationInfo.campaignName}"에 ${location.state.donationInfo.amount} ETH를 기부했어요!`);
+        setContent(`캠페인 "${location.state.donationInfo.campaignName}"에 ${(location.state.donationInfo.amount*10000).toLocaleString()}SCN를 기부했어요!`);
       }
     }
   }, [location]);

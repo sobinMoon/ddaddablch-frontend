@@ -263,7 +263,7 @@ export default function CreateCampaign() {
                         }}
                         placeholder='목표 금액을 입력하세요'
                     />
-                    <span className="unit">ETH</span>
+                    <span className="unit">SCN</span>
                 </div>
 
             </div>
@@ -285,7 +285,7 @@ export default function CreateCampaign() {
                         />
                         <input
                             type="text"
-                            placeholder="금액 (ETH)"
+                            placeholder="금액 (SCN)"
                             value={plan.amount}
                             onChange={(e) => {
                                 const onlyNums = e.target.value.replace(/[^0-9]/g, '');
