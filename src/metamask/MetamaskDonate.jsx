@@ -20,7 +20,7 @@ function MetamaskDonate() {
   const [validationError, setValidationError] = useState("");
   const [provider, setProvider] = useState(null);
   const [donationStep, setDonationStep] = useState(""); // 기부 진행 단계 표시
-  const contractAddress = "0xaA5220fd16a591e743c1e9b6Ee7506d85715feF7";
+  const contractAddress = "0xc9579EbbB3b4EfA2eC70CD3e0F7329334eE60d59";
 
   // 🎯 개선된 한글 카테고리 매핑 함수
   const getDonationCategoryValue = (categoryString) => {
@@ -830,21 +830,16 @@ function MetamaskDonate() {
         <div className="fee-info">
           <p>
             플랫폼 수수료: {(platformFee / 100).toFixed(2)}% (
-            {formatEther(
-              parseEther(donateAmount || "0")
-                ?.mul?.(platformFee)
-                ?.div?.(10000) || "0"
-            )}{" "}
-            ETH)
+            {(
+              (parseFloat(donateAmount || "0") * platformFee) / 10000
+            ).toFixed(3)} SCN)
           </p>
           <p>
             수혜자 수령액:{" "}
-            {formatEther(
-              parseEther(donateAmount || "0")
-                ?.mul?.(10000 - platformFee)
-                ?.div?.(10000) || "0"
-            )}{" "}
-            ETH
+            {(
+              (parseFloat(donateAmount || "0") * (10000 - platformFee)) /
+              10000
+            ).toFixed(3)} SCN
           </p>
         </div>
       )}
