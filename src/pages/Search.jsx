@@ -120,7 +120,7 @@ export default function Search() {
                                         </div>
                                         <div className="campaign-progress">
                                             <div className="progress-info">
-                                                {formatAmount(campaign.currentAmount)} ETH
+                                                {formatAmount((campaign.currentAmount*10000).toLocaleString())} SCN
                                             </div>
                                         </div>
                                     </div>

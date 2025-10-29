@@ -165,7 +165,7 @@ export default function CreateCampaignNews() {
                         />
                         <input
                             type="text"
-                            placeholder="금액 (ETH)"
+                            placeholder="금액 (SCN)"
                             value={usage.amount}
                             onChange={(e) => {
                                 const value = e.target.value;
