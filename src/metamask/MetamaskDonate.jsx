@@ -20,7 +20,7 @@ function MetamaskDonate() {
   const [validationError, setValidationError] = useState("");
   const [provider, setProvider] = useState(null);
   const [donationStep, setDonationStep] = useState(""); // 기부 진행 단계 표시
-  const contractAddress = "0xc9579EbbB3b4EfA2eC70CD3e0F7329334eE60d59";
+  const contractAddress = "0xfC7B6134A2fCFd5b9d814be35d2344ad08310105";
 
   // 🎯 개선된 한글 카테고리 매핑 함수
   const getDonationCategoryValue = (categoryString) => {
@@ -301,9 +301,7 @@ function MetamaskDonate() {
     }
 
     if (parseFloat(donateAmount) < 0.001) {
-      //setValidationError("최소 기부 금액은 0.001 ETH입니다.");
-      setValidationError("최소 기부 금액은 10 SCN입니다.");
-
+      setValidationError("최소 기부 금액은 0.001 ETH입니다.");
       return false;
     }
 
@@ -538,13 +536,12 @@ function MetamaskDonate() {
     try {
       console.log("트랜잭션 실행 중...");
 
-      // Ethers 버전에 따른 분기 처리 (입력값을 10000으로 나눠 사용)
-      const divided = String(Number(donateAmount) / 10000 || 0);
+      // Ethers 버전에 따른 분기 처리
       let parsedAmount;
       try {
-        parsedAmount = ethers.parseEther(divided);
+        parsedAmount = ethers.parseEther(donateAmount);
       } catch (error) {
-        parsedAmount = ethers.utils.parseEther(divided);
+        parsedAmount = ethers.utils.parseEther(donateAmount);
       }
 
       console.log("파싱된 금액:", parsedAmount.toString());
@@ -808,7 +805,7 @@ function MetamaskDonate() {
       </div>
 
       <div className="input-group">
-        <label htmlFor="donateAmount">기부 금액 (SCN)</label>
+        <label htmlFor="donateAmount">기부 금액 (ETH)</label>
         <input
           id="donateAmount"
           type="number"
@@ -817,7 +814,7 @@ function MetamaskDonate() {
           value={donateAmount}
           onChange={(e) => setDonateAmount(e.target.value)}
           disabled={loading}
-          placeholder="최소 10 SCN"
+          placeholder="최소 0.001 ETH"
         />
       </div>
 
@@ -830,16 +827,21 @@ function MetamaskDonate() {
         <div className="fee-info">
           <p>
             플랫폼 수수료: {(platformFee / 100).toFixed(2)}% (
-            {(
-              (parseFloat(donateAmount || "0") * platformFee) / 10000
-            ).toFixed(3)} SCN)
+            {formatEther(
+              parseEther(donateAmount || "0")
+                ?.mul?.(platformFee)
+                ?.div?.(10000) || "0"
+            )}{" "}
+            ETH)
           </p>
           <p>
             수혜자 수령액:{" "}
-            {(
-              (parseFloat(donateAmount || "0") * (10000 - platformFee)) /
-              10000
-            ).toFixed(3)} SCN
+            {formatEther(
+              parseEther(donateAmount || "0")
+                ?.mul?.(10000 - platformFee)
+                ?.div?.(10000) || "0"
+            )}{" "}
+            ETH
           </p>
         </div>
       )}
