@@ -14,7 +14,7 @@ function MetamaskDonate() {
 
   const [account, setAccount] = useState("");
   const [contract, setContract] = useState(null);
-  const [donateAmount, setDonateAmount] = useState("0.001");
+  const [donateAmount, setDonateAmount] = useState("10");
   const [platformFee, setPlatformFee] = useState(0);
   const [loading, setLoading] = useState(false);
   const [validationError, setValidationError] = useState("");
@@ -539,12 +539,11 @@ function MetamaskDonate() {
       console.log("트랜잭션 실행 중...");
 
       // Ethers 버전에 따른 분기 처리 (입력값을 10000으로 나눠 사용)
-      const divided = String(Number(donateAmount) / 10000 || 0);
       let parsedAmount;
       try {
-        parsedAmount = ethers.parseEther(divided);
+        parsedAmount = ethers.parseEther(donateAmount);
       } catch (error) {
-        parsedAmount = ethers.utils.parseEther(divided);
+        parsedAmount = ethers.utils.parseEther(donateAmount);
       }
 
       console.log("파싱된 금액:", parsedAmount.toString());
@@ -810,15 +809,15 @@ function MetamaskDonate() {
       <div className="input-group">
         <label htmlFor="donateAmount">기부 금액 (SCN)</label>
         <input
-          id="donateAmount"
-          type="number"
-          min="10"
-          step="1"
-          value={donateAmount * 10000 || ""} // 표시할 때 다시 10000 곱해서 보여줌
-          onChange={(e) => setDonateAmount(e.target.value / 10000)}
-          disabled={loading}
-          placeholder="최소 10 SCN"
-        />
+  id="donateAmount"
+  type="number"
+  min="10"
+  step="1"
+  value={donateAmount * 10000 || ""} // 표시할 때 다시 10000 곱해서 보여줌
+  onChange={(e) => setDonateAmount(e.target.value / 10000)}
+  disabled={loading}
+  placeholder="최소 10 SCN"
+/>
 
       </div>
 
@@ -832,13 +831,14 @@ function MetamaskDonate() {
           <p>
             플랫폼 수수료: {(platformFee / 100).toFixed(2)}% (
             {(
-              (parseFloat(donateAmount || "0") * platformFee)
+              (parseFloat(donateAmount || "0") * platformFee) / 10000
             ).toFixed(3)} SCN)
           </p>
           <p>
             수혜자 수령액:{" "}
             {(
-              (parseFloat(donateAmount || "0") * (10000 - platformFee))
+              (parseFloat(donateAmount || "0") * (10000 - platformFee)) /
+              10000
             ).toFixed(3)} SCN
           </p>
         </div>
