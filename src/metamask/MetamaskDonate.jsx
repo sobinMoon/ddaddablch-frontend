@@ -539,11 +539,12 @@ function MetamaskDonate() {
       console.log("트랜잭션 실행 중...");
 
       // Ethers 버전에 따른 분기 처리 (입력값을 10000으로 나눠 사용)
+      const divided = String(Number(donateAmount) / 10000 || 0);
       let parsedAmount;
       try {
-        parsedAmount = ethers.parseEther(donateAmount);
+        parsedAmount = ethers.parseEther(divided);
       } catch (error) {
-        parsedAmount = ethers.utils.parseEther(donateAmount);
+        parsedAmount = ethers.utils.parseEther(divided);
       }
 
       console.log("파싱된 금액:", parsedAmount.toString());
@@ -809,16 +810,15 @@ function MetamaskDonate() {
       <div className="input-group">
         <label htmlFor="donateAmount">기부 금액 (SCN)</label>
         <input
-  id="donateAmount"
-  type="number"
-  min="10"
-  step="1"
-  value={donateAmount * 10000 || ""} // 표시할 때 다시 10000 곱해서 보여줌
-  onChange={(e) => setDonateAmount(e.target.value / 10000)}
-  disabled={loading}
-  placeholder="최소 10 SCN"
-/>
-
+          id="donateAmount"
+          type="number"
+          min="0.001"
+          step="0.001"
+          value={donateAmount}
+          onChange={(e) => setDonateAmount(e.target.value)}
+          disabled={loading}
+          placeholder="최소 10 SCN"
+        />
       </div>
 
       <div className="beneficiary-info">
