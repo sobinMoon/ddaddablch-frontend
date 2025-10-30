@@ -34,7 +34,7 @@ const CampaignHorizontal = ({ campaign }) => {
                     </div>
                     <div className="campaign-horizontal-progress-info">
                         <span className="campaign-horizontal-current-amount">
-                            {(campaign.currentAmount * 10000).toLocaleString()}SCN
+                            {campaign.currentAmount.toLocaleString()}SCN
                         </span>
                         <span className="campaign-horizontal-percentage">
                             {Math.round(progress)}%

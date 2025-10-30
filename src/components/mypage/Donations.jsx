@@ -28,7 +28,7 @@ export default function Donations({ recentDonations }) {
                         }}>
                             <div className="mypage-donation-date">{new Date(donation.donationDate).toLocaleDateString()}</div>
                             <div className="mypage-donation-title">{donation.campaignName}</div>
-                            <div className="mypage-donation-amount">{(donation.donationAmount*10000).toLocaleString()}SCN</div>
+                            <div className="mypage-donation-amount">{donation.donationAmount.toLocaleString()}SCN</div>
                             <div className="transaction-hash-container">
                             <div className="mypage-donation-transactionHash-label">Transaction Hash</div>
                             <span className="mypage-donation-transactionHash">{donation.transactionHash}</span>

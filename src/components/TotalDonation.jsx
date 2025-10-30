@@ -29,7 +29,7 @@ export default function TotalDonation({ totalDonation }) {
             </div>
             <div className='total-donation-content'>
                 <span className='total-donation-title'>총 기부금</span>
-                <span className='total-donation-amount'>{(totalDonation*10000).toLocaleString()}SCN</span>
+                <span className='total-donation-amount'>{totalDonation.toLocaleString()}SCN</span>
             </div>
         </div>
     );
