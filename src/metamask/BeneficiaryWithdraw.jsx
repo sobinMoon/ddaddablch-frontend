@@ -181,7 +181,7 @@ function BeneficiaryWithdraw() {
                
         <div className="info-item">
           <span className="info-label">인출 가능한 기부금</span>
-          <span className="info-value balance-value">{(contractBalance*10000).toLocaleString()}SCN</span>
+          <span className="info-value balance-value">{contractBalance.toLocaleString()}SCN</span>
         </div>
       </div>
 

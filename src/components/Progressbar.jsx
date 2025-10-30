@@ -9,8 +9,8 @@ export default function Progressbar({ current, goal }) {
         <div className="progress-wrapper">
             <div className="progress-top">
                 <span>
-                <div id="goal-info">{(goal*10000).toLocaleString()}SCN 목표</div>
-                    <div>{(current*10000).toLocaleString()}SCN 모금</div>
+                <div id="goal-info">{goal.toLocaleString()}SCN 목표</div>
+                    <div>{current.toLocaleString()}SCN 모금</div>
                 </span>
                 <span className='funding-percent'>{formattedPercentage}%</span>
             </div>

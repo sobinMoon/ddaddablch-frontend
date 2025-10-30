@@ -26,7 +26,7 @@ export const createDonationImage = async (imageUrl, donationInfo, nickname) => {
       ctx.fillText(`${nickname}님의 기부증서`, canvas.width / 14, 150);
 
       ctx.font = '60px Arial';
-      ctx.fillText(`기부금 ${(donationInfo.amount*10000).toLocaleString()}SCN`, canvas.width / 14, 250);
+      ctx.fillText(`기부금 ${donationInfo.amount.toLocaleString()}SCN`, canvas.width / 14, 250);
 
   
       // 날짜
