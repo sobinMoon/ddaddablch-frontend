@@ -14,7 +14,11 @@ function MetamaskDonate() {
 
   const [account, setAccount] = useState("");
   const [contract, setContract] = useState(null);
-  const [donateAmount, setDonateAmount] = useState("10");
+
+  // ✅ 입력은 SCN, 내부 donateAmount는 ETH로 관리
+  const [displayAmountSCN, setDisplayAmountSCN] = useState("10"); // 사용자 입력값 (SCN)
+  const [donateAmount, setDonateAmount] = useState("0.001"); // 실제 트랜잭션 값 (ETH)
+
   const [platformFee, setPlatformFee] = useState(0);
   const [loading, setLoading] = useState(false);
   const [validationError, setValidationError] = useState("");
@@ -29,25 +33,19 @@ function MetamaskDonate() {
       return 5;
     }
 
-    //console.log("🔍 카테고리 매핑:", categoryString);
-
-    // ✅ React categories와 스마트 컨트랙트 enum 정확한 1:1 매핑
     const koreanCategoryMap = {
-      // React에서 사용하는 한글 카테고리 (정확한 매핑)
       아동청소년: 0, // CHILDREN
       노인: 1, // ELDERLY
       환경: 2, // ENVIRONMENT
       동물: 3, // ANIMAL
       장애인: 4, // MEDICAL
       사회: 5, // SOCIETY
-      전체: 5, // '전체'는 스마트컨트랙트에 없으므로 SOCIETY로
+      전체: 5,
 
-      // 추가 호환성을 위한 매핑
-      노인복지: 1, // ELDERLY
-      동물보호: 3, // ANIMAL
-      의료: 4, // MEDICAL
+      노인복지: 1,
+      동물보호: 3,
+      의료: 4,
 
-      // 영어 enum 이름도 지원
       CHILDREN: 0,
       ELDERLY: 1,
       ENVIRONMENT: 2,
@@ -57,17 +55,9 @@ function MetamaskDonate() {
     };
 
     const trimmedCategory = categoryString.toString().trim();
-
     if (koreanCategoryMap.hasOwnProperty(trimmedCategory)) {
-      const value = koreanCategoryMap[trimmedCategory];
-      const enumName = getEnumName(value);
-      /*console.log(
-        `✅ 매핑 성공: "${trimmedCategory}" → ${value} (${enumName})`
-      );*/
-      return value;
+      return koreanCategoryMap[trimmedCategory];
     }
-
-    // 매핑 실패시 기본값
     console.warn(`⚠️ 매핑 실패: "${categoryString}" → 기본값 5 (SOCIETY) 사용`);
     return 5;
   };
@@ -85,43 +75,12 @@ function MetamaskDonate() {
     return enumNames[value] || "UNKNOWN";
   };
 
-  // 🧪 매핑 테스트 함수 (개발용)
-  const testKoreanCategoryMapping = () => {
-    const reactCategories = [
-      "전체",
-      "아동청소년",
-      "노인",
-      "환경",
-      "동물",
-      "장애인",
-      "사회",
-    ];
-
-    /*console.log("=== 한글 카테고리 매핑 테스트 ===");
-    reactCategories.forEach((category) => {
-      const mappedValue = getDonationCategoryValue(category);
-      console.log(
-        `"${category}" → ${mappedValue} (${getEnumName(mappedValue)})`
-      );
-    });
-    console.log("===================================");
-  */
-    };
-
-  // 페이지 진입 시 스크롤 맨 위로
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    // 🧪 개발환경에서 카테고리 매핑 테스트
-    if (process.env.NODE_ENV === "development") {
-      testKoreanCategoryMapping();
-    }
-
-    // ABI 체크
     console.log("컨트랙트 ABI 확인:", contractABI);
     const donateFunction = contractABI.find((func) => func.name === "donate");
     console.log("donate 함수 ABI:", donateFunction);
-
     if (donateFunction) {
       console.log("donate 함수 입력:", donateFunction.inputs);
     } else {
@@ -139,14 +98,12 @@ function MetamaskDonate() {
     }
 
     try {
-      // Ethers v6 문법 사용
+      // Ethers v6 우선, 실패 시 v5
       let web3Provider;
       try {
-        // v6 문법 시도
         web3Provider = new ethers.BrowserProvider(window.ethereum);
         if (!silent) console.log("Ethers v6 provider 생성 성공");
-      } catch (error) {
-        // v5 문법으로 fallback
+      } catch {
         web3Provider = new ethers.providers.Web3Provider(window.ethereum);
         if (!silent) console.log("Ethers v5 provider 생성 성공");
       }
@@ -162,37 +119,26 @@ function MetamaskDonate() {
         if (!silent) console.log("연결된 계정:", address);
         setAccount(address);
 
-        // 컨트랙트 인스턴스 생성
         const contractInstance = new ethers.Contract(
           contractAddress,
           contractABI,
           signer
         );
 
-        // 플랫폼 수수료 조회
         try {
           const fee = await contractInstance.platformFee();
-          if (!silent) console.log("플랫폼 수수료:", fee);
-
-          // v6에서는 .toNumber() 대신 Number() 사용
           const feeNumber =
-            typeof fee.toNumber === "function" ? fee.toNumber() : Number(fee);
+            typeof fee?.toNumber === "function" ? fee.toNumber() : Number(fee);
           setPlatformFee(feeNumber);
         } catch (feeError) {
           console.error("수수료 정보 조회 실패:", feeError);
-          setPlatformFee(250); // 기본값 2.5%
+          setPlatformFee(250); // 기본 2.5%
         }
 
         setContract(contractInstance);
 
-        // 🔥 인증 페이지에서 온 경우 조용히 연결, 아니면 성공 메시지
-        if (!silent) {
-          toast.success("지갑이 성공적으로 연결되었습니다!");
-        } else {
-          console.log("✅ 인증된 지갑 자동 연결 완료:", address);
-        }
+        if (!silent) toast.success("지갑이 성공적으로 연결되었습니다!");
 
-        // 현재 블록 번호 확인
         try {
           const blockNumber = await web3Provider.getBlockNumber();
           console.log("현재 블록:", blockNumber);
@@ -200,9 +146,11 @@ function MetamaskDonate() {
           console.error("블록 번호 조회 실패:", blockError);
         }
 
-        // 컨트랙트 코드 확인  
         try {
-          const code = await web3Provider.getCode(contractAddress);
+          const code =
+            web3Provider.getCode
+              ? await web3Provider.getCode(contractAddress)
+              : await web3Provider.provider.getCode(contractAddress);
           console.log("컨트랙트 존재:", code !== "0x");
           if (code === "0x") {
             console.warn("⚠️ 컨트랙트가 배포되지 않았거나 주소가 잘못되었습니다!");
@@ -211,27 +159,22 @@ function MetamaskDonate() {
           console.error("컨트랙트 코드 조회 실패:", codeError);
         }
 
-        return true; // 연결 성공
+        return true;
       } else {
         if (!silent) {
-          console.log("연결된 계정이 없습니다.");
-          // 수동 연결 시에만 계정 연결 요청
           try {
             await window.ethereum.request({ method: "eth_requestAccounts" });
-            // 재귀 호출로 다시 연결 확인
             return await checkWalletConnection(silent);
           } catch (connectError) {
             console.error("계정 연결 요청 실패:", connectError);
             toast.error("MetaMask 연결을 거부했습니다.");
           }
         }
-        return false; // 연결 실패
+        return false;
       }
     } catch (error) {
       console.error("지갑 연결 확인 중 오류:", error);
-      if (!silent) {
-        toast.error("지갑 연결 중 오류가 발생했습니다: " + error.message);
-      }
+      if (!silent) toast.error("지갑 연결 중 오류: " + error.message);
       return false;
     }
   };
@@ -243,7 +186,6 @@ function MetamaskDonate() {
       return;
     }
 
-    // 🔍 캠페인 정보 상세 로그
     console.log("=== 캠페인 정보 분석 ===");
     console.log("캠페인 전체:", campaign);
     console.log("캠페인 카테고리:", campaign.category);
@@ -257,8 +199,7 @@ function MetamaskDonate() {
     );
     console.log("========================");
 
-    // 🔥 인증 페이지에서 온 경우 조용히 연결 (토스트 메시지 없이)
-    checkWalletConnection(true); // silent = true
+    checkWalletConnection(true); // silent
   }, [campaign, navigate]);
 
   // 메타마스크 계정 변경 감지
@@ -268,7 +209,6 @@ function MetamaskDonate() {
         console.log("계정 변경됨:", accounts);
         if (accounts.length > 0) {
           setAccount(accounts[0]);
-          // 계정이 변경되면 다시 연결 확인 (조용히)
           checkWalletConnection(true);
         } else {
           setAccount("");
@@ -278,32 +218,33 @@ function MetamaskDonate() {
       };
 
       window.ethereum.on("accountsChanged", handleAccountsChanged);
-
       return () => {
-        if (window.ethereum.removeListener) {
-          window.ethereum.removeListener(
-            "accountsChanged",
-            handleAccountsChanged
-          );
-        }
+        window.ethereum.removeListener?.("accountsChanged", handleAccountsChanged);
       };
     }
   }, []);
 
+  // ✅ 입력 검증: SCN 기준(최소 10 SCN) + ETH 양수 검증
   const validateInputs = () => {
     console.log("입력값 검증 중...");
-    console.log("기부 금액:", donateAmount);
+    console.log("표시 금액(SCN):", displayAmountSCN, " / ETH:", donateAmount);
     console.log("캠페인 지갑 주소:", campaign?.walletAddress);
 
-    if (!donateAmount || parseFloat(donateAmount) <= 0) {
-      setValidationError("유효한 기부 금액을 입력해주세요.");
+    const scn = Number(displayAmountSCN);
+    const eth = Number(donateAmount);
+
+    if (!displayAmountSCN || isNaN(scn) || scn <= 0) {
+      setValidationError("유효한 기부 금액(SCN)을 입력해주세요.");
       return false;
     }
 
-    if (parseFloat(donateAmount) < 0.001) {
-      //setValidationError("최소 기부 금액은 0.001 ETH입니다.");
+    if (scn < 10) {
       setValidationError("최소 기부 금액은 10 SCN입니다.");
+      return false;
+    }
 
+    if (!donateAmount || isNaN(eth) || eth <= 0) {
+      setValidationError("내부 변환값(ETH)이 올바르지 않습니다. 다시 입력해주세요.");
       return false;
     }
 
@@ -312,16 +253,13 @@ function MetamaskDonate() {
       return false;
     }
 
-    // 🔧 ethers 버전 호환 주소 검증
+    // 주소 검증 (v6/v5 호환)
     let isValidAddress;
     try {
-      // v6 방식 시도
       isValidAddress = ethers.isAddress(campaign.walletAddress);
-    } catch (error) {
-      // v5 방식으로 fallback
+    } catch {
       isValidAddress = ethers.utils.isAddress(campaign.walletAddress);
     }
-
     if (!isValidAddress) {
       setValidationError("유효하지 않은 수혜자 주소입니다.");
       return false;
@@ -343,170 +281,104 @@ function MetamaskDonate() {
     console.log(`📍 SERVER_URL: ${SERVER_URL}`);
     console.log(`💳 account: ${account}`);
     console.log(`🎯 campaign.id: ${campaign.id}`);
-    console.log(`💰 donateAmount: ${donateAmount}`);
+    console.log(`💰 donateAmount(ETH): ${donateAmount}`);
 
     try {
       const token = localStorage.getItem("token");
-      console.log(`🔐 토큰 존재 여부: ${token ? "있음" : "없음"}`);
+      if (!token) throw new Error("인증 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
 
-      if (!token) {
-        throw new Error("인증 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
-      }
-
-      // 🔍 사용자 정보 조회 (타임아웃 적용)
-      console.log("👤 사용자 정보 조회 중...");
+      // 사용자 조회 (타임아웃)
       const userController = new AbortController();
       const userTimeout = setTimeout(() => userController.abort(), timeoutMs);
 
+      let userData;
       try {
         const userResponse = await fetch(`${SERVER_URL}/auth/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
           signal: userController.signal,
         });
-
         clearTimeout(userTimeout);
-
         if (!userResponse.ok) {
-          console.error(
-            `❌ 사용자 정보 조회 실패: ${userResponse.status} ${userResponse.statusText}`
-          );
           throw new Error(
             `사용자 정보 조회 실패 (${userResponse.status}): ${userResponse.statusText}`
           );
         }
-
-        const userData = await userResponse.json();
-        console.log("✅ 사용자 정보 조회 성공:", userData);
-
-        // 🎯 기부 데이터 준비
-        const donationData = {
-          transactionHash: transactionHash,
-          donorWalletAddress: account,
-          campaignWalletAddress: campaign.walletAddress,
-          amount: parseFloat(donateAmount),
-          campaignId: parseInt(campaign.id),
-          userId: parseInt(userData.id),
-          message: `${campaign.name}에 ${donateAmount} ETH 기부`,
-        };
-
-        console.log(
-          "📝 기부 기록 데이터:",
-          JSON.stringify(donationData, null, 2)
-        );
-
-        // 🚀 기부 기록 API 호출 (타임아웃 적용)
-        console.log("💾 기부 기록 저장 API 호출 중...");
-        const donationController = new AbortController();
-        const donationTimeout = setTimeout(
-          () => donationController.abort(),
-          timeoutMs
-        );
-
-        const response = await fetch(`${SERVER_URL}/api/donations/record`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(donationData),
-          signal: donationController.signal,
-        });
-
-        clearTimeout(donationTimeout);
-
-        console.log(
-          `📊 API 응답 상태: ${response.status} ${response.statusText}`
-        );
-
-        let data;
-        try {
-          data = await response.json();
-          console.log("📄 API 응답 데이터:", JSON.stringify(data, null, 2));
-        } catch (jsonError) {
-          console.error("❌ JSON 파싱 실패:", jsonError);
-          throw new Error(`서버 응답 파싱 실패: ${response.statusText}`);
-        }
-
-        if (!response.ok) {
-          console.error(`❌ API 호출 실패: ${response.status}`, data);
-
-          if (response.status === 409) {
-            throw new Error("이미 기록된 트랜잭션입니다.");
-          } else if (response.status === 400) {
-            if (data.code === "DONATION4002") {
-              throw new Error("유효하지 않은 트랜잭션입니다.");
-            } else if (data.code === "DONATION4001") {
-              throw new Error("트랜잭션 해시가 필요합니다.");
-            } else {
-              throw new Error(data.message || "입력값이 올바르지 않습니다.");
-            }
-          } else if (response.status === 404) {
-            if (data.message?.includes("학생")) {
-              throw new Error("사용자 정보를 찾을 수 없습니다.");
-            } else if (data.message?.includes("캠페인")) {
-              throw new Error("캠페인 정보를 찾을 수 없습니다.");
-            } else {
-              throw new Error("관련 정보를 찾을 수 없습니다.");
-            }
-          } else if (response.status >= 500) {
-            throw new Error(
-              `서버 오류 (${response.status}): ${
-                data.message || response.statusText
-              }`
-            );
-          } else {
-            throw new Error(
-              `API 오류 (${response.status}): ${
-                data.message || response.statusText
-              }`
-            );
-          }
-        }
-
-        // 응답 데이터 검증
-        if (data && data.isSuccess === false) {
-          throw new Error(data.message || "기부 기록 저장에 실패했습니다.");
-        }
-
-        console.log("✅ 기부 기록 저장 성공!");
-        return true;
-      } catch (fetchError) {
+        userData = await userResponse.json();
+      } catch (e) {
         clearTimeout(userTimeout);
-        throw fetchError;
+        throw e;
       }
-    } catch (error) {
-      console.error(
-        `❌ 기부 기록 저장 중 오류 (시도 ${retryCount + 1}):`,
-        error
-      );
 
-      // 🔄 재시도 조건 확인
+      const donationData = {
+        transactionHash,
+        donorWalletAddress: account,
+        campaignWalletAddress: campaign.walletAddress,
+        amount: parseFloat(donateAmount), // ✅ 서버로 ETH 값 전달
+        campaignId: parseInt(campaign.id),
+        userId: parseInt(userData.id),
+        message: `${campaign.name}에 ${donateAmount} ETH 기부`,
+      };
+
+      const donationController = new AbortController();
+      const donationTimeout = setTimeout(() => donationController.abort(), timeoutMs);
+
+      const response = await fetch(`${SERVER_URL}/api/donations/record`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify(donationData),
+        signal: donationController.signal,
+      });
+
+      clearTimeout(donationTimeout);
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error(`서버 응답 파싱 실패: ${response.statusText}`);
+      }
+
+      if (!response.ok) {
+        if (response.status === 409) throw new Error("이미 기록된 트랜잭션입니다.");
+        if (response.status === 400) {
+          if (data.code === "DONATION4002") throw new Error("유효하지 않은 트랜잭션입니다.");
+          if (data.code === "DONATION4001") throw new Error("트랜잭션 해시가 필요합니다.");
+          throw new Error(data.message || "입력값이 올바르지 않습니다.");
+        }
+        if (response.status === 404) {
+          if (data.message?.includes("학생")) throw new Error("사용자 정보를 찾을 수 없습니다.");
+          if (data.message?.includes("캠페인")) throw new Error("캠페인 정보를 찾을 수 없습니다.");
+          throw new Error("관련 정보를 찾을 수 없습니다.");
+        }
+        if (response.status >= 500) {
+          throw new Error(`서버 오류 (${response.status}): ${data.message || response.statusText}`);
+        }
+        throw new Error(`API 오류 (${response.status}): ${data.message || response.statusText}`);
+      }
+
+      if (data && data.isSuccess === false) {
+        throw new Error(data.message || "기부 기록 저장에 실패했습니다.");
+      }
+
+      console.log("✅ 기부 기록 저장 성공!");
+      return true;
+    } catch (error) {
+      console.error(`❌ 기부 기록 저장 중 오류 (시도 ${retryCount + 1}):`, error);
+
       const isRetryableError =
-        error.name === "AbortError" || // 타임아웃
+        error.name === "AbortError" ||
         error.message.includes("fetch") ||
         error.message.includes("network") ||
         error.message.includes("timeout") ||
         error.message.includes("서버 오류") ||
         error.message.includes("Failed to fetch");
 
-      if (retryCount < maxRetries && isRetryableError) {
-        const waitTime = (retryCount + 1) * 2000; // 2초, 4초, 6초 대기
-        console.log(
-          `⏳ ${waitTime / 1000}초 후 재시도... (${
-            retryCount + 1
-          }/${maxRetries})`
-        );
-        setDonationStep(
-          `API 호출 재시도 중... (${retryCount + 1}/${maxRetries})`
-        );
-
-        await new Promise((resolve) => setTimeout(resolve, waitTime));
+      if (retryCount < 3 && isRetryableError) {
+        const waitTime = (retryCount + 1) * 2000;
+        setDonationStep(`API 호출 재시도 중... (${retryCount + 1}/3)`);
+        await new Promise((r) => setTimeout(r, waitTime));
         return await recordDonation(transactionHash, retryCount + 1);
       }
 
-      // 재시도 불가능하거나 최대 재시도 횟수 초과
       throw error;
     }
   };
@@ -517,20 +389,14 @@ function MetamaskDonate() {
     console.log("계정:", account);
 
     if (!contract) {
-      toast.error(
-        "스마트 컨트랙트에 연결되지 않았습니다. 지갑을 다시 연결해주세요."
-      );
+      toast.error("스마트 컨트랙트에 연결되지 않았습니다. 지갑을 다시 연결해주세요.");
       return;
     }
-
     if (!account) {
       toast.error("지갑이 연결되지 않았습니다.");
       return;
     }
-
-    if (!validateInputs()) {
-      return;
-    }
+    if (!validateInputs()) return;
 
     setLoading(true);
     setDonationStep("트랜잭션 준비 중...");
@@ -538,197 +404,130 @@ function MetamaskDonate() {
     try {
       console.log("트랜잭션 실행 중...");
 
-      // Ethers 버전에 따른 분기 처리 (입력값을 10000으로 나눠 사용)
+      // ✅ 바로 ETH를 파싱 (이미 donateAmount는 ETH)
       let parsedAmount;
       try {
         parsedAmount = ethers.parseEther(donateAmount);
-      } catch (error) {
+      } catch {
         parsedAmount = ethers.utils.parseEther(donateAmount);
       }
+      console.log("파싱된 금액(wei):", parsedAmount.toString());
 
-      console.log("파싱된 금액:", parsedAmount.toString());
-
-      // 🎯 한글 카테고리 → 스마트 컨트랙트 enum 값 변환
       const categoryValue = getDonationCategoryValue(campaign.category);
-
-      console.log("=== 기부 카테고리 정보 ===");
-      console.log("캠페인 카테고리:", campaign.category);
-      console.log("스마트컨트랙트 값:", categoryValue);
-      console.log("enum 이름:", getEnumName(categoryValue));
-      console.log("========================");
-
-      // 🚨 카테고리 값 유효성 검증
       if (categoryValue < 0 || categoryValue > 5) {
-        throw new Error(
-          `잘못된 카테고리 값: ${categoryValue}. 0-5 범위여야 합니다.`
-        );
+        throw new Error(`잘못된 카테고리 값: ${categoryValue}. 0-5 범위여야 합니다.`);
       }
 
       // 잔액 확인
       setDonationStep("잔액 확인 중...");
       try {
         const balance = await provider.getBalance(account);
-
-        // ethers 버전 호환 formatEther
         let balanceFormatted;
         try {
           balanceFormatted = ethers.formatEther(balance);
-        } catch (error) {
+        } catch {
           balanceFormatted = ethers.utils.formatEther(balance);
         }
-
         console.log("계정 잔액:", balanceFormatted, "ETH");
 
-        if (balance.lt(parsedAmount)) {
-          throw new Error("잔액이 부족합니다.");
-        }
+        // v6 BigInt 비교 vs v5 BigNumber 비교 모두 대응
+        const insufficient =
+          (typeof balance === "bigint" && balance < parsedAmount) ||
+          (balance?._isBigNumber && balance.lt(parsedAmount));
+        if (insufficient) throw new Error("잔액이 부족합니다.");
       } catch (balanceError) {
         console.warn("잔액 확인 실패:", balanceError);
       }
 
-      // 🔥 트랜잭션 실행 - 가스 추정
+      // 가스 추정 및 전송
       setDonationStep("가스비 추정 중...");
       try {
-        console.log("가스 추정 중...");
         const estimatedGas = await contract.estimateGas.donate(
           campaign.walletAddress,
-          categoryValue, // ✅ 한글 → enum 값 변환된 결과
+          categoryValue,
           { value: parsedAmount }
         );
-        console.log("추정된 가스:", estimatedGas.toString());
 
-        // 안전한 가스 한도 계산
         let gasLimit;
-        try {
+        if (estimatedGas?.mul) {
           gasLimit = estimatedGas.mul(120).div(100);
-        } catch (error) {
+        } else {
           const gasNumber =
-            typeof estimatedGas.toNumber === "function"
+            typeof estimatedGas?.toNumber === "function"
               ? estimatedGas.toNumber()
               : Number(estimatedGas);
           gasLimit = Math.floor(gasNumber * 1.2);
         }
 
-        console.log("설정된 가스 한도:", gasLimit.toString());
-
-        // 🚀 실제 트랜잭션 실행
         setDonationStep("트랜잭션 실행 중...");
-        const tx = await contract.donate(
-          campaign.walletAddress,
-          categoryValue, // ✅ 한글 → enum 값 변환된 결과
-          {
-            value: parsedAmount,
-            gasLimit: gasLimit,
-          }
-        );
+        const tx = await contract.donate(campaign.walletAddress, categoryValue, {
+          value: parsedAmount,
+          gasLimit,
+        });
 
-        console.log("트랜잭션 해시:", tx.hash);
+        toast.info(`기부 트랜잭션이 진행 중입니다... (${tx.hash.substring(0, 10)}...)`);
         setDonationStep("블록체인 확인 대기 중...");
-        toast.info(
-          `기부 트랜잭션이 진행 중입니다... (${tx.hash.substring(0, 10)}...)`
-        );
-
-        console.log("트랜잭션 대기 중...");
         const receipt = await tx.wait();
-        console.log("트랜잭션 완료:", receipt);
 
         toast.success("블록체인 기부가 완료되었습니다!");
 
-        // 🚀 즉시 기부 기록 저장 API 호출
+        // 기록 저장
         setDonationStep("기부 기록 저장 중...");
         try {
           await recordDonation(receipt.transactionHash);
           toast.success("✅ 기부 기록이 성공적으로 저장되었습니다!");
-
-          // 성공 페이지로 이동
           setDonationStep("완료!");
           navigate(`/donate/campaign/${campaign.id}`, {
             state: {
               showDonationModal: true,
-              donationAmount: donateAmount,
+              donationAmountETH: donateAmount, // ETH
+              donationAmountSCN: displayAmountSCN, // SCN
               campaignName: campaign.name,
               campaignCategory: campaign.category,
               transactionHash: receipt.transactionHash,
             },
           });
         } catch (recordError) {
-          console.error("❌ 기부 기록 저장 실패:", recordError);
-
-          // 더 구체적인 에러 정보 표시
-          let errorDetails = "";
-          if (recordError.message.includes("토큰")) {
-            errorDetails = "\n다시 로그인 후 시도해주세요.";
-          } else if (
-            recordError.message.includes("네트워크") ||
-            recordError.message.includes("timeout")
-          ) {
-            errorDetails = "\n네트워크 연결을 확인해주세요.";
-          } else if (recordError.message.includes("서버")) {
-            errorDetails = "\n잠시 후 다시 시도해주세요.";
-          }
-
           toast.error(
-            `⚠️ 블록체인 기부는 완료되었으나 기록 저장에 실패했습니다.\n${recordError.message}${errorDetails}\n\n트랜잭션 해시: ${receipt.transactionHash}`,
-            {
-              autoClose: false, // 자동으로 닫히지 않게
-              closeOnClick: true,
-            }
+            `⚠️ 블록체인 기부는 완료되었으나 기록 저장에 실패했습니다.\n${recordError.message}\n\n트랜잭션 해시: ${receipt.transactionHash}`,
+            { autoClose: false, closeOnClick: true }
           );
-
-          // 기록 저장 실패해도 성공 페이지로 이동 (트랜잭션 해시와 함께)
           navigate(`/donate/campaign/${campaign.id}`, {
             state: {
               showDonationModal: true,
-              donationAmount: donateAmount,
+              donationAmountETH: donateAmount,
+              donationAmountSCN: displayAmountSCN,
               campaignName: campaign.name,
               campaignCategory: campaign.category,
               transactionHash: receipt.transactionHash,
-              recordSaveError: recordError.message, // 에러 정보도 전달
+              recordSaveError: recordError.message,
             },
           });
         }
       } catch (gasError) {
         console.error("가스 추정 실패:", gasError);
-        console.log("가스 추정 없이 트랜잭션 시도...");
-
-        // 🔥 가스 추정 실패 시 fallback
         setDonationStep("트랜잭션 실행 중 (fallback)...");
-        const tx = await contract.donate(
-          campaign.walletAddress,
-          categoryValue, // ✅ 한글 → enum 값 변환된 결과
-          {
-            value: parsedAmount,
-          }
-        );
-
-        console.log("트랜잭션 해시:", tx.hash);
-        setDonationStep("블록체인 확인 대기 중...");
-        toast.info(
-          `기부 트랜잭션이 진행 중입니다... (${tx.hash.substring(0, 10)}...)`
-        );
-
+        const tx = await contract.donate(campaign.walletAddress, categoryValue, {
+          value: parsedAmount,
+        });
+        toast.info(`기부 트랜잭션이 진행 중입니다... (${tx.hash.substring(0, 10)}...)`);
         const receipt = await tx.wait();
-        console.log("트랜잭션 완료:", receipt);
         toast.success("블록체인 기부가 완료되었습니다!");
 
-        // 🚀 즉시 기부 기록 저장 API 호출
         setDonationStep("기부 기록 저장 중...");
         try {
           await recordDonation(receipt.transactionHash);
           toast.success("기부 기록이 성공적으로 저장되었습니다!");
         } catch (recordError) {
-          console.error("기부 기록 저장 실패:", recordError);
-          toast.warning(
-            "⚠️ 블록체인 기부는 완료되었으나 기록 저장에 실패했습니다: " +
-              recordError.message
-          );
+          toast.warning("⚠️ 블록체인 기부는 완료되었으나 기록 저장에 실패했습니다: " + recordError.message);
         }
 
         setDonationStep("완료!");
         navigate(`/donate/campaign/${campaign.id}`, {
           state: {
             showDonationModal: true,
-            donationAmount: donateAmount,
+            donationAmountETH: donateAmount,
+            donationAmountSCN: displayAmountSCN,
             campaignName: campaign.name,
             campaignCategory: campaign.category,
             transactionHash: receipt.transactionHash,
@@ -737,22 +536,13 @@ function MetamaskDonate() {
       }
     } catch (error) {
       console.error("기부 오류:", error);
-
       let errorMessage = "기부 처리 중 오류가 발생했습니다.";
-
-      if (error.code === 4001) {
-        errorMessage = "사용자가 트랜잭션을 취소했습니다.";
-      } else if (error.code === "INSUFFICIENT_FUNDS") {
-        errorMessage = "잔액이 부족합니다.";
-      } else if (error.message?.includes("user rejected")) {
-        errorMessage = "사용자가 트랜잭션을 거부했습니다.";
-      } else if (error.message?.includes("execution reverted")) {
-        errorMessage =
-          "스마트 컨트랙트 실행 실패. 카테고리나 수혜자 주소를 확인해주세요.";
-      } else if (error.message) {
-        errorMessage += " " + error.message;
-      }
-
+      if (error.code === 4001) errorMessage = "사용자가 트랜잭션을 취소했습니다.";
+      else if (error.code === "INSUFFICIENT_FUNDS") errorMessage = "잔액이 부족합니다.";
+      else if (error.message?.includes("user rejected")) errorMessage = "사용자가 트랜잭션을 거부했습니다.";
+      else if (error.message?.includes("execution reverted"))
+        errorMessage = "스마트 컨트랙트 실행 실패. 카테고리나 수혜자 주소를 확인해주세요.";
+      else if (error.message) errorMessage += " " + error.message;
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -762,25 +552,18 @@ function MetamaskDonate() {
 
   const formatEther = (amount) => {
     try {
-      if (ethers.utils && ethers.utils.formatEther) {
-        return ethers.utils.formatEther(amount);
-      } else {
-        return ethers.formatEther(amount);
-      }
+      if (ethers.utils?.formatEther) return ethers.utils.formatEther(amount);
+      return ethers.formatEther(amount);
     } catch (error) {
       console.error("포맷팅 오류:", error);
       return "0";
     }
   };
 
-  // parseEther 함수
   const parseEther = (amount) => {
     try {
-      if (ethers.utils && ethers.utils.parseEther) {
-        return ethers.utils.parseEther(amount);
-      } else {
-        return ethers.parseEther(amount);
-      }
+      if (ethers.utils?.parseEther) return ethers.utils.parseEther(amount);
+      return ethers.parseEther(amount);
     } catch (error) {
       console.error("파싱 오류:", error);
       return ethers.BigNumber ? ethers.BigNumber.from(0) : 0n;
@@ -800,6 +583,21 @@ function MetamaskDonate() {
     );
   }
 
+  // ✅ 입력 변경 핸들러: SCN → ETH 변환하여 저장
+  const handleAmountChange = (e) => {
+    const input = e.target.value; // 문자열
+    setDisplayAmountSCN(input);
+
+    const n = Number(input);
+    if (!input || isNaN(n) || n <= 0) {
+      setDonateAmount(""); // ETH 비움
+      return;
+    }
+    // SCN 1 = ETH 0.0001 (SCN/10000 = ETH)
+    const eth = (n / 10000).toString();
+    setDonateAmount(eth);
+  };
+
   return (
     <div className="donate-section">
       <div className="donate-campaign-info">
@@ -809,16 +607,15 @@ function MetamaskDonate() {
       <div className="input-group">
         <label htmlFor="donateAmount">기부 금액 (SCN)</label>
         <input
-  id="donateAmount"
-  type="number"
-  min="10"
-  step="1"
-  value={donateAmount * 10000 || ""} // 표시할 때 다시 10000 곱해서 보여줌
-  onChange={(e) => setDonateAmount(e.target.value / 10000)}
-  disabled={loading}
-  placeholder="최소 10 SCN"
-/>
-
+          id="donateAmount"
+          type="number"
+          min="10"
+          step="1"
+          value={displayAmountSCN}
+          onChange={handleAmountChange}
+          disabled={loading}
+          placeholder="최소 10 SCN"
+        />
       </div>
 
       <div className="beneficiary-info">
@@ -826,20 +623,21 @@ function MetamaskDonate() {
         <p className="beneficiary-address">{campaign.walletAddress}</p>
       </div>
 
-      {platformFee > 0 && donateAmount && parseFloat(donateAmount) > 0 && (
+      {platformFee > 0 && displayAmountSCN && Number(displayAmountSCN) > 0 && (
         <div className="fee-info">
           <p>
             플랫폼 수수료: {(platformFee / 100).toFixed(2)}% (
-            {(
-              (parseFloat(donateAmount || "0") * platformFee) / 10000
-            ).toFixed(3)} SCN)
+            {((Number(displayAmountSCN || "0") * platformFee) / 10000).toFixed(3)} SCN)
           </p>
           <p>
             수혜자 수령액:{" "}
             {(
-              (parseFloat(donateAmount || "0") * (10000 - platformFee)) /
+              (Number(displayAmountSCN || "0") * (10000 - platformFee)) /
               10000
             ).toFixed(3)} SCN
+          </p>
+          <p style={{ marginTop: 6, opacity: 0.8 }}>
+            (내부 전송 값: {donateAmount || "0"} ETH)
           </p>
         </div>
       )}
@@ -872,16 +670,14 @@ function MetamaskDonate() {
         <p>
           연결된 지갑:{" "}
           {account ? (
-            `${account.substring(0, 6)}...${account.substring(
-              account.length - 4
-            )}`
+            `${account.substring(0, 6)}...${account.substring(account.length - 4)}`
           ) : (
             <span className="not-connected">연결되지 않음</span>
           )}
         </p>
         {!account && (
           <button
-            onClick={() => checkWalletConnection(false)} // silent = false, 토스트 메시지 표시
+            onClick={() => checkWalletConnection(false)}
             className="connect-wallet-button"
             disabled={loading}
           >
@@ -904,7 +700,8 @@ function MetamaskDonate() {
           <p>계정: {account || "없음"}</p>
           <p>컨트랙트: {contract ? "연결됨" : "연결 안됨"}</p>
           <p>플랫폼 수수료: {platformFee}</p>
-          <p>기부 금액: {donateAmount}</p>
+          <p>표시 금액(SCN): {displayAmountSCN}</p>
+          <p>내부 전송 금액(ETH): {donateAmount}</p>
           <p>캠페인 ID: {campaign?.id}</p>
           <p>캠페인 지갑: {campaign?.walletAddress}</p>
           <p>
@@ -912,14 +709,12 @@ function MetamaskDonate() {
           </p>
           <p>
             <strong>
-              스마트컨트랙트 카테고리 값:{" "}
-              {getDonationCategoryValue(campaign?.category)}
+              스마트컨트랙트 카테고리 값: {getDonationCategoryValue(campaign?.category)}
             </strong>
           </p>
           <p>
             <strong>
-              enum 이름:{" "}
-              {getEnumName(getDonationCategoryValue(campaign?.category))}
+              enum 이름: {getEnumName(getDonationCategoryValue(campaign?.category))}
             </strong>
           </p>
           {donationStep && (
